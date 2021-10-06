@@ -1,0 +1,93 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "RogueBonFire.h"
+
+// Sets default values
+ARogueBonFire::ARogueBonFire()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+	MeshInit();
+}
+
+// Called when the game starts or when spawned
+void ARogueBonFire::BeginPlay()
+{
+	Super::BeginPlay();
+	GetWorldGameMode();
+	WorldRogueInit();
+	
+}
+
+// Called every frame
+void ARogueBonFire::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ARogueBonFire::WorldRogueInit() {
+	UWorld* TheWorld = GetWorld();
+	AActor* myPawn = UGameplayStatics::GetPlayerPawn(TheWorld, 0);
+	myRogue = Cast<ARogue>(myPawn);
+}
+
+void ARogueBonFire::GetWorldGameMode() {
+	UWorld* TheWorld = GetWorld();
+	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+	MyGameMode = Cast<ACastle_in_DungeonGameModeBase>(GameMode);
+}
+
+void ARogueBonFire::NotifyActorBeginOverlap(AActor* OtherActor) {
+	Super::NotifyActorBeginOverlap(OtherActor);
+	myRogue = Cast<ARogue>(OtherActor);
+	if (myRogue) {
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("BonFireHittttttttt")));
+		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
+		myRogue->myAnimInst->Idle();
+	}
+}
+
+void ARogueBonFire::NotifyActorEndOverlap(AActor* OtherActor) {
+	Super::NotifyActorBeginOverlap(OtherActor);
+	myRogue = Cast<ARogue>(OtherActor);
+	if (myRogue) {
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("BonFireouttttttttt")));
+	}
+}
+
+void ARogueBonFire::MeshInit() {
+	BonFireSword = CreateDefaultSubobject<UStaticMeshComponent>("BonFireSword");
+	auto BonFireSwordAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
+		(TEXT("StaticMesh'/Game/DataBornFire/BonFireSword_0.BonFireSword_0'"));
+
+	if (BonFireSwordAsset.Succeeded()) {
+		BonFireSword->SetStaticMesh(BonFireSwordAsset.Object);
+	}
+	
+	BonFireFlame = CreateDefaultSubobject<UParticleSystemComponent>("BonFireFlame");
+	auto BonFireFlameAsset = ConstructorHelpers::FObjectFinder<UParticleSystem>
+		(TEXT("ParticleSystem'/Game/DataBornFire/Fire_02.Fire_02'"));
+
+	if (BonFireFlameAsset.Succeeded()) {
+		BonFireFlame->SetTemplate(BonFireFlameAsset.Object);
+	}
+
+	BonFireCapsule = CreateDefaultSubobject<UCapsuleComponent>("BonFireCapsule");
+	BonFireFlame->AttachToComponent(BonFireSword, FAttachmentTransformRules::KeepRelativeTransform);
+	BonFireCapsule->AttachToComponent(BonFireSword, FAttachmentTransformRules::KeepRelativeTransform);
+	BonFireCapsule->AddRelativeLocation(FVector(30, 0, 0));
+	BonFireCapsule->SetCapsuleHalfHeight(80);
+	BonFireCapsule->SetCapsuleRadius(190);
+	BonFireCapsule->SetCollisionProfileName("EventZoneCollision");
+	BonFireFlame->AddRelativeLocation(FVector(30, 0, -40));
+	BonFireFlame->SetRelativeScale3D(FVector(0.6, 0.6, 0));
+	BonFireSword->SetCollisionProfileName("BlockAll");
+}
+void ARogueBonFire::FireOn() {
+	 
+}
+void ARogueBonFire::WidgetOn() {
+
+}
