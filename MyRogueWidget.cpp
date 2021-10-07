@@ -627,6 +627,8 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 void UMyRogueWidget::RevivalMenuInit() {
 	Revival = Cast<UTextBlock>(GetWidgetFromName(TEXT("RevivalText")));
 	RevivalOutLine = Cast<UBorder>(GetWidgetFromName(TEXT("Outline")));
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) == TEXT("Stage0"))
+		MyGameMode->StageIndex = 0;
 	if (Revival != nullptr) {
 		if(MyGameMode->StageIndex == 0)
 			Revival->SetText(FText::FromString(TEXT("Castle")));
@@ -652,6 +654,9 @@ void UMyRogueWidget::DialogueMenuInit() {
 }
 
 void UMyRogueWidget::GetExitGame() {
+	MyGameMode->StageIndex = 0;
+	MyGameMode->StageSubIndex = 0;
+	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
 }
 

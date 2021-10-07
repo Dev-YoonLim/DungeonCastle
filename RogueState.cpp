@@ -95,8 +95,7 @@ void ARogueState::BeginPlay() {
 	//GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Red, FString::Printf(TEXT("StatePlace %d"), WeaponNumber));
 	//Call_RogueStartWeaponNumber();
 	//Call_RogueStartWeaponNumber();
-	if(UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap"))
-		RogueDataInit();
+	RogueDataInit();
 }
 
 void ARogueState::RogueDataInit() {
@@ -113,9 +112,9 @@ void ARogueState::RogueDataInit() {
 }
 
 void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
+	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Load")));
-		URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
 		ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 		for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
 			int Index = LoadGame->TotalEquipAbilityDataList[i];
@@ -147,6 +146,8 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
 			SetElementLevelUp();
 		}
+		MyGameMode->StageIndex = LoadGame->StageIndex;
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("LoadStageInitIndex %d"), LoadGame->StageIndex));
 		StartWeaponNumber = LoadGame->WeaponNumber;
 		StartWeaponElementNumber = LoadGame->WeaponElemental;
 		StartTorchElementNumber = LoadGame->TorchElemental;
@@ -165,8 +166,9 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 }
 
 void ARogueState::SaveGameData() {
+	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
-		URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("StageInitIndex %d"), PlayerData->StageIndex));
 		ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 		PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
 		PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
@@ -204,6 +206,11 @@ void ARogueState::SaveGameData() {
 		if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
 			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
 		}
+	}
+	else {
+		MyGameMode->StageIndex = 0;
+		PlayerData->StageIndex = MyGameMode->StageIndex;
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("StageInitIndex %d"), PlayerData->StageIndex));
 	}
 }
 

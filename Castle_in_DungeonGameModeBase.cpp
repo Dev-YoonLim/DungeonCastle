@@ -202,19 +202,19 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 			break;
 		case 2:
 			if (StageSubIndex == 0)
-				UGameplayStatics::OpenLevel(this, TEXT("Stage2"), false);
+				UGameplayStatics::OpenLevel(this, TEXT("Stage2_0_0"), false);
 			else if (StageSubIndex == 1)
-				UGameplayStatics::OpenLevel(this, TEXT("Stage2"), false);
+				UGameplayStatics::OpenLevel(this, TEXT("Stage2_0_1"), false);
 			else if (StageSubIndex == 2)
-				UGameplayStatics::OpenLevel(this, TEXT("Stage2"), false);
+				UGameplayStatics::OpenLevel(this, TEXT("Stage2_0_2"), false);
 			break;
 		case 3:
 			if (StageSubIndex == 0)
-				UGameplayStatics::OpenLevel(this, TEXT("Stage3"), false);
+				UGameplayStatics::OpenLevel(this, TEXT("Stage3_0_0"), false);
 			else if (StageSubIndex == 1)
-				UGameplayStatics::OpenLevel(this, TEXT("Stage3"), false);
+				UGameplayStatics::OpenLevel(this, TEXT("Stage3_0_1"), false);
 			else if (StageSubIndex == 2)
-				UGameplayStatics::OpenLevel(this, TEXT("Stage3"), false);
+				UGameplayStatics::OpenLevel(this, TEXT("Stage3_0_2"), false);
 			break;
 		}
 		//if()S
