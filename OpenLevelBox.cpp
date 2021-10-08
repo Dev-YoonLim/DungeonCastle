@@ -48,7 +48,7 @@ void AOpenLevelBox::MoveLevel() {
 	//UGameplayStatics::LoadStreamLevel(this, LevelToLoad, true, true, LatentInfo);
 	AGameModeBase* GameModeBase = Cast<AGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
 	ACastle_in_DungeonGameModeBase* MyGameMode = Cast< ACastle_in_DungeonGameModeBase>(GameModeBase);
-	SubLevelIndex = FMath::FRandRange(0, 2);
+	SubLevelIndex = FMath::RandRange(0, 2);
 	MyGameMode->GetStageIndex(LevelIndex, SubLevelIndex);
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 	MyGameMode->GetWidgetNumber(-2);

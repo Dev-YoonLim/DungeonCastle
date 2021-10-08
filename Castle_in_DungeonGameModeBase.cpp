@@ -131,8 +131,10 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 		GetWidgetNumber(-1);
 	else
 		GetWidgetNumber(0);
+	
 	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap"))
 		LevelLoading();
+	
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GameModeBaseOk")));
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GameCount %d"), GameStartCheck));
 }
@@ -188,11 +190,14 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 	if (TitleBorderAlphaValue >= 1.5f) {
 		TitleBorderAlphaMax = true;
 		GetWorldTimerManager().ClearTimer(TitleBorderBlackTimeHandle);
+		GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Next LevelIndex : %d"), StageIndex));
 		switch (StageIndex) {
 		case 0:
 			UGameplayStatics::OpenLevel(this, TEXT("Stage0"), false);
 			break;
 		case 1:
+			GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageIndex : %d"), StageIndex));
+			GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageSubIndex : %d"), StageSubIndex));
 			if (StageSubIndex == 0)
 				UGameplayStatics::OpenLevel(this, TEXT("Stage1_0_0"), false);
 			else if (StageSubIndex == 1)
@@ -228,6 +233,8 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 void ACastle_in_DungeonGameModeBase::GetStageIndex(int32 Index, int32 SubIndex) {
 	StageIndex = Index;
 	StageSubIndex = SubIndex;
+	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageIndex : %d"), StageIndex));
+	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageSubIndex : %d"), StageSubIndex));
 }
 
 void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewWidgetclass) {

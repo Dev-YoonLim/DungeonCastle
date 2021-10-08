@@ -103,6 +103,7 @@ void UMyRogueWidget::TitleInRevivalMenuInit() {
 		//Revival->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 1.f, 1.f, MyGameMode->RevivalTextAlphaValue)));
 		//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Blue, FString::Printf(TEXT("TitleUpdate")));
 		if (MyGameMode->TitleBorderAlphaMax == false && MyGameMode->TitleBorderAlphaValue == 0.00f) {
+			//GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Purple, FString::Printf(TEXT("Widget Next Level : %d"), MyGameMode->StageIndex));
 			MyGameMode->TitleUIUpdate();
 		}
 	}
@@ -627,8 +628,6 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 void UMyRogueWidget::RevivalMenuInit() {
 	Revival = Cast<UTextBlock>(GetWidgetFromName(TEXT("RevivalText")));
 	RevivalOutLine = Cast<UBorder>(GetWidgetFromName(TEXT("Outline")));
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) == TEXT("Stage0"))
-		MyGameMode->StageIndex = 0;
 	if (Revival != nullptr) {
 		if(MyGameMode->StageIndex == 0)
 			Revival->SetText(FText::FromString(TEXT("Castle")));

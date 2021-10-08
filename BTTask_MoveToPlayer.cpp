@@ -21,6 +21,8 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 
 	if (Goal) {
 		if (EnemyController->SenseRogue == true) {
+			if (EnemyController->CheckDie() == true)
+				return EBTNodeResult::Failed;
 			EnemyController->MoveToActor(Goal, EnemyRogue->EnemyRogueWeaponRange);
 			EnemyController->DoWalk();
 			return EBTNodeResult::Succeeded;

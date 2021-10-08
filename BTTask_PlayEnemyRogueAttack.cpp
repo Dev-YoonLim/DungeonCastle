@@ -11,6 +11,8 @@ EBTNodeResult::Type UBTTask_PlayEnemyRogueAttack::ExecuteTask(UBehaviorTreeCompo
 
 	if (EnemyController) {
 		EnemyController->StopMovement();
+		if (EnemyController->CheckDie() == true)
+			return EBTNodeResult::Failed;
 		//EnemyController->ClearFocus((EAIFocusPriority::Type)'\002');
 		EnemyController->DoAttack();
 		return EBTNodeResult::Succeeded;

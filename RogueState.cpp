@@ -147,7 +147,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 			SetElementLevelUp();
 		}
 		MyGameMode->StageIndex = LoadGame->StageIndex;
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("LoadStageInitIndex %d"), LoadGame->StageIndex));
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
 		StartWeaponNumber = LoadGame->WeaponNumber;
 		StartWeaponElementNumber = LoadGame->WeaponElemental;
 		StartTorchElementNumber = LoadGame->TorchElemental;
@@ -163,13 +163,18 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 			AttackFormIndex[i] = LoadGame->AttackFormDetail[i];
 		}
 	}
+	else {
+		LoadGame->StageIndex = 0;
+		MyGameMode->StageIndex = LoadGame->StageIndex;
+	}
 }
 
 void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("StageInitIndex %d"), PlayerData->StageIndex));
 		ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		PlayerData->StageIndex = MyGameMode->StageIndex;
+		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
 		PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
 		PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
 		PlayerData->TotalTakeElementalCount = TotalElementCount;
@@ -194,23 +199,17 @@ void ARogueState::SaveGameData() {
 		PlayerData->RogueHp = GetRogueFullHp();
 		PlayerData->RogueData = CurrentData;
 		PlayerData->RogueKarma = CurrentKarma;
-		PlayerData->StageIndex = MyGameMode->StageIndex;
-		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
 		PlayerData->NewGameStart = MyGameMode->NewGameStart;
 		for (int i = 0; i < 3; i++) {
 			PlayerData->AttackForm[i] = AttackForm[i];
 			PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
 		}
 		//PlayerData->LastLocation = myRogue->GetActorLocation();
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
+		GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Orange, FString::Printf(TEXT("SaveStageIndex %d"), PlayerData->StageIndex));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
 		if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
 			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
 		}
-	}
-	else {
-		MyGameMode->StageIndex = 0;
-		PlayerData->StageIndex = MyGameMode->StageIndex;
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("StageInitIndex %d"), PlayerData->StageIndex));
 	}
 }
 
