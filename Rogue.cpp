@@ -843,7 +843,7 @@ bool ARogue::NotRogueDie() {
 
 void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	int32 HitForm = FMath::FRandRange(0, 5);
+	int32 HitForm = FMath::RandRange(0, 5);
 	AEnemyRogueWeapon* EnemyRogueWeapon = Cast<AEnemyRogueWeapon>(OtherActor);
 	GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Blue, FString::Printf(TEXT("RogueHit")));
 	ARogueWeapon* HaveRogueWeapon = Cast<ARogueWeapon>(RogueWeapons->GetChildActor());
@@ -878,11 +878,25 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			TakeHitState(HitForm);
 		}
 	}
+	if (OtherComp->GetCollisionProfileName() == TEXT("DeathZone")) {
+		GetWorldTimerManager().SetTimer(RogueDeathZone, this, &ARogue::DeathZoneDamege, 0.5, true);
+	}
 }
 
 void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
 
+}
+
+void ARogue::DeathZoneDamege() {
+	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(50);
+	TakeHitState(FMath::RandRange(0, 5));
+	if (RogueHp <= 0) {
+		RogueDieState(FMath::RandRange(0, 5));
+		GetWorldTimerManager().SetTimer(RogueDieTimeHandle, this, &ARogue::RogueDie, 2, false, 4);
+		GetCapsuleComponent()->SetCollisionProfileName("Death");
+		GetWorldTimerManager().ClearTimer(RogueDeathZone);
+	}
 }
 
 void ARogue::RogueDie() {

@@ -168,6 +168,7 @@ public:
 
 	void CheckHp(int32 newHp);
 	int32 GetRogueHp() { return RogueHp; }
+	void DeathZoneDamege();
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
 
@@ -226,6 +227,7 @@ public:
 	FTimerHandle RollTimeHandle;
 	FTimerHandle AttackTimeHandle;
 	FTimerHandle RogueDieTimeHandle;
+	FTimerHandle RogueDeathZone;
 
 	USoundCue* TakeHitSoundCue;
 

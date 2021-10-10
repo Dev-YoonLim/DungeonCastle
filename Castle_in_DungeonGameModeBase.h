@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "RogueGameplayStatics.h"
 #include "RogueSaveGame.h"
+#include "Sound/SoundClass.h"
 #include "RogueLevel.h"
 #include "Castle_in_DungeonGameModeBase.generated.h"
 
@@ -331,10 +332,15 @@ public:
 	void TitleBorderAlphaPlus();
 	void GetStageIndex(int32 Index, int32 SubIndex);
 	void LoadGameData(URogueSaveGame* LoadData);
+	void SaveSystemData();
 
 public:
 	UPROPERTY(EditAnywhere)
 		int32 GameStartCheck;
+	UPROPERTY(EditAnywhere)
+		USoundClass* FXSoundClass;
+	UPROPERTY(EditAnywhere)
+		float FXSoundVolumeValue;
 	ARogueLevel* RogueLevel;
 	//ARogueLevel* StartLevel[15];
 	FTransform LevelFloorPoint1[5][5];

@@ -77,6 +77,10 @@ public:
 
 	UPROPERTY()
 		bool DungeonIn;
+
+	UPROPERTY()
+		float FXSoundVolume;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

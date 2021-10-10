@@ -15,6 +15,7 @@
 #include "Components/Border.h"
 #include "Components/Overlay.h"
 #include "Components/CircularThrobber.h"
+#include "Components/Slider.h"
 #include "Sound/SoundCue.h"
 #include "MediaPlayer.h"
 #include "MediaTexture.h"
@@ -40,6 +41,8 @@ protected:
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class USlider* SoundSlider;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UButton* ControllBack;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UTextBlock* Revival;
@@ -52,6 +55,8 @@ public:
 		class UButton* ExitGameButton;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UBorder* TitleBorder;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UButton* Option_Buttons;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -430,6 +435,9 @@ public:
 	UFUNCTION(BlueprintCallable) void TorchElementElectric();
 	UFUNCTION(BlueprintCallable) void SelectElementalButton();
 
+	UFUNCTION(BlueprintCallable) void GetControllOptionMenu();
+	UFUNCTION(BlueprintCallable) void SetSoundVolume(float Value);
+
 		/*UFUNCTION(BlueprintCallable)	   X-Slash");
 			void SlashButtonsFuntion();		   DownUpperCombo"
 		UFUNCTION(BlueprintCallable)		White Fang");
@@ -565,6 +573,8 @@ public:
 	int32 TorchElementalPhase;
 	float RogueOverlapData[6];
 	float* TotalRogueOverlapData[6];
+	UPROPERTY()
+		float VolumeValue;
 	
 	FString* AbilityNames;
 	FButtonStyle NewWeaponAndSkillButton;

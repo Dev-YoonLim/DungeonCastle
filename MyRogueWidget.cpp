@@ -86,6 +86,7 @@ void UMyRogueWidget::PageInit() {
 void UMyRogueWidget::TitleMenuInit() {
 	NewGameButton = Cast<UButton>(GetWidgetFromName(TEXT("NewGameButtons")));
 	ExitGameButton = Cast<UButton>(GetWidgetFromName(TEXT("ExitGameButtons")));
+	Option_Buttons = Cast<UButton>(GetWidgetFromName(TEXT("Option_Button")));
 	if (NewGameButton != nullptr) {
 		NewGameButton->OnClicked.AddDynamic(this, &UMyRogueWidget::GetRogueMain);
 		PageTitle = true;
@@ -93,6 +94,8 @@ void UMyRogueWidget::TitleMenuInit() {
 	}
 	if (ExitGameButton != nullptr)
 		ExitGameButton->OnClicked.AddDynamic(this, &UMyRogueWidget::GetExitGame);
+	if (Option_Buttons != nullptr)
+		Option_Buttons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetControllOptionMenu);
 }
 
 void UMyRogueWidget::TitleInRevivalMenuInit() {
@@ -141,8 +144,13 @@ void UMyRogueWidget::ReSumeMenuInit() {
 
 void UMyRogueWidget::ControllUIInit() {
 	ControllBack = Cast<UButton>(GetWidgetFromName(TEXT("ControllBackButton")));
+	SoundSlider = Cast<USlider>(GetWidgetFromName(TEXT("SoundSlide")));
 	if (ControllBack != nullptr) {
 		ControllBack->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
+	}
+	if (SoundSlider != nullptr) {
+		SoundSlider->SetValue(MyGameMode->FXSoundClass->Properties.Volume);
+		SoundSlider->OnValueChanged.AddDynamic(this, &UMyRogueWidget::SetSoundVolume);
 	}
 }
 
@@ -652,6 +660,11 @@ void UMyRogueWidget::DialogueMenuInit() {
 	Dialogue = Cast<UTextBlock>(GetWidgetFromName(TEXT("NPC_Dialogue")));
 }
 
+void UMyRogueWidget::SetSoundVolume(float Value) {
+	MyGameMode->FXSoundClass->Properties.Volume = Value;
+	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+}
+
 void UMyRogueWidget::GetExitGame() {
 	MyGameMode->StageIndex = 0;
 	MyGameMode->StageSubIndex = 0;
@@ -691,6 +704,10 @@ void UMyRogueWidget::GetRogueMain() {
 	MyGameMode->GetWidgetNumber(-2);
 	//MyGameMode->GetWidgetNumber(1);
 	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(1);
+}
+
+void UMyRogueWidget::GetControllOptionMenu() {
+	MyGameMode->GetWidgetNumber(-3);
 }
 
 void UMyRogueWidget::GetTabMenu() {

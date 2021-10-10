@@ -2,6 +2,7 @@
 
 
 #include "Door.h"
+#include "Rogue.h"
 
 // Sets default values
 ADoor::ADoor()
@@ -56,19 +57,22 @@ void ADoor::OpenInit() {
 	//SelectEntranceNumber = 0.f;
 }
 
-void ADoor::NotifyActorBeginOverlap(AActor* Rougue) {
-	if (DoorWork->getOpen() == false) {
-		DoorWork->setMaxMoveValue(MaxValue);
-		DoorWork->setMoveType(SelectEntranceNumber);
-		if (OpeningState == false) {
-			UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
-			//Vibration->setMoveReady(true);
-			//Vibration->setRadius(0.01f);
-			OpeningState = true;
+void ADoor::NotifyActorBeginOverlap(AActor* OtherActor) {
+	ARogue* Rogue = Cast<ARogue>(OtherActor);
+	if (Rogue) {
+		if (DoorWork->getOpen() == false) {
+			DoorWork->setMaxMoveValue(MaxValue);
+			DoorWork->setMoveType(SelectEntranceNumber);
+			if (OpeningState == false) {
+				UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
+				//Vibration->setMoveReady(true);
+				//Vibration->setRadius(0.01f);
+				OpeningState = true;
+			}
+			//UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
+			//DoorSwitchOne->OnComponentBeginOverlap.AddDynamic(this, &ADoor::EnterBeginOverlap);
+			//DoorSwitchTwo->OnComponentBeginOverlap.AddDynamic(this, &ADoor::NotEnterBeginOverlap);
 		}
-		//UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
-		//DoorSwitchOne->OnComponentBeginOverlap.AddDynamic(this, &ADoor::EnterBeginOverlap);
-		//DoorSwitchTwo->OnComponentBeginOverlap.AddDynamic(this, &ADoor::NotEnterBeginOverlap);
 	}
 }
 

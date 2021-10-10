@@ -17,6 +17,12 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	GameStartCheck = 0;
 	SaveSlotName = TEXT("SaveSlot");
 	//StartSetting();
+
+	auto FXSoundClassAsset = ConstructorHelpers::FObjectFinder<USoundClass>
+		(TEXT("SoundClass'/Game/Sound/FX_SoundClass.FX_SoundClass'"));
+	if (FXSoundClassAsset.Succeeded()) {
+		FXSoundClass = FXSoundClassAsset.Object;
+	}
 	
 
 	auto TitleWidget = ConstructorHelpers::FClassFinder<UMyRogueWidget>
@@ -144,6 +150,8 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
 	StageIndex = LoadGame->StageIndex;
 	StageSubIndex = LoadGame->StageSubIndex;
+	FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("VolumeLoad")));
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 }
 
@@ -646,7 +654,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		}
 	}
 	if (WidgetPageNumber == -3) {
-		Widget_MouseCursorChangedDelegate.ExecuteIfBound(0);
+		Widget_MouseCursorChangedDelegate.ExecuteIfBound(1);
 		if (KeyWidget != nullptr) {
 			KeyWidget->RemoveFromViewport();
 			KeyWidget = nullptr;

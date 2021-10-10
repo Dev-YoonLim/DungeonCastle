@@ -146,6 +146,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
 			SetElementLevelUp();
 		}
+		MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
 		StartWeaponNumber = LoadGame->WeaponNumber;
@@ -173,6 +174,7 @@ void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
 		ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 		PlayerData->StageIndex = MyGameMode->StageIndex;
 		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
 		PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
@@ -1026,13 +1028,13 @@ void ARogueState::DeleteAbility() {
 	TotalElementDataList.Empty();;
 	TotalAttackFormDataList1.Empty();
 	TotalAttackFormDataList2.Empty();
-	LastWeaponDamegeSetting();
-	LastTorchDamegeSetting();
-	LastSpeedSetting();
 	EquipAbilityCount = 0;
 	WeaponNumber = 0;
 	WeaponElementNumber = 0;
 	TorchElementNumber = 0;
+	LastWeaponDamegeSetting();
+	LastTorchDamegeSetting();
+	LastSpeedSetting();
 	MyGameMode->StageIndex = 0;
 	MyGameMode->StageSubIndex = 0;
 	SaveGameData();
