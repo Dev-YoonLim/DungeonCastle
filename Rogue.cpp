@@ -30,6 +30,7 @@ void ARogue::BeginPlay()
 	WeaponTorchDelegateInit();
 	RogueAbilityDelegateInit();
 	WeaponChange();
+	SetFOV(MyGameMode->FOVValue);
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
 }
 
@@ -99,7 +100,12 @@ void ARogue::RogueAbilityDelegateInit(){
 	MyGameMode->RogueSpeedIncreaseDelegate.BindUObject(this, &ARogue::SetMultiplySpeed);
 	MyGameMode->RogueSuperArmorDelegate.BindUObject(this, &ARogue::SuperArmorCheck);
 	MyGameMode->Rogue_SpeedValueDelegate.ExecuteIfBound(Speed * 10);
+	MyGameMode->Call_RogueFOVDelegate.BindUObject(this, &ARogue::SetFOV);
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("ddd %f"), Speed*10));
+}
+
+void ARogue::SetFOV(float NewFOVValue) {
+	RogueView->SetFieldOfView(NewFOVValue);
 }
 
 void ARogue::CheckHp(int32 newHp) {
@@ -187,7 +193,7 @@ void ARogue::RogueViewInit() {
 	ViewArm->AddRelativeRotation(FRotator(90.f, 0, -90.f));
 	RogueView = CreateDefaultSubobject<UCameraComponent>("RogueView");
 	RogueView->AttachToComponent(ViewArm, FAttachmentTransformRules::KeepRelativeTransform);
-	RogueView->SetFieldOfView(100);
+	//RogueView->SetFieldOfView(100.f);
 }
 
 void ARogue::RogueTorchInit() {

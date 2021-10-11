@@ -120,6 +120,7 @@ DECLARE_DELEGATE_OneParam(Call_RogueDamageDelegateSignature, float);
 
 DECLARE_DELEGATE(Call_GameSaveDelegateSignature);
 DECLARE_DELEGATE_OneParam(Call_StageIndexDelegateSignature, int32);
+DECLARE_DELEGATE_OneParam(Call_RogueFOVDelegateSignature, float);
 
 ////------------버그보완
 
@@ -235,6 +236,7 @@ public:
 	Call_RogueDamageDelegateSignature Call_RogueDamageDelegate;
 	Call_GameSaveDelegateSignature Call_GameSaveDelegate;
 	Call_StageIndexDelegateSignature Call_StageIndexDelegate;
+	Call_RogueFOVDelegateSignature Call_RogueFOVDelegate;
 	//Return_GameStartAttackFormNumberDelegateSignature Return_GameStartAttackFormNumberDelegate;
 
 private:
@@ -364,6 +366,7 @@ public:
 	bool TitleBorderAlphaMax = false;
 	float RevivalTextAlphaValue = 0.00f;
 	float TitleBorderAlphaValue = 0.0f;
+	float FOVValue;
 	void RemoveView(int32);
 	bool NewGameStart;
 	FString SaveSlotName;

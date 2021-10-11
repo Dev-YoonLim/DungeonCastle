@@ -169,6 +169,7 @@ public:
 	void CheckHp(int32 newHp);
 	int32 GetRogueHp() { return RogueHp; }
 	void DeathZoneDamege();
+	void SetFOV(float NewFOVValue);
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
 

@@ -15,6 +15,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	WidgetPrePageNumber = 0;
 	WidgetCount = 0;
 	GameStartCheck = 0;
+	//FOVValue = 1.f;
 	SaveSlotName = TEXT("SaveSlot");
 	//StartSetting();
 
@@ -151,7 +152,10 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 	StageIndex = LoadGame->StageIndex;
 	StageSubIndex = LoadGame->StageSubIndex;
 	FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("VolumeLoad")));
+	FOVValue = LoadGame->FOVValue;
+	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("VolumeLoad %f"), FXSoundClass->Properties.Volume));
+	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("FOVLoad %f"), FOVValue));
+	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("SystemLoad")));
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 }
 

@@ -146,7 +146,8 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
 			SetElementLevelUp();
 		}
-		MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
+		//MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
+		//MyGameMode->FOVValue = LoadGame->FOVValue;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
 		StartWeaponNumber = LoadGame->WeaponNumber;
@@ -172,47 +173,49 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 
 void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
-		ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
-		PlayerData->StageIndex = MyGameMode->StageIndex;
-		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
-		PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
-		PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
-		PlayerData->TotalTakeElementalCount = TotalElementCount;
-		PlayerData->TotalAttackFormCount = TotalAttackFormCount;
+	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
+	PlayerData->FOVValue = MyGameMode->FOVValue;
+	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("VolumeSave %f"), PlayerData->FXSoundVolume));
+	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("FOVSave %f"), PlayerData->FOVValue));
+	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	PlayerData->StageIndex = MyGameMode->StageIndex;
+	PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
+	PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
+	PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
+	PlayerData->TotalTakeElementalCount = TotalElementCount;
+	PlayerData->TotalAttackFormCount = TotalAttackFormCount;
 
-		PlayerData->TotalEquipAbilityDataList = TotalEquipAbilityDataList;
-		PlayerData->TotalTakeWeaponDataList = TotalWeaponDataList;
-		PlayerData->TotalTakeElementalDataList = TotalElementDataList;
-		PlayerData->TotalAttackFormDataList1 = TotalAttackFormDataList1;
-		PlayerData->TotalAttackFormDataList2 = TotalAttackFormDataList2;
+	PlayerData->TotalEquipAbilityDataList = TotalEquipAbilityDataList;
+	PlayerData->TotalTakeWeaponDataList = TotalWeaponDataList;
+	PlayerData->TotalTakeElementalDataList = TotalElementDataList;
+	PlayerData->TotalAttackFormDataList1 = TotalAttackFormDataList1;
+	PlayerData->TotalAttackFormDataList2 = TotalAttackFormDataList2;
 
-		PlayerData->WeaponNumber = WeaponNumber;
-		PlayerData->TorchElemental = TorchElementNumber;
-		PlayerData->WeaponElemental = WeaponElementNumber;
-		/*PlayerData->WeaponElemental = WeaponElementNumber;
-		PlayerData->TorchElemental = TorchElementNumber;*/
+	PlayerData->WeaponNumber = WeaponNumber;
+	PlayerData->TorchElemental = TorchElementNumber;
+	PlayerData->WeaponElemental = WeaponElementNumber;
+	/*PlayerData->WeaponElemental = WeaponElementNumber;
+	PlayerData->TorchElemental = TorchElementNumber;*/
 
-		PlayerData->WeaponLevel = WeaponLevel;
-		PlayerData->TorchLevel = TorchLevel;
-		PlayerData->ElementalLevel = ElementLevel;
+	PlayerData->WeaponLevel = WeaponLevel;
+	PlayerData->TorchLevel = TorchLevel;
+	PlayerData->ElementalLevel = ElementLevel;
 
-		PlayerData->RogueHp = GetRogueFullHp();
-		PlayerData->RogueData = CurrentData;
-		PlayerData->RogueKarma = CurrentKarma;
-		PlayerData->NewGameStart = MyGameMode->NewGameStart;
-		for (int i = 0; i < 3; i++) {
-			PlayerData->AttackForm[i] = AttackForm[i];
-			PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
-		}
-		//PlayerData->LastLocation = myRogue->GetActorLocation();
-		GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Orange, FString::Printf(TEXT("SaveStageIndex %d"), PlayerData->StageIndex));
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
-		if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
-		}
+	PlayerData->RogueHp = GetRogueFullHp();
+	PlayerData->RogueData = CurrentData;
+	PlayerData->RogueKarma = CurrentKarma;
+	PlayerData->NewGameStart = MyGameMode->NewGameStart;
+	for (int i = 0; i < 3; i++) {
+		PlayerData->AttackForm[i] = AttackForm[i];
+		PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
 	}
+	//PlayerData->LastLocation = myRogue->GetActorLocation();
+	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Orange, FString::Printf(TEXT("SaveStageIndex %d"), PlayerData->StageIndex));
+	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
+	if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
+	}
+
 }
 
 void ARogueState::Call_RogueStartWeaponNumber() {

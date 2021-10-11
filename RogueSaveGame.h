@@ -81,6 +81,9 @@ public:
 	UPROPERTY()
 		float FXSoundVolume;
 
+	UPROPERTY()
+		float FOVValue;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

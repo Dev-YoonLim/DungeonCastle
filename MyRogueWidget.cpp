@@ -145,6 +145,9 @@ void UMyRogueWidget::ReSumeMenuInit() {
 void UMyRogueWidget::ControllUIInit() {
 	ControllBack = Cast<UButton>(GetWidgetFromName(TEXT("ControllBackButton")));
 	SoundSlider = Cast<USlider>(GetWidgetFromName(TEXT("SoundSlide")));
+	SoundVolumeValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("SoundVolumeValue")));
+	FOVSlider = Cast<USlider>(GetWidgetFromName(TEXT("FOVSlide")));
+	FOVValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("FOVValue")));
 	if (ControllBack != nullptr) {
 		ControllBack->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
 	}
@@ -152,6 +155,20 @@ void UMyRogueWidget::ControllUIInit() {
 		SoundSlider->SetValue(MyGameMode->FXSoundClass->Properties.Volume);
 		SoundSlider->OnValueChanged.AddDynamic(this, &UMyRogueWidget::SetSoundVolume);
 	}
+	if (SoundVolumeValues != nullptr) {
+		//FString ValueString = 
+		FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), SoundSlider->GetValue()));
+		SoundVolumeValues->SetText(ValueText);
+	}
+	if (FOVSlider != nullptr) {
+		FOVSlider->SetValue(MyGameMode->FOVValue/100.f);
+		FOVSlider->OnValueChanged.AddDynamic(this, &UMyRogueWidget::SetFOVVolume);
+	}
+	if (FOVValues != nullptr) {
+		FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), FOVSlider->GetValue()));
+		FOVValues->SetText(ValueText);
+	}
+
 }
 
 void UMyRogueWidget::TabMenuInit() {
@@ -662,6 +679,16 @@ void UMyRogueWidget::DialogueMenuInit() {
 
 void UMyRogueWidget::SetSoundVolume(float Value) {
 	MyGameMode->FXSoundClass->Properties.Volume = Value;
+	FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), SoundSlider->GetValue()));
+	SoundVolumeValues->SetText(ValueText);
+	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+}
+
+void UMyRogueWidget::SetFOVVolume(float Value) {
+	MyGameMode->FOVValue = 100 * Value;
+	MyGameMode->Call_RogueFOVDelegate.ExecuteIfBound(MyGameMode->FOVValue);
+	FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), FOVSlider->GetValue()));
+	FOVValues->SetText(ValueText);
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 }
 

@@ -54,6 +54,8 @@ public:
 
 	float getSelectWeapon() { return WeaponNumber; }
 	void SetSelectWeapon(int32 SelectWeaponNumber);
+
+	int32 SaveCount;
 	
 public:
 	void TorchElementInit();

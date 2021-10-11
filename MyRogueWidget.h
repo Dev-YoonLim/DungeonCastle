@@ -41,6 +41,12 @@ protected:
 	
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* FOVValues;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* SoundVolumeValues;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class USlider* FOVSlider;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class USlider* SoundSlider;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UButton* ControllBack;
@@ -437,6 +443,7 @@ public:
 
 	UFUNCTION(BlueprintCallable) void GetControllOptionMenu();
 	UFUNCTION(BlueprintCallable) void SetSoundVolume(float Value);
+	UFUNCTION(BlueprintCallable) void SetFOVVolume(float Value);
 
 		/*UFUNCTION(BlueprintCallable)	   X-Slash");
 			void SlashButtonsFuntion();		   DownUpperCombo"
