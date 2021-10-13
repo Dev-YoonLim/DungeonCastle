@@ -14,6 +14,7 @@
 #include "Sound/SoundCue.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Castle_in_DungeonGameModeBase.h"
+#include "DeathZone.h"
 #include "Kismet/GameplayStatics.h"
 #include "Rogue.generated.h"
 
@@ -169,6 +170,7 @@ public:
 	void CheckHp(int32 newHp);
 	int32 GetRogueHp() { return RogueHp; }
 	void DeathZoneDamege();
+	void DeathZoneDirectDie();
 	void SetFOV(float NewFOVValue);
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();

@@ -113,62 +113,65 @@ void ARogueState::RogueDataInit() {
 
 void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Load")));
-		ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-		for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
-			int Index = LoadGame->TotalEquipAbilityDataList[i];
-			AbilityRandTake(Index);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
-		}
-		for (int i = 0; i < LoadGame->TotalTakeWeaponCount; i++) {
-			int Index = LoadGame->TotalTakeWeaponDataList[i];
-			WeaponHadCheck(Index);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
-		}
-		for (int i = 0; i < LoadGame->TotalTakeElementalCount; i++) {
-			int Index = LoadGame->TotalTakeElementalDataList[i];
-			ElementalHadCheck(Index);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
-		}
-		for (int i = 0; i < LoadGame->TotalAttackFormCount; i++) {
-			int Index1 = LoadGame->TotalAttackFormDataList1[i];
-			int Index2 = LoadGame->TotalAttackFormDataList2[i];
-			AttackFormHadCheck(Index1, Index2);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
-		}
-		for (int i = 2; i <= LoadGame->WeaponLevel; i++) {
-			SetWeaponLevelUp();
-		}
-		for (int i = 2; i <= LoadGame->TorchLevel; i++) {
-			SetTorchLevelUp();
-		}
-		for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
-			SetElementLevelUp();
-		}
-		//MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
-		//MyGameMode->FOVValue = LoadGame->FOVValue;
-		MyGameMode->StageIndex = LoadGame->StageIndex;
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
-		StartWeaponNumber = LoadGame->WeaponNumber;
-		StartWeaponElementNumber = LoadGame->WeaponElemental;
-		StartTorchElementNumber = LoadGame->TorchElemental;
-		FullMaxHp = LoadGame->RogueHp;
-		RogueHp = LoadGame->RogueHp;
-		CurrentData = LoadGame->RogueData;
-		CurrentKarma = LoadGame->RogueKarma;
-		MyGameMode->NewGameStart = LoadGame->NewGameStart;
-		//MyGameMode->StageIndex = LoadGame->StageNumber;
-		//myRogue->SetActorLocation(LoadGame->LastLocation);
-		for (int i = 0; i < 3; i++) {
-			AttackForm[i] = LoadGame->AttackForm[i];
-			AttackFormIndex[i] = LoadGame->AttackFormDetail[i];
-		}
+	//if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Load")));
+	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
+		int Index = LoadGame->TotalEquipAbilityDataList[i];
+		AbilityRandTake(Index);
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
 	}
-	else {
+	for (int i = 0; i < LoadGame->TotalTakeWeaponCount; i++) {
+		int Index = LoadGame->TotalTakeWeaponDataList[i];
+		WeaponHadCheck(Index);
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+	}
+	for (int i = 0; i < LoadGame->TotalTakeElementalCount; i++) {
+		int Index = LoadGame->TotalTakeElementalDataList[i];
+		ElementalHadCheck(Index);
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+	}
+	for (int i = 0; i < LoadGame->TotalAttackFormCount; i++) {
+		int Index1 = LoadGame->TotalAttackFormDataList1[i];
+		int Index2 = LoadGame->TotalAttackFormDataList2[i];
+		AttackFormHadCheck(Index1, Index2);
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+	}
+	for (int i = 2; i <= LoadGame->WeaponLevel; i++) {
+		SetWeaponLevelUp();
+	}
+	for (int i = 2; i <= LoadGame->TorchLevel; i++) {
+		SetTorchLevelUp();
+	}
+	for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
+		SetElementLevelUp();
+	}
+	//MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
+	//MyGameMode->FOVValue = LoadGame->FOVValue;
+	MyGameMode->StageIndex = LoadGame->StageIndex;
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
+	StartWeaponNumber = LoadGame->WeaponNumber;
+	StartWeaponElementNumber = LoadGame->WeaponElemental;
+	StartTorchElementNumber = LoadGame->TorchElemental;
+	FullMaxHp = LoadGame->RogueHp;
+	RogueHp = LoadGame->RogueHp;
+	CurrentData = LoadGame->RogueData;
+	CurrentKarma = LoadGame->RogueKarma;
+	MyGameMode->NewGameStart = LoadGame->NewGameStart;
+	//MyGameMode->StageIndex = LoadGame->StageNumber;
+	//myRogue->SetActorLocation(LoadGame->LastLocation);
+	for (int i = 0; i < 3; i++) {
+		AttackForm[i] = LoadGame->AttackForm[i];
+		AttackFormIndex[i] = LoadGame->AttackFormDetail[i];
+	}
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) == TEXT("StartMap")) {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}
+	/*else {
+		LoadGame->StageIndex = 0;
+		MyGameMode->StageIndex = LoadGame->StageIndex;
+	}*/
 }
 
 void ARogueState::SaveGameData() {

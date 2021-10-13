@@ -5,6 +5,7 @@
 #include "EnemyRogue.h"
 #include "EnemyRogueWeapon.h"
 #include "RogueWeapon.h"
+
 // Sets default values
 ARogue::ARogue()
 {
@@ -885,7 +886,11 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		}
 	}
 	if (OtherComp->GetCollisionProfileName() == TEXT("DeathZone")) {
-		GetWorldTimerManager().SetTimer(RogueDeathZone, this, &ARogue::DeathZoneDamege, 0.5, true);
+		ADeathZone* DeathZone = Cast<ADeathZone>(OtherActor);
+		if (DeathZone->DeathZoneNumber == 1)
+			GetWorldTimerManager().SetTimer(RogueDeathZone, this, &ARogue::DeathZoneDamege, 0.5, true);
+		else if (DeathZone->DeathZoneNumber == 0)
+			DeathZoneDirectDie();
 	}
 }
 
@@ -903,6 +908,14 @@ void ARogue::DeathZoneDamege() {
 		GetCapsuleComponent()->SetCollisionProfileName("Death");
 		GetWorldTimerManager().ClearTimer(RogueDeathZone);
 	}
+}
+
+void ARogue::DeathZoneDirectDie() {
+	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(9999);
+	RogueDieState(FMath::RandRange(0, 5));
+	GetWorldTimerManager().SetTimer(RogueDieTimeHandle, this, &ARogue::RogueDie, 2, false, 4);
+	GetCapsuleComponent()->SetCollisionProfileName("Death");
+	GetWorldTimerManager().ClearTimer(RogueDeathZone);
 }
 
 void ARogue::RogueDie() {

@@ -28,4 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* DeathBox;
 
+	UPROPERTY(EditAnywhere)
+		int32 DeathZoneNumber;
+
 };
