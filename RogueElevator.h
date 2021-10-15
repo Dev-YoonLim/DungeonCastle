@@ -61,6 +61,7 @@ public:
 	USoundCue* StartStopSound;
 	USoundCue* MoveSound;
 	UAudioComponent* MoveSoundComponent;
+	//UAudioComponent* StartStopSoundComponent;
 
 	UPROPERTY(EditAnywhere)
 		USceneComponent* Root;

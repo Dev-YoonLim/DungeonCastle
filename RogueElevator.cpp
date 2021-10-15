@@ -58,7 +58,7 @@ bool ARogueElevator::ElevatorStopState() {
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, (TEXT("Stop")));
 		Upfloor = true;
 		Stop = true;
-		UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, Elevator->GetComponentLocation());
 		MoveSoundComponent->Stop();
 		//UGameplayStatics::
 		MoveStart = true;
@@ -67,7 +67,7 @@ bool ARogueElevator::ElevatorStopState() {
 	else if (Elevator->GetRelativeLocation().Z <= DownStopZone->GetRelativeLocation().Z) {
 		Upfloor = false;
 		Stop = true;
-		UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, Elevator->GetComponentLocation());
 		MoveSoundComponent->Stop();
 		MoveStart = true;
 		//setElevatorSpeed(0.f);
@@ -80,7 +80,7 @@ bool ARogueElevator::ElevatorStopState() {
 void ARogueElevator::ElevatorMove() {
 	if (Move == true) {
 		if (MoveStart == true) {
-			UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, GetActorLocation());
+			UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, Elevator->GetComponentLocation());
 			MoveSoundComponent->Play();
 			//UGameplayStatics::PlaySoundAtLocation(this, MoveSoundComponent->Sound, GetActorLocation());
 			MoveStart = false;
@@ -133,6 +133,7 @@ void ARogueElevator::Elevatorinit() {
 	DownStopZone = CreateDefaultSubobject<USceneComponent>("DownStopZone");
 	Vibrations = CreateDefaultSubobject<UVibration>("Vibrations");
 	MoveSoundComponent = CreateDefaultSubobject<UAudioComponent>("MoveSound");
+	//StartStopSoundComponent = CreateDefaultSubobject<UAudioComponent>("StartStopSound");
 	auto ElevatorAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
 		(TEXT("StaticMesh'/Game/LevelVehicle/Elevator.Elevator'"));
 
@@ -144,6 +145,7 @@ void ARogueElevator::Elevatorinit() {
 	DownStopZone->AttachToComponent(Root, FAttachmentTransformRules::KeepRelativeTransform);
 	Elevator->AttachToComponent(Root, FAttachmentTransformRules::KeepRelativeTransform);
 	MoveSoundComponent->AttachToComponent(Elevator, FAttachmentTransformRules::KeepRelativeTransform);
+	//StartStopSoundComponent->AttachToComponent(Elevator, FAttachmentTransformRules::KeepRelativeTransform);
 	Elevator->SetCollisionProfileName(TEXT("BlockAll"));
 
 	auto StartSoundAsset = ConstructorHelpers::FObjectFinder<USoundCue>

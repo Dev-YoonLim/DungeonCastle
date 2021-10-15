@@ -880,18 +880,18 @@ void ACastle_in_DungeonGameModeBase::LevelLoading() {
 			LevelFloorCheck1[i][j] = true;
 		}
 	}
-	for (StageCount = 0; StageCount < 15; StageCount++) {
+	//for (StageCount = 0; StageCount < 15; StageCount++) {
 		LevelFloorCheck1[StageX][StageY] = false;
 		RogueLevel = GetWorld()->SpawnActor<ARogueLevel>
 			(ARogueLevel::StaticClass(), LevelFloorPoint1[StageX][StageY]);		
 		LevelFloorCheck();
-		if(StageCount == 0)
-			RogueLevel->DoorGuard(NextDirection, NextDirectionIndex, PreDirection, PreDirectionIndex, true);
-		else
-			RogueLevel->DoorGuard(NextDirection, NextDirectionIndex, PreDirection, PreDirectionIndex, false);
+		//if(StageCount == 0)
+		RogueLevel->DoorGuard(NextDirection, NextDirectionIndex, PreDirection, PreDirectionIndex, true);
+		//else
+			//RogueLevel->DoorGuard(NextDirection, NextDirectionIndex, PreDirection, PreDirectionIndex, false);
 		
 		//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Blue, FString::Printf(TEXT("Level : %d, %d"), StageX, StageY));
-	}
+	//}
 }
 
 void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {
@@ -924,12 +924,12 @@ void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {
 			NextStageDirection[3] = false;
 	}
 	int32 SelectDirection = FMath::FRandRange(0, 3);
-	while (NextStageDirection[SelectDirection] == false) {
+	/*while (NextStageDirection[SelectDirection] == false) {
 		SelectDirection = FMath::FRandRange(0, 3);
 		if (NextStageDirection[0] == false && NextStageDirection[1] == false
 			&& NextStageDirection[2] == false && NextStageDirection[3] == false)
 			break;
-	}
+	}*/
 	if (StageCount != 0) {
 		if (NextDirection == 0)
 			PreDirection = 2;

@@ -34,5 +34,6 @@ public:
 	UStaticMeshComponent* LevelFloorStaticMeshComp;
 	UStaticMeshComponent* FloorDoorGuard[10];
 	FVector DoorGuardFosition[4][3];
+	UChildActorComponent* EndPointActor;
 	//ANavMeshBoundsVolume* NaviMeshComp;
 };

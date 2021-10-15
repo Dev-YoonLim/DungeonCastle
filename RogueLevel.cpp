@@ -2,6 +2,7 @@
 
 
 #include "RogueLevel.h"
+#include "DungeonEnd.h"
 
 // Sets default values
 ARogueLevel::ARogueLevel()
@@ -53,12 +54,29 @@ void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 Pre
 				FloorDoorGuard[GuardCount]->SetRelativeLocation(DoorGuardFosition[i][j]);
 				if (i == 1)
 					FloorDoorGuard[GuardCount]->SetRelativeRotation(FRotator(0, 90, 0));
-				if (i == 2)
+				else if (i == 2)
 					FloorDoorGuard[GuardCount]->SetRelativeRotation(FRotator(0, 180, 0));
-				if (i == 3)
+				else if (i == 3)
 					FloorDoorGuard[GuardCount]->SetRelativeRotation(FRotator(0, 270, 0));
 				if (GuardCount < 9)
 					GuardCount++;
+			}
+			else if((i == NextDirection && j == DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)){
+				if (i == 0) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-2600 + j * 3000, -3900, 150));
+				}
+				//DoorGuardFosition[i][j] = GetActorLocation() + FVector(-2700 + j * 3000, -3900, 150);
+				else if (i == 1) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3900, -2600 + j * 3000, 150));
+					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
+				}
+				else if (i == 2) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3200 + j * 3000, 3900, 150));
+				}
+				else if (i == 3) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3900, -3200 + j * 3000, 150));
+					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
+				}
 			}
 		}
 	}
@@ -94,6 +112,13 @@ void ARogueLevel::LevelFloorInit() {
 			FloorDoorGuard[i]->SetStaticMesh(DoorGuard.Object);
 			FloorDoorGuard[i]->AttachToComponent(LevelFloorStaticMeshComp, FAttachmentTransformRules::KeepRelativeTransform);
 		}
+	}
+
+	EndPointActor = CreateDefaultSubobject<UChildActorComponent>("EndPoint");
+	auto EndPointAsset = ConstructorHelpers::FClassFinder<ADungeonEnd>
+		(TEXT("Class'/Script/Castle_in_Dungeon.DungeonEnd'"));
+	if (EndPointAsset.Succeeded()) {
+		EndPointActor->SetChildActorClass(EndPointAsset.Class);
 	}
 	//NaviMeshComp = CreateDefaultSubobject<ANavMeshBoundsVolume>("NavMesh");
 	//NaviMeshComp->SetActorScale3D()
