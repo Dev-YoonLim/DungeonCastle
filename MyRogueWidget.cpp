@@ -157,7 +157,7 @@ void UMyRogueWidget::ControllUIInit() {
 	}
 	if (SoundVolumeValues != nullptr) {
 		//FString ValueString = 
-		FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), SoundSlider->GetValue()));
+		FText ValueText = FText::FromString(FString::Printf(TEXT("%.0f"), SoundSlider->GetValue()*100.f/3.f));
 		SoundVolumeValues->SetText(ValueText);
 	}
 	if (FOVSlider != nullptr) {
@@ -165,7 +165,7 @@ void UMyRogueWidget::ControllUIInit() {
 		FOVSlider->OnValueChanged.AddDynamic(this, &UMyRogueWidget::SetFOVVolume);
 	}
 	if (FOVValues != nullptr) {
-		FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), FOVSlider->GetValue()));
+		FText ValueText = FText::FromString(FString::Printf(TEXT("%.0f"), FOVSlider->GetValue()*100.f));
 		FOVValues->SetText(ValueText);
 	}
 
@@ -679,7 +679,7 @@ void UMyRogueWidget::DialogueMenuInit() {
 
 void UMyRogueWidget::SetSoundVolume(float Value) {
 	MyGameMode->FXSoundClass->Properties.Volume = Value;
-	FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), SoundSlider->GetValue()));
+	FText ValueText = FText::FromString(FString::Printf(TEXT("%.0f"), SoundSlider->GetValue() * 100.f / 3.f));
 	SoundVolumeValues->SetText(ValueText);
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 }
@@ -687,7 +687,7 @@ void UMyRogueWidget::SetSoundVolume(float Value) {
 void UMyRogueWidget::SetFOVVolume(float Value) {
 	MyGameMode->FOVValue = 100 * Value;
 	MyGameMode->Call_RogueFOVDelegate.ExecuteIfBound(MyGameMode->FOVValue);
-	FText ValueText = FText::FromString(FString::Printf(TEXT("%f"), FOVSlider->GetValue()));
+	FText ValueText = FText::FromString(FString::Printf(TEXT("%.0f"), FOVSlider->GetValue() * 100.f));
 	FOVValues->SetText(ValueText);
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 }
@@ -712,6 +712,7 @@ void UMyRogueWidget::GetTitleMenu() {
 void UMyRogueWidget::GetNewGame() {
 	MyGameMode->StageIndex = 0;
 	MyGameMode->StageSubIndex = 0;
+	MyGameMode->WidgetCount = 0;
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 	MyGameMode->GetWidgetNumber(-2);
 	//이거 나중에 초기값스타트 정보 들어가야함

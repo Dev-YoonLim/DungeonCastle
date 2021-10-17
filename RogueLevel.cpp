@@ -63,18 +63,18 @@ void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 Pre
 			}
 			else if((i == NextDirection && j == DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)){
 				if (i == 0) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-2600 + j * 3000, -3900, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-2400 + j * 3000, -3900, 150));
 				}
 				//DoorGuardFosition[i][j] = GetActorLocation() + FVector(-2700 + j * 3000, -3900, 150);
 				else if (i == 1) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3900, -2600 + j * 3000, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3900, -2400 + j * 3000, 150));
 					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
 				}
 				else if (i == 2) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3200 + j * 3000, 3900, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, 3900, 150));
 				}
 				else if (i == 3) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3900, -3200 + j * 3000, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3900, -3000 + j * 3000, 150));
 					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
 				}
 			}

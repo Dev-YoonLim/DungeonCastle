@@ -150,9 +150,10 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	//MyGameMode->FOVValue = LoadGame->FOVValue;
 	MyGameMode->StageIndex = LoadGame->StageIndex;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
-	StartWeaponNumber = LoadGame->WeaponNumber;
-	StartWeaponElementNumber = LoadGame->WeaponElemental;
-	StartTorchElementNumber = LoadGame->TorchElemental;
+	WeaponNumber = LoadGame->WeaponNumber;
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("LoadWeapon %d"), WeaponNumber));
+	WeaponElementNumber = LoadGame->WeaponElemental;
+	TorchElementNumber = LoadGame->TorchElemental;
 	FullMaxHp = LoadGame->RogueHp;
 	RogueHp = LoadGame->RogueHp;
 	CurrentData = LoadGame->RogueData;
@@ -195,6 +196,7 @@ void ARogueState::SaveGameData() {
 	PlayerData->TotalAttackFormDataList2 = TotalAttackFormDataList2;
 
 	PlayerData->WeaponNumber = WeaponNumber;
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("SaveWeapon %d"), WeaponNumber));
 	PlayerData->TorchElemental = TorchElementNumber;
 	PlayerData->WeaponElemental = WeaponElementNumber;
 	/*PlayerData->WeaponElemental = WeaponElementNumber;
@@ -222,11 +224,13 @@ void ARogueState::SaveGameData() {
 }
 
 void ARogueState::Call_RogueStartWeaponNumber() {
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("AttackInit")));
-	WeaponNumber = StartWeaponNumber;
-	WeaponElementNumber = StartWeaponElementNumber;
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("WeaponInit")));
+	//WeaponNumber = StartWeaponNumber;
+	//WeaponElementNumber = StartWeaponElementNumber;
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("CheckWeaponF %d"), WeaponNumber));
 	MyGameMode->Return_WeaponChangeDelegate.ExecuteIfBound(WeaponNumber);
 	MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(WeaponElementNumber, ElementLevelValue);
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("CheckWeaponS %d"), WeaponNumber));
 	SaveGameData();
 	//MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(StartWeaponElementNumber, ElementLevelValue);
 	/*WeaponNumber = FMath::FRandRange(0, 9);
@@ -237,7 +241,7 @@ void ARogueState::Call_RogueStartWeaponNumber() {
 }
 
 void ARogueState::Call_RogueStartTorchElementalNumber() {
-	TorchElementNumber = StartTorchElementNumber;
+	//TorchElementNumber = StartTorchElementNumber;
 	MyGameMode->TorchElementChangeDelegate_.ExecuteIfBound(TorchElementNumber, ElementLevelValue);
 	SaveGameData();
 }

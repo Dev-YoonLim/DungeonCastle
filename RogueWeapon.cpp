@@ -21,11 +21,12 @@ ARogueWeapon::ARogueWeapon()
 void ARogueWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("CheckSelectWeaponF %d"), SelectWeaponNumber));
 	WorldRogueInit();
 	WorldGameModeInit();
 	WeaponDelegate();
 	//WeaponNumberChange();
-	WeaponChangeElement(0, 1.f);
+	//WeaponChangeElement(0, 1.f);
 	//WeaponNumberChange(myRogueState->StartWeaponNumber);
 	MyGameMode->Call_GameStartWeaponNumberDelegate.ExecuteIfBound();
 }
@@ -232,6 +233,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		
 		WeaponSynergy(0.2f, 0.f, 1.5f);
 	}
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Yellow, TEXT("StartingCheck"));
 	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, ElementPer);
 	MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
 	MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();

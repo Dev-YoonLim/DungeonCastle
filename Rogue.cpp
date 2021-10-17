@@ -855,7 +855,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Blue, FString::Printf(TEXT("RogueHit")));
 	ARogueWeapon* HaveRogueWeapon = Cast<ARogueWeapon>(RogueWeapons->GetChildActor());
 	
-	if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueWeaponCollision")&& EnemyRogueWeapon->GetTakeHit() == true) {
+	if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueWeaponCollision") && EnemyRogueWeapon->GetTakeHit() == true) {
 		TakeHitOn = true;
 		GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Yellow, FString::Printf(TEXT("RogueHit")));
 		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(EnemyRogueWeapon->EnemyWeaponDamage*30);
@@ -891,6 +891,15 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			GetWorldTimerManager().SetTimer(RogueDeathZone, this, &ARogue::DeathZoneDamege, 0.5, true);
 		else if (DeathZone->DeathZoneNumber == 0)
 			DeathZoneDirectDie();
+	}
+	if (OtherComp->GetCollisionProfileName() == TEXT("DungeonEnd")) {
+
+		MyGameMode->StageIndex = 0;
+		MyGameMode->StageSubIndex = 0;
+		MyGameMode->WidgetCount = 0;
+		MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+		MyGameMode->GetWidgetNumber(-2);
+		//ADungeonEnd* DungeonEnd = Cast<ADungeonEnd>(OtherActor);
 	}
 }
 

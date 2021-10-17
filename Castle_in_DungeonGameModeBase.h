@@ -240,11 +240,6 @@ public:
 	//Return_GameStartAttackFormNumberDelegateSignature Return_GameStartAttackFormNumberDelegate;
 
 private:
-	int32 WidgetPageNumber;
-	int32 WidgetPrePageNumber;
-	TSubclassOf<UUserWidget> WidgetStack[100];
-	int32 WidgetStackNumber[100];
-	int32 WidgetCount;
 	bool TitleWidgetState;
 	bool MainWidgetState;
 	bool ReSumeWidgetState;
@@ -317,6 +312,11 @@ private:
 
 
 public:
+	int32 WidgetPageNumber;
+	int32 WidgetPrePageNumber;
+	TSubclassOf<UUserWidget> WidgetStack[100];
+	int32 WidgetStackNumber[100];
+	int32 WidgetCount;
 	URogueGameplayStatics* RogueGameplayStatics;
 	void ChangedWidget(TSubclassOf<UUserWidget> NewWidgetclass);
 	void GetWidgetNumber(int32 PageNumber);
