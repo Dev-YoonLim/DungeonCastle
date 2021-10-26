@@ -84,6 +84,9 @@ public:
 	UPROPERTY()
 		float FOVValue;
 
+	UPROPERTY()
+		int32 StoryProgress[3];
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

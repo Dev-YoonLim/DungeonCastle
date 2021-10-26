@@ -32,7 +32,7 @@ void ARogueState::AbilityInit() {
 	TorchElementCriper = 1.f;
 	TorchBurnAttackSynergy = 1.f;
 	UseDataValuePercent = 1.f;
-	CurrentData = 1000;
+	CurrentData = 300;
 	SlashIncreaseValue = 1.f;
 	BreakIncreaseValue = 1.f;
 	StabIncreaseValue = 1.f;
@@ -213,6 +213,7 @@ void ARogueState::SaveGameData() {
 	for (int i = 0; i < 3; i++) {
 		PlayerData->AttackForm[i] = AttackForm[i];
 		PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
+		PlayerData->StoryProgress[i] = MyGameMode->StoryProgress[i];
 	}
 	//PlayerData->LastLocation = myRogue->GetActorLocation();
 	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Orange, FString::Printf(TEXT("SaveStageIndex %d"), PlayerData->StageIndex));
@@ -313,14 +314,16 @@ void ARogueState::SetStaticRogueData(int32 UseDataValue) {
 	CurrentData -= UseDataValue;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current StaticData : %d"), CurrentData));
 	MyGameMode->Widget_GetRogueDataDelegate.ExecuteIfBound(CurrentData);
-	MyGameMode->MainUIUpdate();
+	if(MyGameMode->MainWidgetState == true)
+		MyGameMode->MainUIUpdate();
 }
 
 void ARogueState::SetDynamicRogueData(int32 UseDataValue) {
 	CurrentData -= UseDataValue * UseDataValuePercent;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current DynamicData : %d"), CurrentData));
 	MyGameMode->Widget_GetRogueDataDelegate.ExecuteIfBound(CurrentData);
-	MyGameMode->MainUIUpdate();
+	if (MyGameMode->MainWidgetState == true)
+		MyGameMode->MainUIUpdate();
 
 }
 
@@ -337,7 +340,7 @@ void ARogueState::SetPlusCurrentKarma(int32 newKarma) {
 }
 
 void ARogueState::DataInit() {
-	CurrentData = 1000;
+	CurrentData = 300;
 }
 void ARogueState::KarmaInit() {
 	CurrentKarma = 100;

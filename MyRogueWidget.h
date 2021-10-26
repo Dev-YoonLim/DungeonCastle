@@ -344,6 +344,8 @@ public:
 		class UImage* AbilityIcon3;
 	UPROPERTY()
 		class UImage* AbilityIcon4;
+	UPROPERTY()
+		class UTextBlock* NowDatas;
 
 
 
@@ -520,6 +522,7 @@ public:
 	int32 RogueData;
 	int32 RogueKarma;
 	float RogueStatData[16];
+	float AbilityCost = 1.f;
 
 public:
 	FString RogueHpString;

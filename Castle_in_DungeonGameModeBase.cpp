@@ -153,6 +153,8 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 	StageSubIndex = LoadGame->StageSubIndex;
 	FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
 	FOVValue = LoadGame->FOVValue;
+	for(int i = 0; i < 3; i ++)
+		StoryProgress[i] = LoadGame->StoryProgress[i];
 	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("VolumeLoad %f"), FXSoundClass->Properties.Volume));
 	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("FOVLoad %f"), FOVValue));
 	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("SystemLoad")));

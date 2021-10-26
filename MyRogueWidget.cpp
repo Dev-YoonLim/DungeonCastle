@@ -120,8 +120,8 @@ void UMyRogueWidget::MainMenuInit() {
 	if (RogueHPValue != nullptr && RogueDataValue != nullptr && RogueKarmaValue != nullptr) {
 		PageMain = true;
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
+		//GetRogueHpVlaue, GetRogueDataValue, GetRogueKarmaValue
 	}
-
 }
 
 void UMyRogueWidget::ReSumeMenuInit() {
@@ -238,6 +238,7 @@ void UMyRogueWidget::EquipMenuInit() {
 		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
 		for (int i = 0; i <= AbilityLastIndex; i++) {
 			GetRogueAbilityList(i, AbilityNames[i]);
+
 		}
 		PageMain = false;
 	}
@@ -537,8 +538,10 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 	AbilityIcon2 = Cast<UImage>(GetWidgetFromName(TEXT("ClassIcon2")));
 	AbilityIcon3 = Cast<UImage>(GetWidgetFromName(TEXT("ClassIcon3")));
 	AbilityIcon4 = Cast<UImage>(GetWidgetFromName(TEXT("ClassIcon4")));
+	NowDatas = Cast<UTextBlock>(GetWidgetFromName(TEXT("NowData")));
 
 	if (AddAbilityBackButton != nullptr) {
+		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 		MyGameMode->Widget_CallStatWidgetDelegate.ExecuteIfBound();
 		for (int i = 0; i < 4; i++) {
 			int32 RandAbilityIndex = FMath::FRandRange(0, 32);
@@ -624,6 +627,8 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 			}
 			SelectAbilityIndex[i] = RandAbilityIndex;
 		}
+		RogueDataString = FString::Printf(TEXT("%d"), RogueData);
+		NowDatas->SetText(FText::FromString(RogueDataString));
 		SelectAbilityName1->SetText(FText::FromString(RogueSelectAbilityString[0]));
 		SelectAbilityName2->SetText(FText::FromString(RogueSelectAbilityString[1]));
 		SelectAbilityName3->SetText(FText::FromString(RogueSelectAbilityString[2]));
@@ -645,6 +650,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
 		for (int i = 0; i <= AbilityLastIndex; i++) {
 			GetRogueAbilityList(i, AbilityNames[i]);
+			AbilityCost *= 1.01;
 		}
 		PageMain = false;
 	}
@@ -770,6 +776,11 @@ void UMyRogueWidget::GetChangedAttackFormMenu() {
 	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(9);
 }
 void UMyRogueWidget::GetAddAbilityMenu() {
+	MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
+	if (RogueData >= 100)
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(100.f);
+	else if (RogueData < 100)
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(RogueData);
 	MyGameMode->GetWidgetNumber(10);
 	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 }
@@ -1377,8 +1388,8 @@ void UMyRogueWidget::SetAttackForm(int32 Form, int32 FormIndex) {
 	for (int i = 0; i < 3; i++) {
 		AttackSource[i] = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 			RogueEquipmentAttackFormString[i]));
-		AttackFormTexture[i]->SetMediaPlayer(AttackFormPlayer[i]);
-		AttackFormPlayer[i]->OpenSource(AttackSource[i]);
+		//AttackFormTexture[i]->SetMediaPlayer(AttackFormPlayer[i]);
+		//AttackFormPlayer[i]->OpenSource(AttackSource[i]);
 		//AttackFormPlayer[i]->Play();
 
 	}
@@ -1765,111 +1776,127 @@ void UMyRogueWidget::GetSpecialList() {
 }
 void UMyRogueWidget::GetSelectRogueAbilityOne() {
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz %d"), SelectAbilityIndex[0]));
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz2")));
-	if (SelectAbilityIndex[0] <= 23) {
-		MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[0]);
-		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+	if (RogueData > AbilityCost * 100.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+		AbilityCost = 1.f;
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz2")));
+		if (SelectAbilityIndex[0] <= 23) {
+			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[0]);
+			MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+		}
+		else if (SelectAbilityIndex[0] == 24 || SelectAbilityIndex[0] == 25) {
+			MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[0]);
+		}
+		else if (SelectAbilityIndex[0] == 26) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[0]);
+		}
+		else if (SelectAbilityIndex[0] == 27) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[0]);
+		}
+		else if (SelectAbilityIndex[0] == 28) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[0]);
+		}
+		else if (SelectAbilityIndex[0] == 29) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[0]);
+		}
+		else if (SelectAbilityIndex[0] == 30 || SelectAbilityIndex[0] == 31) {
+			MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[0]);
+		}
+		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 	}
-	else if (SelectAbilityIndex[0] == 24 || SelectAbilityIndex[0] == 25 ) {
-		MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[0]);
-	}
-	else if (SelectAbilityIndex[0] == 26) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[0]);
-	}
-	else if (SelectAbilityIndex[0] == 27) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[0]);
-	}
-	else if (SelectAbilityIndex[0] == 28) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[0]);
-	}
-	else if (SelectAbilityIndex[0] == 29) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[0]);
-	}
-	else if (SelectAbilityIndex[0] == 30 || SelectAbilityIndex[0] == 31) {
-		MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[0]);
-	}
-	MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityTwo() {
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
-	if (SelectAbilityIndex[1] <= 23) {
-		MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[1]);
-		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+	if (RogueData > AbilityCost * 100.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+		AbilityCost = 1.f;
+		if (SelectAbilityIndex[1] <= 23) {
+			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[1]);
+			MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+		}
+		else if (SelectAbilityIndex[1] == 24 || SelectAbilityIndex[1] == 25) {
+			MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[1]);
+		}
+		else if (SelectAbilityIndex[1] == 26) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[1]);
+		}
+		else if (SelectAbilityIndex[1] == 27) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[1]);
+		}
+		else if (SelectAbilityIndex[1] == 28) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[1]);
+		}
+		else if (SelectAbilityIndex[1] == 29) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[1]);
+		}
+		else if (SelectAbilityIndex[1] == 30 || SelectAbilityIndex[1] == 31) {
+			MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[1]);
+		}
+		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 	}
-	else if (SelectAbilityIndex[1] == 24 || SelectAbilityIndex[1] == 25) {
-		MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[1]);
-	}
-	else if (SelectAbilityIndex[1] == 26) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[1]);
-	}
-	else if (SelectAbilityIndex[1] == 27) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[1]);
-	}
-	else if (SelectAbilityIndex[1] == 28) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[1]);
-	}
-	else if (SelectAbilityIndex[1] == 29) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[1]);
-	}
-	else if (SelectAbilityIndex[1] == 30 || SelectAbilityIndex[1] == 31) {
-		MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[1]);
-	}
-	MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityThree() {
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
-	if (SelectAbilityIndex[2] <= 23) {
-		MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[2]);
-		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+	if (RogueData > AbilityCost * 100.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+		AbilityCost = 1.f;
+		if (SelectAbilityIndex[2] <= 23) {
+			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[2]);
+			MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+		}
+		else if (SelectAbilityIndex[2] == 24 || SelectAbilityIndex[2] == 25) {
+			MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[2]);
+		}
+		else if (SelectAbilityIndex[2] == 26) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[2]);
+		}
+		else if (SelectAbilityIndex[2] == 27) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[2]);
+		}
+		else if (SelectAbilityIndex[2] == 28) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[2]);
+		}
+		else if (SelectAbilityIndex[2] == 29) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[2]);
+		}
+		else if (SelectAbilityIndex[2] == 30 || SelectAbilityIndex[2] == 31) {
+			MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[2]);
+		}
+		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 	}
-	else if (SelectAbilityIndex[2] == 24 || SelectAbilityIndex[2] == 25) {
-		MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[2]);
-	}
-	else if (SelectAbilityIndex[2] == 26) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[2]);
-	}
-	else if (SelectAbilityIndex[2] == 27) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[2]);
-	}
-	else if (SelectAbilityIndex[2] == 28) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[2]);
-	}
-	else if (SelectAbilityIndex[2] == 29) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[2]);
-	}
-	else if (SelectAbilityIndex[2] == 30 || SelectAbilityIndex[2] == 31) {
-		MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[2]);
-	}
-	MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityFour() {
-	if (SelectAbilityIndex[3] <= 23) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
-		MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[3]);
-		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+	if (RogueData > AbilityCost * 100.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+		AbilityCost = 1.f;
+		if (SelectAbilityIndex[3] <= 23) {
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
+			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[3]);
+			MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
+		}
+		else if (SelectAbilityIndex[3] == 24 || SelectAbilityIndex[3] == 25) {
+			MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[3]);
+		}
+		else if (SelectAbilityIndex[3] == 26) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[3]);
+		}
+		else if (SelectAbilityIndex[3] == 27) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[3]);
+		}
+		else if (SelectAbilityIndex[3] == 28) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[3]);
+		}
+		else if (SelectAbilityIndex[3] == 29) {
+			MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[3]);
+		}
+		else if (SelectAbilityIndex[3] == 30 || SelectAbilityIndex[3] == 31) {
+			MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[3]);
+		}
+		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 	}
-	else if (SelectAbilityIndex[3] == 24 || SelectAbilityIndex[3] == 25) {
-		MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(AbilityRandIndex[3]);
-	}
-	else if (SelectAbilityIndex[3] == 26) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(0, AbilityRandIndex[3]);
-	}
-	else if (SelectAbilityIndex[3] == 27) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(1, AbilityRandIndex[3]);
-	}
-	else if (SelectAbilityIndex[3] == 28) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(2, AbilityRandIndex[3]);
-	}
-	else if (SelectAbilityIndex[3] == 29) {
-		MyGameMode->Call_RogueHavingAttackFormCheckDelegate.ExecuteIfBound(3, AbilityRandIndex[3]);
-	}
-	else if (SelectAbilityIndex[3] == 30 || SelectAbilityIndex[3] == 31) {
-		MyGameMode->Call_RogueHavingElementalCheckDelegate.ExecuteIfBound(AbilityRandIndex[3]);
-	}
-	MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
 }
 
 void UMyRogueWidget::GetDialogue(FString* DialogueData, int32 DialogueIndex) {

@@ -239,7 +239,7 @@ public:
 	Call_RogueFOVDelegateSignature Call_RogueFOVDelegate;
 	//Return_GameStartAttackFormNumberDelegateSignature Return_GameStartAttackFormNumberDelegate;
 
-private:
+public:
 	bool TitleWidgetState;
 	bool MainWidgetState;
 	bool ReSumeWidgetState;
@@ -309,8 +309,6 @@ private:
 	TSubclassOf<UUserWidget> DialogueWidgetClass;
 	class UMyRogueWidget* DialogueWidget;
 
-
-
 public:
 	int32 WidgetPageNumber;
 	int32 WidgetPrePageNumber;
@@ -370,4 +368,7 @@ public:
 	void RemoveView(int32);
 	bool NewGameStart;
 	FString SaveSlotName;
+
+	int32 StoryProgress[3];
+	int32 SpecialStoryProgress[3];
 };
