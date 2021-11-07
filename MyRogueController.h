@@ -42,6 +42,7 @@ public:
 	void OnReSumeWidget();
 	void OnTabWidget();
 	void NotControll();
+	void TurnDialogueWindow();
 
 public:
 	APawn* myPawn;

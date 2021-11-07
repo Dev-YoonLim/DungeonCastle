@@ -66,6 +66,7 @@ void AMyRogueController::AxisMapping(UPlayerInput* PlayerInputControll) {
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Stat", EKeys::T));
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("ESC", EKeys::Escape));
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Tab", EKeys::Tab));
+	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("F", EKeys::F));
 
 }
 
@@ -73,7 +74,12 @@ void AMyRogueController::BindAxis_func() {
 	InputComponent->BindAction("Stat", IE_Pressed, this, &AMyRogueController::OnStatWidget);
 	InputComponent->BindAction("ESC", IE_Pressed, this, &AMyRogueController::OnReSumeWidget);
 	InputComponent->BindAction("Tab", IE_Pressed, this, &AMyRogueController::OnTabWidget);
+	InputComponent->BindAction("F", IE_Pressed, this, &AMyRogueController::TurnDialogueWindow);
+}
 
+void AMyRogueController::TurnDialogueWindow() {
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("FCheck")));
+	myRogue->FrontDialogueWindow();
 }
 
 void AMyRogueController::OnStatWidget() {

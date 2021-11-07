@@ -599,6 +599,8 @@ public:
 	UMediaSource* AttackSource[3];
 	UMediaPlayer* AttackFormPlayer[3];
 	UMediaTexture* AttackFormTexture[3];
+	UMediaSource* TestSource;
+	UMediaPlayer* TestPlayer;
 	
 	USoundCue* SelectSound;
 	//UTexture2D WeaponTexture;

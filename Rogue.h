@@ -15,6 +15,7 @@
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Castle_in_DungeonGameModeBase.h"
 #include "DeathZone.h"
+#include "Components/TextRenderComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Rogue.generated.h"
 
@@ -88,6 +89,8 @@ public:
 	void RogueViewInit();
 	void RogueMovementInit();
 	void RogueStateInit();
+	void DialogueInit();
+	void ChangeDialogueText();
 
 	void RogueViewWork();
 	void RogueMovementValue();
@@ -175,6 +178,9 @@ public:
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
 
+	UFUNCTION(BlueprintCallable) void FrontDialogueWindow();
+	UFUNCTION(BlueprintCallable) void ReturnDialogueWindow();
+
 private:
 	float Axel;
 	float Speed;
@@ -234,6 +240,9 @@ public:
 
 	USoundCue* TakeHitSoundCue;
 
+	UPROPERTY(EditAnywhere)
+		UTextRenderComponent* RogueDialogue;
+
 	UPROPERTY(EditAnyWhere)
 		UChildActorComponent* RogueWeapons;
 
@@ -245,6 +254,15 @@ public:
 
 	UPROPERTY(EditAnyWhere)
 		USpringArmComponent* ViewArm;
+
+	UPROPERTY(EditAnywhere)
+		USpringArmComponent* WindowArm;
+	
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* DialogueWindowPlane;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* DialogueWindowCase;
 
 	UPROPERTY(EditAnywhere)
 		UCapsuleComponent *TorchCapsules;

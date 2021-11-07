@@ -116,9 +116,18 @@ void UMyRogueWidget::MainMenuInit() {
 	RogueHPValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueHpBlock")));
 	RogueDataValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueDataBlock")));
 	RogueKarmaValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueKarmaBlock")));
-
+	/*TestPlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
+		TEXT("MediaPlayer'/Game/Dialogue_Video/NewMediaPlayer.NewMediaPlayer'")));
+	TestSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+		TEXT("FileMediaSource'/Game/Dialogue_Video/test3.test3'")));
+	if (TestPlayer != nullptr) {
+		TestPlayer->OpenSource(TestSource);
+	}*/
 	if (RogueHPValue != nullptr && RogueDataValue != nullptr && RogueKarmaValue != nullptr) {
 		PageMain = true;
+		/*if (TestPlayer != nullptr) {
+			TestPlayer->OpenSource(TestSource);
+		}*/
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 		//GetRogueHpVlaue, GetRogueDataValue, GetRogueKarmaValue
 	}

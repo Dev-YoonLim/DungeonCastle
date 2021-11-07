@@ -17,6 +17,7 @@ ARogue::ARogue()
 	RogueTorchInit();
 	setCanHit(false);
 	SetTorchCanHit(false);
+	//DialogueInit();
 }
 
 // Called when the game starts or when spawned
@@ -32,6 +33,7 @@ void ARogue::BeginPlay()
 	RogueAbilityDelegateInit();
 	WeaponChange();
 	SetFOV(MyGameMode->FOVValue);
+	//WindowArm->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
 }
 
@@ -103,6 +105,19 @@ void ARogue::RogueAbilityDelegateInit(){
 	MyGameMode->Rogue_SpeedValueDelegate.ExecuteIfBound(Speed * 10);
 	MyGameMode->Call_RogueFOVDelegate.BindUObject(this, &ARogue::SetFOV);
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("ddd %f"), Speed*10));
+}
+
+void ARogue::FrontDialogueWindow() {
+	WindowArm->AddRelativeRotation(FRotator(150.f, 0.f, 0.f));
+}
+
+void ARogue::ReturnDialogueWindow() {
+	
+}
+
+void ARogue::DialogueInit() {
+	
+	//RogueDialogue->SetRelativeRotation(FRotator())
 }
 
 void ARogue::SetFOV(float NewFOVValue) {
@@ -195,6 +210,28 @@ void ARogue::RogueViewInit() {
 	RogueView = CreateDefaultSubobject<UCameraComponent>("RogueView");
 	RogueView->AttachToComponent(ViewArm, FAttachmentTransformRules::KeepRelativeTransform);
 	//RogueView->SetFieldOfView(100.f);
+
+	WindowArm = CreateDefaultSubobject<USpringArmComponent>("WindowArm");
+	WindowArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, (TEXT("Head")));
+	WindowArm->TargetArmLength = 10.f;
+	//WindowArm->CameraLagSpeed = 8.f;
+	WindowArm->CameraRotationLagSpeed = 15.f;
+	//WindowArm->bEnableCameraLag = true;
+	WindowArm->bEnableCameraRotationLag = true;
+	//WindowArm->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
+
+	DialogueWindowPlane = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowPlane");
+	DialogueWindowPlane->AttachToComponent(WindowArm, FAttachmentTransformRules::KeepRelativeTransform);
+	DialogueWindowCase = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowCase");
+	DialogueWindowCase->AttachToComponent(DialogueWindowPlane, FAttachmentTransformRules::KeepRelativeTransform);
+	auto DialogueWindowPlaneAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
+		(TEXT("StaticMesh'/Game/Dialogue_Video/DialoguePlane.DialoguePlane'"));
+	auto DialogueWindowCaseAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
+		(TEXT("StaticMesh'/Game/Dialogue_Video/DialogueCase.DialogueCase'"));
+	if (DialogueWindowCaseAsset.Succeeded())
+		DialogueWindowPlane->SetStaticMesh(DialogueWindowCaseAsset.Object);
+	if (DialogueWindowPlaneAsset.Succeeded())
+		DialogueWindowPlane->SetStaticMesh(DialogueWindowPlaneAsset.Object);
 }
 
 void ARogue::RogueTorchInit() {

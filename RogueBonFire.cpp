@@ -60,7 +60,7 @@ void ARogueBonFire::NotifyActorEndOverlap(AActor* OtherActor) {
 void ARogueBonFire::MeshInit() {
 	BonFireSword = CreateDefaultSubobject<UStaticMeshComponent>("BonFireSword");
 	auto BonFireSwordAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
-		(TEXT("StaticMesh'/Game/DataBornFire/BonFireSword_0.BonFireSword_0'"));
+		(TEXT("StaticMesh'/Game/DataBornFire/Fire_Crucible_Frame_1.Fire_Crucible_Frame_1'"));
 
 	if (BonFireSwordAsset.Succeeded()) {
 		BonFireSword->SetStaticMesh(BonFireSwordAsset.Object);
@@ -77,12 +77,14 @@ void ARogueBonFire::MeshInit() {
 	BonFireCapsule = CreateDefaultSubobject<UCapsuleComponent>("BonFireCapsule");
 	BonFireFlame->AttachToComponent(BonFireSword, FAttachmentTransformRules::KeepRelativeTransform);
 	BonFireCapsule->AttachToComponent(BonFireSword, FAttachmentTransformRules::KeepRelativeTransform);
-	BonFireCapsule->AddRelativeLocation(FVector(30, 0, 0));
+	BonFireCapsule->AddRelativeLocation(FVector(0, 0, 0));
 	BonFireCapsule->SetCapsuleHalfHeight(80);
 	BonFireCapsule->SetCapsuleRadius(190);
 	BonFireCapsule->SetCollisionProfileName("EventZoneCollision");
-	BonFireFlame->AddRelativeLocation(FVector(30, 0, -40));
+	BonFireFlame->AddRelativeLocation(FVector(0, 0, -20));
 	BonFireFlame->SetRelativeScale3D(FVector(0.6, 0.6, 0));
+	BonFireSword->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.7f));
+	BonFireSword->AddRelativeLocation(FVector(0.f, 0.f, 10.f));
 	BonFireSword->SetCollisionProfileName("BlockAll");
 }
 void ARogueBonFire::FireOn() {
