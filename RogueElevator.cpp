@@ -55,7 +55,7 @@ void ARogueElevator::NotifyActorEndOverlap(AActor* Rogue) {
 
 bool ARogueElevator::ElevatorStopState() {
 	if (Elevator->GetRelativeLocation().Z >= UpStopZone->GetRelativeLocation().Z) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, (TEXT("Stop")));
+		
 		Upfloor = true;
 		Stop = true;
 		UGameplayStatics::PlaySoundAtLocation(this, StartStopSound, Elevator->GetComponentLocation());
@@ -93,7 +93,7 @@ void ARogueElevator::ElevatorMove() {
 			Vibrations->setRadius(0.5f);
 		
 		Elevator->AddRelativeLocation(FVector(0, 0, getElevatorSpeed()));
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), ElevatorSpeed));
+		
 		if (ElevatorStopState() == true) {
 			Vibrations->setMoveReady(false);
 			Move = false;
@@ -109,7 +109,7 @@ void ARogueElevator::SwitchMove() {
 			SwitchBlock->AddRelativeLocation(FVector(0, 0, -0.2));
 			SwitchBlockUpfloor->AddRelativeLocation(FVector(0, 0, -0.2));
 			SwitchBlockDownfloor->AddRelativeLocation(FVector(0, 0, -0.2));
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), SwitchLen));
+			
 			SwitchLen -= 0.05;
 			//if(SwitchLen < -4.f)
 		}
@@ -119,7 +119,7 @@ void ARogueElevator::SwitchMove() {
 			SwitchBlock->AddRelativeLocation(FVector(0, 0, 0.2));
 			SwitchBlockUpfloor->AddRelativeLocation(FVector(0, 0, 0.2));
 			SwitchBlockDownfloor->AddRelativeLocation(FVector(0, 0, 0.2));
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), SwitchLen));
+			
 			SwitchLen += 0.05;
 		}
 	}

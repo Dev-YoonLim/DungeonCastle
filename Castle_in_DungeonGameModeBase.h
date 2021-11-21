@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "RogueGameplayStatics.h"
 #include "RogueSaveGame.h"
 #include "Sound/SoundClass.h"
 #include "RogueLevel.h"
@@ -315,7 +314,6 @@ public:
 	TSubclassOf<UUserWidget> WidgetStack[100];
 	int32 WidgetStackNumber[100];
 	int32 WidgetCount;
-	URogueGameplayStatics* RogueGameplayStatics;
 	void ChangedWidget(TSubclassOf<UUserWidget> NewWidgetclass);
 	void GetWidgetNumber(int32 PageNumber);
 	int32 GetPageNumber() { return WidgetPageNumber; }
@@ -364,7 +362,7 @@ public:
 	bool TitleBorderAlphaMax = false;
 	float RevivalTextAlphaValue = 0.00f;
 	float TitleBorderAlphaValue = 0.0f;
-	float FOVValue;
+	float FOVValue = 100.f;
 	void RemoveView(int32);
 	bool NewGameStart;
 	FString SaveSlotName;

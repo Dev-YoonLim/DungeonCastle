@@ -13,8 +13,9 @@ ACandle::ACandle()
 	CandleMeshInit();
 }
 
-void ACandle::CandleSetRefInit() {
-	CandleSetIndex = FMath::RandRange(0, 5);
+void ACandle::PostLoad() {
+	Super::PostLoad();
+	/*CandleSetIndex = FMath::RandRange(0, 5);
 	switch (CandleSetIndex) {
 	case 0:
 		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_0.Candle_0'");
@@ -35,6 +36,40 @@ void ACandle::CandleSetRefInit() {
 		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_5.Candle_5'");
 		break;
 	}
+	UStaticMesh* CandleNewMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, CandleSetRef));
+	CandleMesh->SetStaticMesh(CandleNewMesh);
+	if (CandleSetIndex == 0 || CandleSetIndex == 3 || CandleSetIndex == 4) {
+		CandleMesh->AddRelativeLocation(FVector(-35.f, 0, 0));
+	}
+	else {
+		CandleMesh->AddRelativeLocation(FVector(35.f, 0, 0));
+	}*/
+}
+
+void ACandle::CandleSetRefInit() {
+	CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_0.Candle_0'");
+	CandleSetIndex = 0;
+	/*CandleSetIndex = FMath::RandRange(0, 5);
+	switch (CandleSetIndex) {
+	case 0:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_0.Candle_0'");
+		break;
+	case 1:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_1.Candle_1'");
+		break;
+	case 2:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_2.Candle_2'");
+		break;
+	case 3:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_3.Candle_3'");
+		break;
+	case 4:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_4.Candle_4'");
+		break;
+	case 5:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_5.Candle_5'");
+		break;
+	}*/
 }
 
 void ACandle::CandleMeshInit() {
@@ -69,6 +104,35 @@ void ACandle::CandleLightInit() {
 void ACandle::BeginPlay()
 {
 	Super::BeginPlay();
+	CandleSetIndex = FMath::RandRange(0, 5);
+	switch (CandleSetIndex) {
+	case 0:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_0.Candle_0'");
+		break;
+	case 1:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_1.Candle_1'");
+		break;
+	case 2:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_2.Candle_2'");
+		break;
+	case 3:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_3.Candle_3'");
+		break;
+	case 4:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_4.Candle_4'");
+		break;
+	case 5:
+		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_5.Candle_5'");
+		break;
+	}
+	UStaticMesh* CandleNewMesh = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, CandleSetRef));
+	CandleMesh->SetStaticMesh(CandleNewMesh);
+	if (CandleSetIndex == 0 || CandleSetIndex == 3 || CandleSetIndex == 4) {
+		CandleMesh->AddRelativeLocation(FVector(-35.f, 0, 0));
+	}
+	else {
+		CandleMesh->AddRelativeLocation(FVector(35.f, 0, 0));
+	}
 	
 }
 

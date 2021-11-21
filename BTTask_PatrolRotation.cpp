@@ -32,23 +32,15 @@ void UBTTask_PatrolRotation::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 	FVector Goal =
 		Blackboard->GetValueAsVector(AEnemyAIController::NextPosKeyName);
 	EnemyRogue = Cast<AEnemyRogue>(EnemyController->GetPawn());
-	//EnemyController->SetFocus(myRogue);
-		//EnemyController->SetControlRotation(Direction.Rotation());
-
-	/*GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Blue, FString::Printf(TEXT("x%f y%f z%f"),
-		EnemyRogue->GetActorLocation().X, EnemyRogue->GetActorLocation().Y, EnemyRogue->GetActorLocation().Z));
-
-	GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Yellow, FString::Printf(TEXT("x%f y%f z%f"),
-		Goal.X, Goal.Y, Goal.Z));*/
-
+	
 	
 	EnemyRogue->SetActorRotation(FMath::RInterpTo(
 		EnemyRogue->GetActorRotation(), Goal.Rotation(), DeltaSeconds, 3.f));
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("%f %f %")));
+	
 
 	if (EnemyRogue->GetActorRotation() == Goal.Rotation())
 		FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 
-		//	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
+
 	
 }

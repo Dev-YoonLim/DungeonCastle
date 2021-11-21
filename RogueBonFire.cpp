@@ -43,7 +43,7 @@ void ARogueBonFire::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("BonFireHittttttttt")));
+		
 		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
 		myRogue->myAnimInst->Idle();
 	}
@@ -53,7 +53,7 @@ void ARogueBonFire::NotifyActorEndOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("BonFireouttttttttt")));
+		
 	}
 }
 

@@ -24,6 +24,7 @@ ARogueTorch::ARogueTorch()
 void ARogueTorch::BeginPlay()
 {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueTorchOn")));
 	UGameplayStatics::PlaySoundAtLocation(this, IdleFireSound, GetActorLocation());
 	WorldRogueInit();
 	WorldGameModeInit();
@@ -34,7 +35,7 @@ void ARogueTorch::BeginPlay()
 
 void ARogueTorch::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("END?"));
+	
 	setTorchArrive(false);
 }
 
@@ -45,10 +46,10 @@ void ARogueTorch::Tick(float DeltaTime)
 	/*GetOverlappingActors(EnemyArray, TSubclassOf<AEnemyRogue>());
 	for (int32 Index = 0; Index != EnemyArray.Num(); Index++) {
 		AEnemyRogue* Enemys = Cast<AEnemyRogue>(EnemyArray[Index]);
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Overlap? %d"), Index));
+		
 		if (Enemys->TakeTorchSpecial == true) {
 			Enemys->SetHp(Enemys->ExplosionDamage);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Overlap? %d"), Index));
+			
 		}
 	}*/
 
@@ -276,15 +277,15 @@ void ARogueTorch::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	TorchHitOn = true;
 	if (OtherComp->GetCollisionProfileName() == TEXT("WallCollision")) {
 		if (OverlappedComponent->GetName() == TEXT("FireStick")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("Torchwall"));
+			
 			TorchCrashDelegate();
 		}
 		else if (OverlappedComponent->GetName() == TEXT("RightCapsule")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("TorchwallRight"));
+			
 			TorchSideCrashDelegate(true);
 		}
 		else if (OverlappedComponent->GetName() == TEXT("LeftCapsule")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("TorchwallLeft"));
+			
 			TorchSideCrashDelegate(false);
 		}
 	}
@@ -296,9 +297,9 @@ void ARogueTorch::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 				HitPlace = OtherComp->GetSocketLocation(HitPlaceName);
 				HitPlace.Z = GetActorLocation().Z;
 				OtherActors = OtherActor;
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("TorchHit"));
+				
 				TorchAttackEffectPlay(); //¿ä°ÍÀÌ ½ºÅÇ
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("TorchHitting"));
+				
 				GetWorldTimerManager().SetTimer(HitTimeHandle, this, &ARogueTorch::TorchAttackEffectPlay, 0.01, true);
 			}
 		}
@@ -310,15 +311,15 @@ void ARogueTorch::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	TorchHitOn = false;
 	if (OtherComp->GetCollisionProfileName() == TEXT("WallCollision")) {
 		if (OverlappedComponent->GetName() == TEXT("FireStick")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("Torchwall"));
+			
 			TorchLeaveDelegate();
 		}
 		else if (OverlappedComponent->GetName() == TEXT("RightCapsule")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("TorchwallRightLeave"));
+			
 			TorchSideLeaveDelegate(true);
 		}
 		else if (OverlappedComponent->GetName() == TEXT("LeftCapsule")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("TorchwallLeftLeave"));
+			
 			TorchSideLeaveDelegate(false);
 		}
 	}
@@ -329,7 +330,7 @@ void ARogueTorch::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 			TorchAttackFinsh = true;
 			TorchStateSpecialEffects[TorchElementNumber] = false;
 			TorchStateDefaultEffects[TorchElementNumber] = false;
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("TorchRangeOutOutOut!")));
+			
 			TorchHitCounter = 0;
 			GetWorldTimerManager().ClearTimer(HitTimeHandle);
 		}
@@ -358,7 +359,6 @@ void ARogueTorch::TorchAttackEffectPlay() {
 						Enemys->EnemyRogueTakeTorchDamege(TorchStabDamegeValue, TorchBurnAttacksDamegeValue, TorchSpecialDamegeValue, 
 							TorchEffectsStack, CanStabAttack, TorchStateDefaultEffects, TorchStateSpecialEffects, TorchElementNumber);
 						Enemys->TakeAttackVector(TackAttackVectorValue);
-						GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("HitClear %d"), Index));
 					}
 					TorchEffectsStack[TorchElementNumber] = 0;
 					if (TorchElementNumber == 4)
@@ -383,7 +383,6 @@ void ARogueTorch::TorchAttackEffectPlay() {
 			}
 		}
 		TorchHitCounter++;
-		//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("TrochHitCounter : %d"), TorchHitCounter));
 	}
 	else {
 		GetWorldTimerManager().ClearTimer(HitTimeHandle);

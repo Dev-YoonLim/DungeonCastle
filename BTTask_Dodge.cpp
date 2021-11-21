@@ -28,9 +28,6 @@ EBTNodeResult::Type UBTTask_Dodge::ExecuteTask(UBehaviorTreeComponent& OwnerComp
 		FVector((-EnemyRogue->GetActorRightVector() - EnemyRogue->GetActorForwardVector()).GetSafeNormal() * 250);
 	
 	
-	//EnemyRogue->GetActorLocation() + FVector(EnemyRogue->GetActorRightVector().GetSafeNormal() * 100);
-	//EnemyController->MoveToActor(Target, 50.0f);
-	//EnemyRogue = Cast<AEnemyRogue>();
 
 	if (EnemyController) {
 		if (EnemyController->SenseRogue == true) {

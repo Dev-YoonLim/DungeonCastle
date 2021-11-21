@@ -99,7 +99,7 @@ void AGuideFire::NotifyActorEndOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("BonFireouttttttttt")));
+		
 	}
 }
 

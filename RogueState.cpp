@@ -17,6 +17,7 @@ ARogueState::ARogueState() {
 	HadAttackFormCheckInit();
 	AbilityHadCheckInit();
 	ElementalHadCheckInit();
+	DialogueRefInit();
 }
 
 void ARogueState::AbilityInit() {
@@ -55,10 +56,14 @@ void ARogueState::AbilityInit() {
 	TorchLevelValue = 1.f + TorchLevel * 0.05;
 	ElementLevelValue = 1.f + ElementLevel * 0.05;
 	SaveSlotName = TEXT("SaveSlot");
+	DialogueIndex = 0;
+	for (int i = 0; i < 7; i++)
+		FirstDialogueState[i] = 0;
 }
 
 void ARogueState::BeginPlay() {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueStateOn")));
 	getWorldGameModeBase();
 	TorchElementDelegateInit();
 	WeaponElementDelegateInit();
@@ -91,10 +96,9 @@ void ARogueState::BeginPlay() {
 	MyGameMode->Call_TakeAttackFormDelegate.BindUObject(this, &ARogueState::AttackFormChange);
 	MyGameMode->Call_RogueDamageDelegate.BindUObject(this, &ARogueState::SetDamegedRogue);
 	MyGameMode->Call_GameSaveDelegate.BindUObject(this, &ARogueState::SaveGameData);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("MyRogueStateOk")));
-	//GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Red, FString::Printf(TEXT("StatePlace %d"), WeaponNumber));
-	//Call_RogueStartWeaponNumber();
-	//Call_RogueStartWeaponNumber();
+	Call_RogueStartAttackFormNumber();
+	Call_RogueStartWeaponNumber();
+	Call_RogueStartTorchElementalNumber();
 	RogueDataInit();
 }
 
@@ -119,23 +123,23 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
 		int Index = LoadGame->TotalEquipAbilityDataList[i];
 		AbilityRandTake(Index);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+		
 	}
 	for (int i = 0; i < LoadGame->TotalTakeWeaponCount; i++) {
 		int Index = LoadGame->TotalTakeWeaponDataList[i];
 		WeaponHadCheck(Index);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+		
 	}
 	for (int i = 0; i < LoadGame->TotalTakeElementalCount; i++) {
 		int Index = LoadGame->TotalTakeElementalDataList[i];
 		ElementalHadCheck(Index);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+		
 	}
 	for (int i = 0; i < LoadGame->TotalAttackFormCount; i++) {
 		int Index1 = LoadGame->TotalAttackFormDataList1[i];
 		int Index2 = LoadGame->TotalAttackFormDataList2[i];
 		AttackFormHadCheck(Index1, Index2);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Loading")));
+		
 	}
 	for (int i = 2; i <= LoadGame->WeaponLevel; i++) {
 		SetWeaponLevelUp();
@@ -159,6 +163,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	CurrentData = LoadGame->RogueData;
 	CurrentKarma = LoadGame->RogueKarma;
 	MyGameMode->NewGameStart = LoadGame->NewGameStart;
+	SetDialogueIndex(LoadGame->DialogueIndex);
 	//MyGameMode->StageIndex = LoadGame->StageNumber;
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 	for (int i = 0; i < 3; i++) {
@@ -169,6 +174,8 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}
+	for (int i = 0; i < 7; i++)
+		FirstDialogueState[i] = LoadGame->FirstDialogueState[i];
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
@@ -179,8 +186,7 @@ void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 	PlayerData->FOVValue = MyGameMode->FOVValue;
-	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("VolumeSave %f"), PlayerData->FXSoundVolume));
-	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("FOVSave %f"), PlayerData->FOVValue));
+	
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	PlayerData->StageIndex = MyGameMode->StageIndex;
 	PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
@@ -196,7 +202,7 @@ void ARogueState::SaveGameData() {
 	PlayerData->TotalAttackFormDataList2 = TotalAttackFormDataList2;
 
 	PlayerData->WeaponNumber = WeaponNumber;
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("SaveWeapon %d"), WeaponNumber));
+	
 	PlayerData->TorchElemental = TorchElementNumber;
 	PlayerData->WeaponElemental = WeaponElementNumber;
 	/*PlayerData->WeaponElemental = WeaponElementNumber;
@@ -215,8 +221,10 @@ void ARogueState::SaveGameData() {
 		PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
 		PlayerData->StoryProgress[i] = MyGameMode->StoryProgress[i];
 	}
+	for (int i = 0; i < 7; i++)
+		PlayerData->FirstDialogueState[i] = FirstDialogueState[i];
 	//PlayerData->LastLocation = myRogue->GetActorLocation();
-	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Orange, FString::Printf(TEXT("SaveStageIndex %d"), PlayerData->StageIndex));
+	
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
 	if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
@@ -225,13 +233,13 @@ void ARogueState::SaveGameData() {
 }
 
 void ARogueState::Call_RogueStartWeaponNumber() {
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("WeaponInit")));
+	
 	//WeaponNumber = StartWeaponNumber;
 	//WeaponElementNumber = StartWeaponElementNumber;
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("CheckWeaponF %d"), WeaponNumber));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("StartWeapon")));
 	MyGameMode->Return_WeaponChangeDelegate.ExecuteIfBound(WeaponNumber);
 	MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(WeaponElementNumber, ElementLevelValue);
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("CheckWeaponS %d"), WeaponNumber));
+	
 	SaveGameData();
 	//MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(StartWeaponElementNumber, ElementLevelValue);
 	/*WeaponNumber = FMath::FRandRange(0, 9);
@@ -243,24 +251,25 @@ void ARogueState::Call_RogueStartWeaponNumber() {
 
 void ARogueState::Call_RogueStartTorchElementalNumber() {
 	//TorchElementNumber = StartTorchElementNumber;
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("StartTorch")));
 	MyGameMode->TorchElementChangeDelegate_.ExecuteIfBound(TorchElementNumber, ElementLevelValue);
 	SaveGameData();
 }
 
 
 void ARogueState::Call_RogueStartAttackFormNumber() {
-//	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("AnimInit")));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("StartAttackForm")));
 	AttackFormInit();
 	if (MyGameMode->NewGameStart == true) {
-		GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Orange, FString::Printf(TEXT("NewGame NewAttackForm")));
+		
 		AttackFormHadCheck(AttackForm[0], AttackFormIndex[0]);
 		AttackFormHadCheck(AttackForm[1], AttackFormIndex[1]);
 		AttackFormHadCheck(AttackForm[2], AttackFormIndex[2]);
 		MyGameMode->NewGameStart = false;
 
 	}
-	SetAttackAnimation();
 	SaveGameData();
+	SetAttackAnimation();
 	//MyGameMode->Return_GameStartAttackFormNumberDelegate.ExcuteIfBound(AttackForm, AttackFormIndex);
 }
 
@@ -274,29 +283,29 @@ void ARogueState::Widget_ViewInit() {
 void ARogueState::AttackFormChange(int32 TakeAttackForm, int32 TakeAttackFormIndex, int32 TakeAttackSlot) {
 	AttackForm[TakeAttackSlot] = TakeAttackForm;
 	AttackFormIndex[TakeAttackSlot] = TakeAttackFormIndex;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%d %d %d"), 
-		TakeAttackForm, TakeAttackFormIndex, TakeAttackSlot));
+	
 	SetAttackAnimation();
 }
 
 void ARogueState::AttackFormInit() {
 	if(MyGameMode->NewGameStart == true && TotalAttackFormCount == 0){
 		for (int i = 0; i < 3; i++) {
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("NewGame")));
-			AttackForm[i] = FMath::FRandRange(0, 1);
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("AttackFormIndexInit")));
+			AttackForm[i] = FMath::RandRange(0, 2);
 			switch (AttackForm[i]) {
 			case 0:
-				AttackFormIndex[i] = FMath::FRandRange(0, 6);
+				AttackFormIndex[i] = FMath::RandRange(0, 6);
 				break;
 			case 1:
-				AttackFormIndex[i] = FMath::FRandRange(0, 8);
+				AttackFormIndex[i] = FMath::RandRange(0, 8);
 				break;
 			case 2:
-				AttackFormIndex[i] = FMath::FRandRange(0, 8);
+				AttackFormIndex[i] = FMath::RandRange(0, 8);
 				break;
 			}
 		}
 	}
+	
 }
 
 void ARogueState::SetDamegedRogue(float Dameged) {
@@ -422,14 +431,14 @@ void ARogueState::GetTorchDemege() {
 }
 
 void ARogueState::SetTorchElementOne(int32 SelectElementNumber, bool Take) {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("2nd_Input"));
+	
 	HadTorchElement[SelectElementNumber] = Take;
 	TorchElementNumber = SelectElementNumber;
 	MyGameMode->TorchElementChangeDelegate_.ExecuteIfBound(SelectElementNumber, ElementLevelValue); //현재는 키보드 입력으로
 }
 
 void ARogueState::SetWeaponElementOne(int32 SelectElementNumber, bool Take) {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("2nd_Input"));
+	
 	HadWeaponElement[SelectElementNumber] = Take;
 	WeaponElementNumber = SelectElementNumber;
 	MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(SelectElementNumber, ElementLevelValue); //현재는 키보드입력으로
@@ -443,7 +452,7 @@ void ARogueState::GetWeaponElementSynergy(float ElementSynergy, float ElementDef
 
 void ARogueState::SetSelectWeapon(int32 SelectWeaponNumber) {
 	WeaponNumber = SelectWeaponNumber;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("2nd_Input"));
+	
 	MyGameMode->Return_WeaponChangeDelegate.ExecuteIfBound(WeaponNumber);
 }
 
@@ -458,6 +467,9 @@ void ARogueState::GetWeaponSynergy(int32 WeaponNumbers, float Slash, float Break
 }
 
 void ARogueState::SetAttackAnimation() {
+	for (int i = 0; i < 3; i++) {
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("AttackForm %d // Index %d\n"), AttackForm[i], AttackFormIndex[i]));
+	}
 	MyGameMode->AttackAnimationChangeDelegate_.ExecuteIfBound(AttackForm[0], AttackFormIndex[0], AttackForm[1], AttackFormIndex[1], AttackForm[2], AttackFormIndex[2]);
 	LastSpeedSetting();
 }
@@ -469,7 +481,7 @@ void ARogueState::GetAttackFormSynergy(float* AttackFormSynergys, bool* CheckDou
 		AttackDirectionCheck[i][1] = CheckAttackDirection[i][1];
 		for (int j = 0; j < 3; j++) {
 			AttackFormSynergy[i][j] = *AttackFormSynergys++;
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Synergy : %f"), AttackFormSynergy[i][j]));
+			
 		}
 	}
 	LastWeaponDamegeSetting();
@@ -528,7 +540,7 @@ void ARogueState::SetElementLevelUp() {
 
 void ARogueState::GetMoveSpeed(float MoveSpeed) {
 	RogueMoveSpeed = MoveSpeed;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("ddd %f"), RogueMoveSpeed));
+	
 }
 
 void ARogueState::SetEquipmentStrings() {
@@ -714,8 +726,7 @@ void ARogueState::SetEquipmentStrings() {
 	RogueAttackFormVideoString[3][1] = TEXT("");
 	RogueAttackFormVideoString[3][2] = TEXT("");
 
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, WeaponName);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK6")));
+	
 	EquipData[0] = WeaponName;
 	EquipData[1] = WeaponElementName;
 	EquipData[2] = TorchElementName;
@@ -755,7 +766,7 @@ void ARogueState::SetStatData() {
 	StatData[1] = GetRogueData();
 	StatData[2] = GetRogueKill();
 	StatData[3] = RogueMoveSpeed;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("ddddd %f"), RogueMoveSpeed));
+	
 	StatData[4] = SuperArmorCount * 10.f;
 	StatData[5] = WeaponSpeed * WeaponLevelValue * WeaponSpeedValue;
 	StatData[6] = WeaponLevel;
@@ -764,7 +775,7 @@ void ARogueState::SetStatData() {
 	StatData[9] = AvgWeaponDamege;
 	StatData[10] = WeaponElementDamege;
 	StatData[11] = WeaponElementPer * WeaponElementPerValue;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("ddddd %f"), WeaponElementPerValue));
+	
 	StatData[12] = TorchStabTotalDamege;
 	StatData[13] = TorchBurnAttacksTotalDamege;
 	StatData[14] = TorchSpecialTotalDamege;
@@ -1269,6 +1280,14 @@ void ARogueState::HadAttackFormCheckInit() {
 		}
 }
 
+int32 ARogueState::GetDialogueIndex() {
+	return DialogueIndex;
+}
+
+void ARogueState::SetDialogueIndex(int32 NewIndex) {
+	DialogueIndex = NewIndex;
+}
+
 
 
 
@@ -1310,4 +1329,14 @@ void ARogueState::LastTorchDamegeSetting() {
 void ARogueState::LastSpeedSetting() {
 	MyGameMode->WeaponSpeedSynergyDelegate.ExecuteIfBound(WeaponSpeed, WeaponSpeedValue, WeaponLevelValue);
 	MyGameMode->TorchSpeedSynergyDelegate.ExecuteIfBound(TorchLevelValue);
+}
+
+void ARogueState::DialogueRefInit() {
+	FirstDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening.Opening'");
+	FirstDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
+	FirstDialogueSourceRef[2] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Castle_main_in.Castle_main_in'");
+	FirstDialogueSourceRef[3] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Enemy.Enemy'");
+	FirstDialogueSourceRef[4] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Attack_Info.Attack_Info'");
+	FirstDialogueSourceRef[5] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Attack_Synergy.Attack_Synergy'");
+	FirstDialogueSourceRef[6] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/UnknowAbility.UnknowAbility'");
 }

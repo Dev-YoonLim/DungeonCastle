@@ -33,7 +33,6 @@ void UBTTask_StayWait_Fix::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* No
 			FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 		else{
 			if (EnemyController->GetMoveStatus() == EPathFollowingStatus::Idle) {
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("WaitTime")));
 				EnemyController->DoAllAnimStop();
 				if (EnemyController->SenseRogue == true)
 					FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);

@@ -13,12 +13,9 @@ EBTNodeResult::Type UBTTask_Die::ExecuteTask(UBehaviorTreeComponent& OwnerComp, 
 	auto Blackboard = OwnerComp.GetBlackboardComponent();
 
 	EnemyRogue->EnemyRogueDie();
-	//EnemyRogue->GetActorLocation() + FVector(EnemyRogue->GetActorRightVector().GetSafeNormal() * 100);
-	//EnemyController->MoveToActor(Target, 50.0f);
-	//EnemyRogue = Cast<AEnemyRogue>();
+
 
 	return EBTNodeResult::Succeeded;
 
-	//return EBTNodeResult::Failed;
 
 }

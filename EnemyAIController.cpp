@@ -40,9 +40,8 @@ AEnemyAIController::AEnemyAIController() {
 
 void AEnemyAIController::OnPossess(APawn* InPawn) {
 	Super::OnPossess(InPawn);
-
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyPossessOn")));
 	if (PerceptionComponent != nullptr) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("PerceptionCheck"));
 		GetPerceptionComponent()->OnPerceptionUpdated.AddDynamic(this, &AEnemyAIController::FindSenseRogue);
 		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIController::FindSenseRogueTarget);
 	}
@@ -115,9 +114,10 @@ void AEnemyAIController::FindSenseRogueTarget(AActor* myRogue, FAIStimulus Stimu
 	ARogue* Rogue = Cast<ARogue>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	if ((myRogue == GetWorld()->GetFirstPlayerController()->GetPawn()
 		&& Stimul.WasSuccessfullySensed() == true)) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("FindRogue???"));
 		SenseRogue = true;
 	}
+	else
+		SenseRogue = false;
 	/*else {
 		if (SenseRogue == true) {
 			//DoConfused();
@@ -162,15 +162,15 @@ void AEnemyAIController::DoIdle() {
 
 void AEnemyAIController::DoAllAnimStop() {
 	if (EnemyRogue->EnemyForm <= 6) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("NormalStop")));
+		
 		EnemyRogue->EnemyAnimInst->Montage_Stop(1.f, EnemyRogue->EnemyAnimInst->EnemyForwardWalk);
 	}
 	else if (EnemyRogue->EnemyForm <= 8) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("CombatStop")));
+		
 		EnemyRogue->EnemyAnimInst->Montage_Stop(1.f, EnemyRogue->EnemyAnimInst->EnemyCombatForwardWalk);
 	}
 	else if (EnemyRogue->EnemyForm <= 10) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("SadStop")));
+		
 		EnemyRogue->EnemyAnimInst->Montage_Stop(1.f, EnemyRogue->EnemyAnimInst->EnemySadForwardWalk);
 	}
 	

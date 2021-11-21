@@ -23,6 +23,7 @@ void UMyRogueWidget::NativeConstruct() {
 	if (NewSound) {
 		SelectSound = NewSound;
 	}
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("WidgetOn")));
 
 	ElementIconInit();
 	AbilityListString();
@@ -102,11 +103,9 @@ void UMyRogueWidget::TitleInRevivalMenuInit() {
 	TitleBorder = Cast<UBorder>(GetWidgetFromName(TEXT("TitleBlackBorder")));
 	if (TitleBorder != nullptr) {
 		TitleBorder->SetBrushColor(FLinearColor(0.f, 0.f, 0.f, MyGameMode->TitleBorderAlphaValue));
-		//Revival->SetText(FText::FromString(TEXT("REVIVAL")));
-		//Revival->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 1.f, 1.f, MyGameMode->RevivalTextAlphaValue)));
-		//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Blue, FString::Printf(TEXT("TitleUpdate")));
+		
 		if (MyGameMode->TitleBorderAlphaMax == false && MyGameMode->TitleBorderAlphaValue == 0.00f) {
-			//GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Purple, FString::Printf(TEXT("Widget Next Level : %d"), MyGameMode->StageIndex));
+			
 			MyGameMode->TitleUIUpdate();
 		}
 	}
@@ -116,20 +115,10 @@ void UMyRogueWidget::MainMenuInit() {
 	RogueHPValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueHpBlock")));
 	RogueDataValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueDataBlock")));
 	RogueKarmaValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueKarmaBlock")));
-	/*TestPlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
-		TEXT("MediaPlayer'/Game/Dialogue_Video/NewMediaPlayer.NewMediaPlayer'")));
-	TestSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
-		TEXT("FileMediaSource'/Game/Dialogue_Video/test3.test3'")));
-	if (TestPlayer != nullptr) {
-		TestPlayer->OpenSource(TestSource);
-	}*/
 	if (RogueHPValue != nullptr && RogueDataValue != nullptr && RogueKarmaValue != nullptr) {
 		PageMain = true;
-		/*if (TestPlayer != nullptr) {
-			TestPlayer->OpenSource(TestSource);
-		}*/
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
-		//GetRogueHpVlaue, GetRogueDataValue, GetRogueKarmaValue
+		
 	}
 }
 
@@ -196,7 +185,7 @@ void UMyRogueWidget::TabMenuInit() {
 		TabMenuIn = true;
 		PageMain = false;
 		TabBackButton->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK5")));
+		
 	}
 }
 
@@ -221,7 +210,7 @@ void UMyRogueWidget::StatMenuInit() {
 
 	if (RogueStatBackButton != nullptr) {
 		PageStat = true;
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK2")));
+		
 		RogueStatBackButton->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
 		MyGameMode->Widget_CallStatWidgetDelegate.ExecuteIfBound();
 		PageMain = false;
@@ -269,7 +258,7 @@ void UMyRogueWidget::BurningTotemMenuInit() {
 		ChangedAttackFormButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetChangedAttackFormMenu);
 		ChangedElementalButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetChangedElementalMenu);
 		AddAbilityButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetAddAbilityMenu);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("testtesttrest"));
+		
 	}
 }
 
@@ -442,7 +431,7 @@ void UMyRogueWidget::ChangedElementalInit() {
 		if (RogueEquipmentString[1] == TEXT("Physical") || 
 			RogueEquipmentString[1] == TEXT("Strenght") ||
 			RogueEquipmentString[1] == TEXT("Smite")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("StrenghtOK")));
+			
 			SelectWeaponElementalIcons->SetBrushFromTexture(SelectElementIcon[0][0]);
 			ElementalText[1]->SetText(FText::FromString(TEXT("High Damage")));
 			ElementalText[2]->SetText(FText::FromString(TEXT("Ability : Stun")));
@@ -480,7 +469,7 @@ void UMyRogueWidget::ChangedElementalInit() {
 		if (RogueEquipmentString[2] == TEXT("Physical") ||
 			RogueEquipmentString[2] == TEXT("Strenght") ||
 			RogueEquipmentString[2] == TEXT("Smite")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("StrenghtOK")));
+			
 			SelectTorchElementalIcons->SetBrushFromTexture(SelectElementIcon[1][0]);
 			ElementalText[4]->SetText(FText::FromString(TEXT("Easy Conditions")));
 			ElementalText[5]->SetText(FText::FromString(TEXT("Ability : LevelDamege")));
@@ -680,9 +669,8 @@ void UMyRogueWidget::RevivalMenuInit() {
 		Revival->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 1.f, 1.f, MyGameMode->RevivalTextAlphaValue)));
 		if (MyGameMode->RevivalTextAlphaMax == true)
 			RevivalOutLine->SetBrushColor(FLinearColor(0.f, 0.f, 0.f, MyGameMode->RevivalTextAlphaValue));
-		//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Blue, FString::Printf(TEXT("Update")));
+		
 		if (MyGameMode->RevivalTextAlphaMax == false && MyGameMode->RevivalTextAlphaValue == 0.00f) {
-			GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("F0")));
 			MyGameMode->RevivalUIUpdate();
 		}
 	}
@@ -720,8 +708,7 @@ void UMyRogueWidget::GetBackButton() {
 
 void UMyRogueWidget::GetTitleMenu() {
 	UGameplayStatics::OpenLevel(this, FName(TEXT("StartMap")), false);
-	//MyGameMode->GetWidgetNumber(0);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(0);
+	
 }
 
 void UMyRogueWidget::GetNewGame() {
@@ -759,12 +746,11 @@ void UMyRogueWidget::GetTabMenu() {
 
 void UMyRogueWidget::GetRogueStat() {
 	MyGameMode->GetWidgetNumber(4);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(4);
 }
 
 void UMyRogueWidget::GetRogueEquip() {
 	MyGameMode->GetWidgetNumber(5);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(5);
+	
 }
 
 void UMyRogueWidget::GetGameState() {
@@ -773,16 +759,16 @@ void UMyRogueWidget::GetGameState() {
 
 void UMyRogueWidget::GetBurningTotemMenu() {
 	MyGameMode->GetWidgetNumber(7);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
+	
 }
 
 void UMyRogueWidget::GetChangedWeaponMenu() {
 	MyGameMode->GetWidgetNumber(8);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(8);
+	
 }
 void UMyRogueWidget::GetChangedAttackFormMenu() {
 	MyGameMode->GetWidgetNumber(9);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(9);
+	
 }
 void UMyRogueWidget::GetAddAbilityMenu() {
 	MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
@@ -791,17 +777,17 @@ void UMyRogueWidget::GetAddAbilityMenu() {
 	else if (RogueData < 100)
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(RogueData);
 	MyGameMode->GetWidgetNumber(10);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(10);
+	
 }
 
 void UMyRogueWidget::GetChangedElementalMenu() {
 	MyGameMode->GetWidgetNumber(11);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(11);
+	
 }
 
 void UMyRogueWidget::GetDialogue() {
 	MyGameMode->GetWidgetNumber(99);
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(99);
+	
 }
 
 void UMyRogueWidget::GetRevival() {
@@ -809,7 +795,6 @@ void UMyRogueWidget::GetRevival() {
 }
 
 void UMyRogueWidget::SelectWeaponButtonFuntion() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("dddddOK")));
 	MyGameMode->Call_WeaponChangeDelegate.ExecuteIfBound(WeaponNumberIndex);
 	MyGameMode->WidgetPop();
 	//적용 내용 입력.
@@ -881,7 +866,7 @@ void UMyRogueWidget::GetRogueStatValue(float* SetData) {
 		RogueStatTorchElementDamegeValue->SetText(FText::FromString(RogueStatDataString[13]));
 		RogueStatTorchEffectDamegeValue->SetText(FText::FromString(RogueStatDataString[14]));
 		RogueStatTorchEffectPercentageValue->SetText(FText::FromString(RogueStatDataString[15] + TEXT("%")));
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK1")));
+		
 	}
 }
 
@@ -935,7 +920,7 @@ void UMyRogueWidget::GetRogueEquipmentValue(FString* EquipmentValues, TCHAR** Eq
 			}
 		}
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK2")));
+	
 }
 
 void UMyRogueWidget::Call_HaveWeaponList() {
@@ -1082,8 +1067,6 @@ void UMyRogueWidget::Return_HaveAttackFormList(bool ReturnAttackFormList[4][10],
 			}
 		}
 	}
-	//if(ViewAttackFormListButton[0]->OnClicked.IsBound() == true)
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("testtesttrest")));
 }
 
 void UMyRogueWidget::Return_HaveElementalList(bool ElementalCheck[10], float ElementalOverlap[10]) {
@@ -1097,11 +1080,11 @@ void UMyRogueWidget::Return_HaveElementalList(bool ElementalCheck[10], float Ele
 					WeaponElementalText[i]->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 1.f - ((ElementalOverlap[i]-5) / 20), 0.f, 1.f)));
 				else
 					WeaponElementalText[i]->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 0.f, 0.f, 1.f)));
-				//RogueElementCheckNumber[i]
+				
 			}
 			else {
 				TorchElementalButton[i-5]->SetIsEnabled(true);
-				//TorchElementalText[i-5]->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 1.f, 1.f, 1.f)));
+				
 				if (ElementalOverlap[i] <= 5)
 					TorchElementalText[i-5]->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 1.f, 1.f - (ElementalOverlap[i] / 5), 1.f)));
 				else if (ElementalOverlap[i] <= 20)
@@ -1110,7 +1093,7 @@ void UMyRogueWidget::Return_HaveElementalList(bool ElementalCheck[10], float Ele
 					TorchElementalText[i-5]->SetColorAndOpacity(FSlateColor(FLinearColor(1.f, 0.f, 0.f, 1.f)));
 			}
 		}
-			//HaveElementalList[i] = ElementalCheck[i];
+			
 	}
 	WeaponElementalButton[0]->OnClicked.AddDynamic(this, &UMyRogueWidget::WeaponElementStrenght);
 	WeaponElementalButton[1]->OnClicked.AddDynamic(this, &UMyRogueWidget::WeaponElementHeat);
@@ -1458,7 +1441,7 @@ void UMyRogueWidget::Return_HaveWeaponList(bool* ReturnWeaponList, float* Weapon
 	for (int i = 0; i <= 9; i++){
 		HaveWeaponList[i] = *(ReturnWeaponList + i);
 		if (HaveWeaponList[i] == true) {
-			GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Red, FString::Printf(TEXT("WeaponPlace %d"), i));
+			
 			ViewWeaponListText[i] = NewObject<UTextBlock>();
 			ViewWeaponListText[i]->SetText(FText::FromString(RogueHaveWeaponListString[i]));
 			ViewWeaponListText[i]->SetFont(FSlateFontInfo(UseCinzelFont, 30));
@@ -1784,11 +1767,11 @@ void UMyRogueWidget::GetSpecialList() {
 	Call_HaveAttackFormList();
 }
 void UMyRogueWidget::GetSelectRogueAbilityOne() {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz %d"), SelectAbilityIndex[0]));
+	
 	if (RogueData > AbilityCost * 100.f) {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz2")));
+		
 		if (SelectAbilityIndex[0] <= 23) {
 			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[0]);
 			MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
@@ -1816,7 +1799,7 @@ void UMyRogueWidget::GetSelectRogueAbilityOne() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityTwo() {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
+	
 	if (RogueData > AbilityCost * 100.f) {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;
@@ -1847,7 +1830,7 @@ void UMyRogueWidget::GetSelectRogueAbilityTwo() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityThree() {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
+	
 	if (RogueData > AbilityCost * 100.f) {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;
@@ -1882,7 +1865,7 @@ void UMyRogueWidget::GetSelectRogueAbilityFour() {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;
 		if (SelectAbilityIndex[3] <= 23) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, RogueSelectAbilityString[0]);
+			
 			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[3]);
 			MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
 		}
@@ -2090,7 +2073,6 @@ void UMyRogueWidget::Receive_ReturnRogueUseWeaponRef(int32 UseWeaponNumber) {
 }
 
 void UMyRogueWidget::RogueUseWeaponRefCheck() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("UseWeaponNumber %d"), UsedWeaponNumber));
 	switch (UsedWeaponNumber) {
 	case 0:
 		GetDaggerImage();
@@ -2132,7 +2114,7 @@ void UMyRogueWidget::ToolTipInit() {
 	IconToolTip[3] = FText::FromString(TEXT("Elemental Specialization"));
 	IconToolTip[4] = FText::FromString(TEXT("High DPS"));
 	IconToolTip[5] = FText::FromString(TEXT("Great Balance"));
-	//IconToolTip[0] = FText::FromString(TEXT("Slash Specialization"));
+	
 }
 
 void UMyRogueWidget::ElementIconInit() {

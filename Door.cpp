@@ -54,7 +54,6 @@ void ADoor::DoorInit() {
 
 void ADoor::OpenInit() {
 	MaxValue = 2.5f;
-	//SelectEntranceNumber = 0.f;
 }
 
 void ADoor::NotifyActorBeginOverlap(AActor* OtherActor) {
@@ -65,24 +64,17 @@ void ADoor::NotifyActorBeginOverlap(AActor* OtherActor) {
 			DoorWork->setMoveType(SelectEntranceNumber);
 			if (OpeningState == false) {
 				UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
-				//Vibration->setMoveReady(true);
-				//Vibration->setRadius(0.01f);
 				OpeningState = true;
 			}
-			//UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
-			//DoorSwitchOne->OnComponentBeginOverlap.AddDynamic(this, &ADoor::EnterBeginOverlap);
-			//DoorSwitchTwo->OnComponentBeginOverlap.AddDynamic(this, &ADoor::NotEnterBeginOverlap);
 		}
 	}
 }
 
 void ADoor::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
 	, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	//DoorWork->setMaxMoveValue(MaxValue);
-	//DoorWork->setMoveType(SelectEntranceNumber);
 }
 
 void ADoor::NotEnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
 	, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), MaxValue));
+	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), MaxValue));
 }

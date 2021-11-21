@@ -15,7 +15,7 @@ void UEnemyRogueAttackNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp,
 	//AEnemyRogueWeapon* EnemyRogueWeapon = Cast<AEnemyRogueWeapon>(EnemyRogue->EnemyWeapon->GetChildActor());
 	if (EnemyRogue) {
 		EnemyRogue->SetTakeHit(true);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("CanhitBegin"));
+		
 	}
 }
 
@@ -25,7 +25,7 @@ void UEnemyRogueAttackNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, U
 	//AEnemyRogueWeapon* EnemyRogueWeapon = Cast<AEnemyRogueWeapon>(EnemyRogue->EnemyWeapon->GetChildActor());
 	if (EnemyRogue) {
 		EnemyRogue->SetTakeHit(false);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("CanhitEnd"));
+		
 	}
 }
 

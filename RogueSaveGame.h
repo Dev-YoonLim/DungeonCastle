@@ -87,6 +87,12 @@ public:
 	UPROPERTY()
 		int32 StoryProgress[3];
 
+	UPROPERTY()
+		int32 DialogueIndex;
+	
+	UPROPERTY()
+		int32 FirstDialogueState[7];
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

@@ -57,7 +57,7 @@ void UBTTask_AttackRotation::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 			EnemyRogue->GetActorRotation(), (-(myRogue->GetActorForwardVector())).Rotation(), DeltaSeconds, 4.f));
 		if (myRogue->GetActorRotation().Vector() ==
 			- (EnemyRogue->GetActorRotation().Vector())) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Orange, FString::Printf(TEXT("RotationFinsh")));
+			
 			FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 		}
 

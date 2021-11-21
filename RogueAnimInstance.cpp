@@ -17,12 +17,13 @@ URogueAnimInstance::URogueAnimInstance() {
 
 void URogueAnimInstance::NativeBeginPlay() {
 	Super::NativeBeginPlay();
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("TaskTwo")));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueAnimOn")));
 	GetWorldGameModeBase();
 	AttackAnimationDelegateInit();
 	AttackFormInit();
-	EnemyRogueAttackFormSetting();
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("MyRogueAnimOk")));
+	EnemyRogueAttackFormIndex();
+	//EnemyRogueAttackFormIndex();
+	//EnemyRogueAttackFormSetting();
 }
 
 void URogueAnimInstance::NativeUpdateAnimation(float DeltaSeconds) {
@@ -37,8 +38,8 @@ void URogueAnimInstance::GetWorldGameModeBase() {
 
 void URogueAnimInstance::AttackAnimationDelegateInit() {
 	MyGameMode->AttackAnimationChangeDelegate_.BindUObject(this, &URogueAnimInstance::AttackFormToChangeAnimReferens);
-	MyGameMode->WeaponSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationWeaponSpeedSetting);
-	MyGameMode->TorchSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationTorchSpeedSetting);
+	//MyGameMode->WeaponSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationWeaponSpeedSetting);
+	//MyGameMode->TorchSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationTorchSpeedSetting);
 	//MyGameMode->Call_TakeAttackFormRefDelegate.BindUObject(this, &URogueAnimInstance::AttackFormToChangeAnimReferens);
 }
 
@@ -328,11 +329,11 @@ void URogueAnimInstance::MovementAnimationInit() {
 
 void URogueAnimInstance::DaggerAttackAnimationInit() {
 	auto AttackOneMontageAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
-		(TEXT("AnimMontage'/Game/Character/BP_AttackOne.BP_AttackOne'"));
+		(TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'"));
 	auto AttackTwoMontageAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
-		(TEXT("AnimMontage'/Game/Character/BP_AttackOne.BP_AttackOne'"));
+		(TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'"));
 	auto AttackThreeMontageAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
-		(TEXT("AnimMontage'/Game/Character/BP_AttackThree.BP_AttackThree'"));
+		(TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'"));
 
 	if (AttackOneMontageAsset.Succeeded()) 
 		AttackOneMontage = AttackOneMontageAsset.Object;
@@ -357,15 +358,17 @@ void URogueAnimInstance::TorchAttackAnimationInit() {
 }
 
 void URogueAnimInstance::AttackFormSetting() {
-		ChangeAttackThreeMontage = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(), NULL, SelectAttackForm[2]));
-		if (ChangeAttackThreeMontage)
-			AttackThreeMontage = ChangeAttackThreeMontage;
-		ChangeAttackTwoMontage = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(), NULL, SelectAttackForm[1]));
-		if (ChangeAttackTwoMontage)
-			AttackTwoMontage = ChangeAttackTwoMontage;
-		ChangeAttackOneMontage = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(), NULL, SelectAttackForm[0]));
-		if (ChangeAttackOneMontage)
-			AttackOneMontage = ChangeAttackOneMontage; // 동적으로 오브젝트 바꾸는 코드
+	ChangeAttackThreeMontage = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(), NULL, SelectAttackForm[2]));
+	if (ChangeAttackThreeMontage)
+		AttackThreeMontage = ChangeAttackThreeMontage;
+	ChangeAttackTwoMontage = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(), NULL, SelectAttackForm[1]));
+	if (ChangeAttackTwoMontage)
+		AttackTwoMontage = ChangeAttackTwoMontage;
+	ChangeAttackOneMontage = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(), NULL, SelectAttackForm[0]));
+	if (ChangeAttackOneMontage) {
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Blue, FString::Printf(TEXT("AttackFormSetting")));
+		AttackOneMontage = ChangeAttackOneMontage; // 동적으로 오브젝트 바꾸는 코드
+	}
 }
 
 void URogueAnimInstance::AnimationWeaponTorchSpeedInit() {
@@ -378,6 +381,11 @@ void URogueAnimInstance::AnimationWeaponTorchSpeedInit() {
 
 void URogueAnimInstance::AttackFormToChangeAnimReferens(int32 AttackFormZero, int32 AttackFormIndexZero,
 	int32 AttackFormOne, int32 AttackFormIndexOne, int32 AttackFormTwo, int32 AttackFormIndexTwo) {
+
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("%d___%d"), AttackFormZero, AttackFormIndexZero));
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("%d___%d"), AttackFormOne, AttackFormIndexOne));
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("%d___%d"), AttackFormTwo, AttackFormIndexTwo));
+
 		SelectAttackForm[2] = AttackFormList[AttackFormTwo][AttackFormIndexTwo];
 		SelectFormSynergy[2][0] = SlashFormSynergy[AttackFormTwo][AttackFormIndexTwo];
 		SelectFormSynergy[2][1] = BreakFormSynergy[AttackFormTwo][AttackFormIndexTwo];
@@ -425,6 +433,7 @@ void URogueAnimInstance::AttackFormToChangeAnimReferens(int32 AttackFormZero, in
 	ConvertCheckAttackDirection = (int32*)CheckAttackDirection;
 	MyGameMode->Call_TakeAttackFormRefDelegate.ExecuteIfBound(SelectAttackForm);
 	MyGameMode->AttackFormSynergyDelegate.ExecuteIfBound(ConvertSelectFormSynergy, ConvertCheckDoubleAttack, CheckAttackDirection);
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Purple, FString::Printf(TEXT("AttackFormChange")));
 	AttackFormSetting();
 	//AnimationWeaponSpeedSetting(WeaponSpeedSynergys, WeaponLevelValue);
 }
@@ -473,7 +482,7 @@ void URogueAnimInstance::AnimationTorchSpeedSetting(float TorchLevelValue) {
 }
 
 void URogueAnimInstance::Attack(int AttackQue) {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("AttackIn")));
+	
 	AttackFormSetting();
 	switch (AttackQue) {
 	case 0:
@@ -486,12 +495,11 @@ void URogueAnimInstance::Attack(int AttackQue) {
 		Montage_Play(AttackThreeMontage);
 		break;
 	case 4:
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("AttackOn : %d"), AttackQue));
 		Montage_Play(TorchAttackMontage);
 		break;
 	}
 
-	//->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Attackout")));
+	
 }
 
 void URogueAnimInstance::Idle() {
@@ -504,7 +512,7 @@ void URogueAnimInstance::Walking(bool right, bool left, bool forward, bool back,
 	if (right == false && left == false && roll == false) {
 		if (back == false && forward == true) {
 			if (Montage_IsPlaying(WalkMontage) == false) {
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("walk"));
+				
 				Montage_Play(WalkMontage);
 			}
 		}
@@ -516,7 +524,7 @@ void URogueAnimInstance::Walking(bool right, bool left, bool forward, bool back,
 	}
 	else if (right == true && left == false && roll == false) {
 		if (Montage_IsPlaying(WalkRightMontage) == false) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("Right"));
+			
 			Montage_Play(WalkRightMontage);
 		}
 	}
@@ -542,7 +550,7 @@ void URogueAnimInstance::Desh(bool right, bool left, bool forward, bool back, bo
 	}
 	else if (right == true && left == false && roll == false) {
 		if (Montage_IsPlaying(DeshRightMontage) == false) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("Right"));
+			
 			Montage_Play(DeshRightMontage);
 		}
 	}
@@ -574,7 +582,7 @@ void URogueAnimInstance::EnemyRogueAnimationInit() {
 	EnemyRoguePlayMovementAnimationInit();
 	EnemyRoguePlayIdleAnimationInit();
 	EnemyRoguePlayDeathAnimation();
-	EnemyRoguePlayAttackAnimation();
+	EnemyRogueAttackRefInit();
 }
 
 void URogueAnimInstance::EnemyRoguePlayHitAnimationInit(){
@@ -761,29 +769,29 @@ void URogueAnimInstance::EnemyRoguePlayDeathAnimation() {
 		EnemyUpDeath3[1] = EnemyUpDeath3IdleAsset.Object;
 }
 
-void URogueAnimInstance::EnemyRoguePlayAttackAnimation() {
-	EnemyAttackFormRef[0][0] =
+void URogueAnimInstance::EnemyRogueAttackRefInit() {
+	EnemyAttackFormRef[0] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Slash/Slash1.Slash1'"));
-	EnemyAttackFormRef[0][1] =
+	EnemyAttackFormRef[1] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Slash/Slash1_2.Slash1_2'"));
-	EnemyAttackFormRef[0][2] =
+	EnemyAttackFormRef[2] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Slash/Slash1_3.Slash1_3'"));
-	EnemyAttackFormRef[0][3] =
+	EnemyAttackFormRef[3] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Slash/Slash1_4.Slash1_4'"));
-	EnemyAttackFormRef[0][4] =
+	EnemyAttackFormRef[4] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Slash/Slash1_5.Slash1_5'"));
 
-	EnemyAttackFormRef[1][0] =
+	EnemyAttackFormRef[5] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1.Smash1'"));
-	EnemyAttackFormRef[1][1] =
+	EnemyAttackFormRef[6] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_2.Smash1_2'"));
-	EnemyAttackFormRef[1][2] =
+	EnemyAttackFormRef[7] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_3.Smash1_3'"));
-	EnemyAttackFormRef[1][3] =
+	EnemyAttackFormRef[8] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_4.Smash1_4'"));
-	EnemyAttackFormRef[1][4] =
+	EnemyAttackFormRef[9] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_5.Smash1_5'"));
-	EnemyAttackFormRef[1][5] =
+	EnemyAttackFormRef[10] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_6.Smash1_6'"));
 
 	/*EnemyAttackFormRef[2][0] =
@@ -799,32 +807,47 @@ void URogueAnimInstance::EnemyRoguePlayAttackAnimation() {
 
 	/*EnemyAttackFormRef[2][0] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/SpecialArts/SpecialArts.SpecialArts'"));*/
-	EnemyAttackFormRef[2][0] =
+	EnemyAttackFormRef[11] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/SpecialArts/SpecialArts_2.SpecialArts_2'"));
-	EnemyAttackFormRef[2][1] =
+	EnemyAttackFormRef[12] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/SpecialArts/SpecialArts_3.SpecialArts_3'"));
-	for (int i = 0; i < 3; i++) {
-		EnemyAttackFormRand[i] = FMath::FRandRange(0, 2);
-		switch (EnemyAttackFormRand[i]) {
-		case 0:
-			EnemyAttackFormIndexRand[i] = FMath::FRandRange(0, 4);
-			break;
-		case 1:
-			EnemyAttackFormIndexRand[i] = FMath::FRandRange(0, 5);
-			break;
-		case 2:
-			EnemyAttackFormIndexRand[i] = FMath::FRandRange(0, 1);
-			break;
+	for (int i = 0; i < 13; i++) {
+		auto EnemyAttackAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
+			(EnemyAttackFormRef[i]);
+		if (EnemyAttackAsset.Succeeded()) {
+			EnemyAttackForm[i] = EnemyAttackAsset.Object;
 		}
 	}
 }
 
-void URogueAnimInstance::EnemyRogueAttackFormSetting() {
+void URogueAnimInstance::EnemyRogueAttackFormIndex() {
+	int32 AttackFormIndex = FMath::FRandRange(0, 13);
+	FinalEnemyAttackForm = EnemyAttackForm[AttackFormIndex];
+	/*//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Blue, FString::Printf(TEXT("EnemyAttackFormIndex")));
 	for (int i = 0; i < 3; i++) {
+		EnemyAttackFormRand[i] = FMath::RandRange(0, 2);
+		switch (EnemyAttackFormRand[i]) {
+		case 0:
+			EnemyAttackFormIndexRand[i] = FMath::RandRange(0, 4);
+			break;
+		case 1:
+			EnemyAttackFormIndexRand[i] = FMath::RandRange(0, 5);
+			break;
+		case 2:
+			EnemyAttackFormIndexRand[i] = FMath::RandRange(0, 1);
+			break;
+		}
+	}
+	EnemyRogueAttackFormSetting();*/
+}
+
+void URogueAnimInstance::EnemyRogueAttackFormSetting() {
+	/*for (int i = 0; i < 3; i++) {
 		EnemyAttackForm[i] = Cast<UAnimMontage>(StaticLoadObject(UAnimMontage::StaticClass(),
-			NULL, EnemyAttackFormRef[EnemyAttackFormRand[i]][EnemyAttackFormIndexRand[i]]));
+			NULL, EnemyAttackFormRef[EnemyAttackFormRand]);
 	}
 	//EnemyAttackFormRef[EnemyAttackFormRand[i]][EnemyAttackFormIndexRand[i]]
-	int32 SelectAttackFormIndex = FMath::FRandRange(0, 2);
+	int32 SelectAttackFormIndex = FMath::RandRange(0, 2);
 	FinalEnemyAttackForm = EnemyAttackForm[SelectAttackFormIndex];
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Blue, FString::Printf(TEXT("EnemyAttackFormSetting")));*/
 }

@@ -16,8 +16,6 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 
 	ARogue* Goal =
 		Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
-	//EnemyController->MoveToActor(Target, 50.0f);
-	//EnemyRogue = Cast<AEnemyRogue>();
 
 	if (Goal) {
 		if (EnemyController->SenseRogue == true) {
@@ -25,12 +23,10 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 				return EBTNodeResult::Failed;
 			EnemyController->MoveToActor(Goal, EnemyRogue->EnemyRogueWeaponRange);
 			EnemyController->DoWalk();
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveTo"));
 			return EBTNodeResult::Succeeded;
 		}
 	}
 	return EBTNodeResult::Failed;
 
 }
-
-//&& EnemyController->CheckHit() == false
-//&& EnemyController->CheckDie() == false

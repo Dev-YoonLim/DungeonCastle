@@ -22,7 +22,10 @@ AEnemyRogue::AEnemyRogue()
 // Called when the game starts or when spawned
 void AEnemyRogue::BeginPlay()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyRogueOn")));
 	Super::BeginPlay();
+	EnemyRogueBodySetting();
+	//EnemyRogueStateSetting();
 	PostInitializeComponents();
 	GetWorldGameMode();
 	EnemyRogueTakeDamegeDelegateInit();
@@ -63,7 +66,6 @@ void AEnemyRogue::WorldRogueInit() {
 
 void AEnemyRogue::SetEnemyDownFinish(bool StartCheck) {
 	EnemyDownFinish = StartCheck;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("EnemyDownFinish")));
 	if(EnemyDownFinish == true)
 		Destroy();
 }
@@ -102,16 +104,13 @@ void AEnemyRogue::EnemyRogueTakeDamegeDelegateInit() {
 void AEnemyRogue::EnemyRogueBodyInit() {
 	auto EnemyRogueBodyAsset = ConstructorHelpers::FObjectFinder<USkeletalMesh>
 		(TEXT("SkeletalMesh'/Game/EnemyRogue/EnemyROgue.EnemyROgue'"));
-	float RandScale1 = FMath::FRandRange(1, 1.3);
-	float RandScale2 = FMath::FRandRange(1, 1.3);
-	float RandScale3 = FMath::FRandRange(1, 1.3);
 	GetMesh()->SetSkeletalMesh(EnemyRogueBodyAsset.Object);
-	GetMesh()->SetRelativeScale3D(FVector(RandScale1, RandScale2, RandScale3));
+	
 	GetMesh()->AddRelativeLocation(FVector(0, 0, -90));
 	GetMesh()->AddRelativeRotation(FRotator(0, -90, 0));
 	GetMesh()->SetCollisionProfileName("NoCollision");
 	RootComponent->AddRelativeRotation(FRotator(0, 90, 0));
-	GetCapsuleComponent()->SetRelativeScale3D(FVector(RandScale1, RandScale2, RandScale3));
+	
 	EnemyRogueCollisionInit();
 
 	ViewArm = CreateDefaultSubobject<USpringArmComponent>("ViewArm");
@@ -123,6 +122,14 @@ void AEnemyRogue::EnemyRogueBodyInit() {
 	if (TakeHitSoundCueAsset1.Succeeded()) {
 		TakeHitSoundCue = TakeHitSoundCueAsset1.Object;
 	}
+}
+
+void AEnemyRogue::EnemyRogueBodySetting() {
+	float RandScale1 = FMath::FRandRange(1, 1.3);
+	float RandScale2 = FMath::FRandRange(1, 1.3);
+	float RandScale3 = FMath::FRandRange(1, 1.3);
+	GetMesh()->SetRelativeScale3D(FVector(RandScale1, RandScale2, RandScale3));
+	GetCapsuleComponent()->SetRelativeScale3D(FVector(RandScale1, RandScale2, RandScale3));
 }
 
 void AEnemyRogue::EnemyRogueCollisionInit() {
@@ -170,7 +177,20 @@ void AEnemyRogue::EnemyRogueStateInit() {
 	EnemyDownFinish = false;
 	AIControllerClass = AEnemyAIController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 95.f;
-	EnemyForm = FMath::FRandRange(0, 9);
+	auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
+	if (BlandAnim.Succeeded()) {
+		GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+	}
+	GetCharacterMovement()->MaxWalkSpeed = 145.f;
+	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;
+
+	auto EnemyBehaviorTreeAsset = ConstructorHelpers::FObjectFinder<UBehaviorTree>
+		(TEXT("BehaviorTree'/Game/EnemyRogue/BT/EnemyBehaviorTree.EnemyBehaviorTree'"));
+	if (EnemyBehaviorTreeAsset.Succeeded())
+		EnemyBehaviorTree = EnemyBehaviorTreeAsset.Object;
+
+	/*EnemyForm = FMath::FRandRange(0, 9);
 	if (EnemyForm <= 6) {
 		auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
 			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
@@ -180,26 +200,70 @@ void AEnemyRogue::EnemyRogueStateInit() {
 		GetCharacterMovement()->MaxWalkSpeed = 145.f;
 	}
 	else if (EnemyForm <= 8) {
-		auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
-			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'"));
+	auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'"));
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
 		}
 		GetCharacterMovement()->MaxWalkSpeed = 165.f;
 	}
 	else if (EnemyForm <= 9) {
-		auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+	auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'"));
+		if (BlandAnim.Succeeded()) {
+				GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+		}
+		GetCharacterMovement()->MaxWalkSpeed = 85.f;
+	}*/
+}
+
+void AEnemyRogue::EnemyRogueStateSetting() {
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyRogueStateOn")));
+	//EnemyForm = FMath::FRandRange(0, 9);
+	if (EnemyForm <= 6) {
+		UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'")));
+		//auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+			//(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
+		//if (BlandAnim.Succeeded()) {
+		GetMesh()->SetAnimInstanceClass(EnemyAnim->StaticClass());
+		GetCharacterMovement()->MaxWalkSpeed = 145.f;
+	}
+	else if (EnemyForm <= 8) {
+		UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'")));
+		GetMesh()->SetAnimInstanceClass(EnemyAnim->StaticClass());
+		GetCharacterMovement()->MaxWalkSpeed = 165.f;
+		/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'"));
+		if (BlandAnim.Succeeded()) {
+			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+		}*/
+		//GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+		//GetCharacterMovement()->MaxWalkSpeed = 165.f;
+	}
+	else if (EnemyForm <= 9) {
+		UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'")));
+		GetMesh()->SetAnimInstanceClass(EnemyAnim->StaticClass());
+		GetCharacterMovement()->MaxWalkSpeed = 85.f;
+		/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
 			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'"));
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
 		}
 		GetCharacterMovement()->MaxWalkSpeed = 85.f;
 	}
-	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;
-	auto EnemyBehaviorTreeAsset = ConstructorHelpers::FObjectFinder<UBehaviorTree>
+	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;*/
+	}
+	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed; 
+	UBehaviorTree* NewActionTree = Cast<UBehaviorTree>(StaticLoadObject(UBehaviorTree::StaticClass(), NULL,
+		TEXT("BehaviorTree'/Game/EnemyRogue/BT/EnemyBehaviorTree.EnemyBehaviorTree'")));
+	EnemyBehaviorTree = NewActionTree;
+	/*auto EnemyBehaviorTreeAsset = ConstructorHelpers::FObjectFinder<UBehaviorTree>
 		(TEXT("BehaviorTree'/Game/EnemyRogue/BT/EnemyBehaviorTree.EnemyBehaviorTree'"));
 	if (EnemyBehaviorTreeAsset.Succeeded())
-		EnemyBehaviorTree = EnemyBehaviorTreeAsset.Object;
+		EnemyBehaviorTree = EnemyBehaviorTreeAsset.Object;*/
 }
 
 void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float EffectTotalDamege, float DotDamege,
@@ -217,7 +281,6 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 	TakeWeaponAttackStack = WeaponAttackStack;
 	TakeDotDamege = DotDamege;
 	RogueWeaponSpeed = WeaponSpeed;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponHittttttttttt")));
 	TakeTorchSpecial = false;
 	ChangeKnockBackValue = 1.f * 1 / (WeaponSpeed * WeaponSpeed);
 	if (WeaponKnockBack == true)
@@ -267,14 +330,11 @@ void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksD
 	TakeTorchElementNumbers = TorchElementNumber;
 	TakeStabAttackOn = StabAttackOn;
 	TakeDefaultEffect = DefaultEffect[TorchElementNumber];
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("TorchHittttttttttttttttttttt")));
-	//TakeKnockBack();
 	TorchHitAnimationPlay();
 	UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 	if (TakeStabAttackOn == true) {
 		SetHp(TakeTorchStabDamege);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("StabDealll %f"), TakeTorchStabDamege));
 	}
 	if (TakeDefaultEffect == true) {
 		switch (TakeTorchElementNumbers) {
@@ -318,17 +378,14 @@ void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksD
 }
 
 void AEnemyRogue::TakeStun() {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GetStun")));
 	StunDotTick = 8;
 	Stun = true;
 	GetWorldTimerManager().SetTimer(StunDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakeStunDotTimer, 0.5, true);
 }
 
 void AEnemyRogue::EnemyRogueTakeStunDotTimer() {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("DotTick : %d"), StunDotTick));
 	StunDotTick--;
 	if (StunDotTick <= 0) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OverStun")));
 		GetWorldTimerManager().ClearTimer(StunDotTimeHandle);
 		Stun = false;
 		StunDotTick = 0;
@@ -336,11 +393,8 @@ void AEnemyRogue::EnemyRogueTakeStunDotTimer() {
 }
 
 void AEnemyRogue::TakeKnockBack() {
-	//EnemyRogueVectors = GetActorLocation();
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz %f"), TakeAttackVectorValue.Size()));
 	EnemyRogueVectors = DirectionVector();
 	if (TakeTorchSpecial == true) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, FString::Printf(TEXT("BigKnockBackkkkkkk")));
 		GetCapsuleComponent()->AddRelativeLocation((EnemyRogueVectors) * KnockBigBackValue);
 		KnockBigBackValue -= 0.5f;
 		if (KnockBigBackValue < 0.f) {
@@ -349,7 +403,6 @@ void AEnemyRogue::TakeKnockBack() {
 		}
 	}
 	else{
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz %f"), TakeAttackVectorValue.Size()));
 		GetCapsuleComponent()->AddRelativeLocation((EnemyRogueVectors) * KnockBackValue);
 		KnockBackValue -= 0.1f;
 		if (KnockBackValue < 0.f) {
@@ -374,7 +427,6 @@ void AEnemyRogue::TakeBurn() {
 	if (Burning == false)
 		BurningDotTick = 16;
 	Burning = true;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GetBurn")));
 	GetWorldTimerManager().SetTimer(BurnDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakeBurningDotDamege, 0.5, true);
 }
 
@@ -385,7 +437,7 @@ void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(),
 			FRotator(0, 0, 0), FVector(0.2, 0.2, 0.5));
 		SetHp(TakeWeaponTempDamege*0.2);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OverBurning")));
+		
 		GetWorldTimerManager().ClearTimer(BurnDotTimeHandle);
 		Burning = false;
 		BurningDotTick = -1;
@@ -395,7 +447,7 @@ void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 	else {
 		SetHp(TakeDotDamege);
 		TakeWeaponTempDamege += TakeWeaponDamege;
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("DotTick : %d"), BurningDotTick));
+		
 		BurningDotTick--;
 	}
 }
@@ -406,7 +458,7 @@ void AEnemyRogue::TakeBurnExplosion() {
 	if (Burning == true) {
 		MyGameMode->EnemyRogueEffectStateCheckDelegate.ExecuteIfBound();
 		TakeTorchSpecial = false;
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("TorchBurnExplosion : %f"), TakeTorchSpecialDamege));
+		
 		GetWorldTimerManager().ClearTimer(BurnDotTimeHandle);
 		Burning = false;
 		BurningDotTick = 0;
@@ -448,7 +500,7 @@ void AEnemyRogue::TakeCold() {
 		ColdDotTick = 24;
 	else
 		ColdDotTick = 40;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GetCold")));
+	
 	EnemyRogueSlow(ColdSlowStack, FreezSlow);
 	GetWorldTimerManager().SetTimer(ColdDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakeColdSlowDotTimer, 0.5, true);
 }
@@ -465,7 +517,7 @@ void AEnemyRogue::EnemyRogueTakeColdSlowDotTimer() {
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("DotTick : %d"), ColdDotTick));
 	ColdDotTick--;
 	if (ColdDotTick <= 0) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OverCold")));
+		
 		EnemyRogueSlow(ColdSlowStack, FreezSlow);
 		GetWorldTimerManager().ClearTimer(ColdDotTimeHandle);
 		ColdSlow = false;
@@ -500,11 +552,11 @@ void AEnemyRogue::TakeFreezExplosion() {
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FreezSlowBoomDobule, GetActorLocation() +
 				FVector(0, -70, 0), FRotator(0, 0, 0), FVector(0.5, 0.5, 0.5) * 1.5);
 			ExplosionDamage = TakeTorchSpecialDamege * 3.f;
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("TorchFreezDamege : %f"), TakeTorchSpecialDamege * 5.f));
+			
 		}
 		else 
 			ExplosionDamage = TakeTorchSpecialDamege * 2.f;
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("TorchFreezDamege : %f"), TakeTorchSpecialDamege * 3.f));
+			
 	}
 	else
 		ExplosionDamage = TakeTorchSpecialDamege * 1.2;
@@ -532,7 +584,7 @@ void AEnemyRogue::TakePoison() {
 		PoisonStack = 12;
 	Poison = true;
 	PoisonDotTick = 12;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GetPoison")));
+	
 	GetWorldTimerManager().SetTimer(PoisonDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakePoisonDotDamege, 0.5, true);
 }
 
@@ -650,7 +702,7 @@ void AEnemyRogue::EnemyRogueTakeElectriFicationDotTimer() {
 
 
 void AEnemyRogue::TakeElectiFication() {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("TrochHitCounterdddddddddddddddddddddddddddddd : %d"), TakeTorchEffectStack));
+	
 	if (ElectriFicationDPlus == true || ElectriFicationPlus == true)
 		ElectriFication = false;
 	else
@@ -723,7 +775,7 @@ void AEnemyRogue::EnemyRogueDie() {
 		//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(99);
 		//Destroy();
 		int32 DeathFormIndex = FMath::FRandRange(0, 8);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, FString::Printf(TEXT("%d"), DeathFormIndex));
+		
 		if (DeathFormIndex == 0) {
 			DeathForm = EnemyAnimInst->EnemyDownDeath1[1];
 			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath1[0]);
@@ -860,7 +912,7 @@ void AEnemyRogue::StateEffectInit() {
 
 void AEnemyRogue::TakeAttackVector(FVector TakeAttackVectors) {
 	TakeAttackVectorValue = TakeAttackVectors;
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("zzzzzzzzzz %f"), TakeAttackVectorValue.Size()));
+	
 }
 
 void AEnemyRogue::TakeWeaponKnockBackCheck(bool KnockBackCheck) { 
@@ -882,15 +934,7 @@ FVector AEnemyRogue::DirectionVector() {
 	float AcosAngle = FMath::Acos(dot);
 	float angle = FMath::RadiansToDegrees(AcosAngle);
 	FVector Cross = FVector::CrossProduct(myRogue->AttackFowardVectors, DirNomal);
-	/*if (Cross.Z > 0) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Right")));
-	}
-	else if (Cross.Z < 0) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Left")));
-	}
-	else if (Cross.Z == 0) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Center")));
-	}*/
+	
 	return DirNomal;
 }
 
@@ -905,15 +949,15 @@ void AEnemyRogue::WeaponHitAnimationPlay() {
 	if (TakeCheckAttackDirection[HitDirectionIndex] == 0) {
 		if (WeaponAttackRandHitIndex <= 2) {
 			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownHit1, 1.f * SlowValue);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponHittttttttttt")));
+			
 		}
 		else if (WeaponAttackRandHitIndex == 3) {
 			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndDownHit1, 1.f * SlowValue);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponHittttttttttt")));
+			
 		}
 		else if (WeaponAttackRandHitIndex == 4) {
 			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideHit1, 1.f * SlowValue);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponHittttttttttt")));
+			
 		}
 	}
 	else if (TakeCheckAttackDirection[HitDirectionIndex] == 1) {
@@ -974,17 +1018,19 @@ void AEnemyRogue::TorchHitAnimationPlay() {
 	}
 }
 
+//EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->FinalEnemyAttackForm) == true ||
 bool AEnemyRogue::CheckAttack() {
-	if (EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->FinalEnemyAttackForm) == true ||
-		EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->EnemyRoll) == true)
+	if (EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->FinalEnemyAttackForm) == true || EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->EnemyRoll) == true) {
 		return true;
+	}
 	else
 		return false;
 }
 
 bool AEnemyRogue::DoAttack() {
-	EnemyAnimInst->EnemyRogueAttackFormSetting();
+	EnemyAnimInst->EnemyRogueAttackFormIndex();
 	if (EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->FinalEnemyAttackForm) != true) {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("EnemyAttack"));
 			//EnemyRogueWeaponSpeed
 		//EnemyAnimInst->Montage_SetPlayRate(EnemyAnimInst->FinalEnemyAttackForm, EnemyRogueWeaponSpeed);
 		EnemyAnimInst->Montage_Play(EnemyAnimInst->FinalEnemyAttackForm, EnemyRogueWeaponSpeed*1.2f*SlowValue);
@@ -1028,7 +1074,7 @@ bool AEnemyRogue::DoIdle(int32 IdleIndex) {
 }*/
 
 bool AEnemyRogue::DoWalk(int32 WalkIndex) {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Orange, FString::Printf(TEXT("%d"), ShakingForm));
+	
 	if (EnemyAnimInst->AnimationAllCheck == true) {
 		if (EnemyForm <= 6) {
 			switch (WalkIndex) {
@@ -1157,3 +1203,32 @@ void AEnemyRogue::SetTakeHit(bool newTakeHitState) {
 	AttackCanHit = newTakeHitState; 
 	EnemyRogueWeapon->SetTakeHit(AttackCanHit);
 }
+
+
+/*if (EnemyForm <= 6) {
+	UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+		TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'")));
+	//auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+		//(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
+	//if (BlandAnim.Succeeded()) {
+	GetMesh()->SetAnimInstanceClass(EnemyAnim->GetClass());
+}
+GetCharacterMovement()->MaxWalkSpeed = 145.f;
+	}
+	else if (EnemyForm <= 8) {
+	auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'"));
+	if (BlandAnim.Succeeded()) {
+		GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+	}
+	GetCharacterMovement()->MaxWalkSpeed = 165.f;
+	}
+	else if (EnemyForm <= 9) {
+	auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'"));
+	if (BlandAnim.Succeeded()) {
+		GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+	}
+	GetCharacterMovement()->MaxWalkSpeed = 85.f;
+	}
+	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;*/

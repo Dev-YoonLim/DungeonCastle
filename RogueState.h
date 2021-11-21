@@ -116,9 +116,10 @@ public:
 	void SetEquipmentAttackFormString(TCHAR** AttackFormString);
 	void SetStatData();
 	void GetMoveSpeed(float MoveSpeed);
+	int32 GetDialogueIndex();
+	void SetDialogueIndex(int32 NewIndex);
 
 public:
-
 	int32 SlashSynergyIncreaseCount;
 	void SlashSynergyIncrease();
 	void DeleteSlashSynergyIncrease();
@@ -221,6 +222,7 @@ public:
 	void SaveGameData();
 	void RogueDataInit();
 	void LoadGameData(URogueSaveGame* SaveData);
+	void DialogueRefInit();
 	//void GetRogue();
 
 public:
@@ -233,6 +235,7 @@ private:
 	int32 CurrentKarma;
 	int32 RogueKill;
 	int32 CurrentData;
+	int32 DialogueIndex;
 	float UseDataValuePercent;
 
 	float WeaponElementSynergy;
@@ -363,4 +366,8 @@ private:
 	bool Mad;
 	bool Stablity;
 
+
+public:
+	int32 FirstDialogueState[7];
+	TCHAR* FirstDialogueSourceRef[7];
 };

@@ -16,6 +16,7 @@ AEnemyRogueWeapon::AEnemyRogueWeapon()
 void AEnemyRogueWeapon::BeginPlay()
 {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyWeaponOn")));
 	//EnemyRogueWeaponInit();
 	EnemyRogueWeaponChange();
 	//EnemyRgoueWeaponTransform();
@@ -123,7 +124,7 @@ void AEnemyRogueWeapon::EnemyRogueWeaponChange() {
 
 void AEnemyRogueWeapon::EnemyRgoueWeaponTransform() {
 	EnemyWeapons->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), FVector(1, 1, 1)));
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Yellow, FString::Printf(TEXT("Trans %d"), EnemyWeaponIndex));
+	
 	if (EnemyWeaponIndex == 2 || EnemyWeaponIndex == 6)
 		EnemyWeapons->SetRelativeRotation(FRotator(0, 180, 0));
 	if (EnemyWeaponIndex == 4) {

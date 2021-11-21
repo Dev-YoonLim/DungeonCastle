@@ -21,7 +21,7 @@ ARogueWeapon::ARogueWeapon()
 void ARogueWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("CheckSelectWeaponF %d"), SelectWeaponNumber));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueWeaponOn")));
 	WorldRogueInit();
 	WorldGameModeInit();
 	WeaponDelegate();
@@ -111,7 +111,7 @@ void ARogueWeapon::WeaponAttackEffectInit() {
 }
 
 void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("WeaponWeaponChangeCheck"));
+	
 	SelectWeaponNumber = WeaponNumber;
 	if (WeaponNumber == 0) {
 		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Dagger.Dagger'");
@@ -233,7 +233,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		
 		WeaponSynergy(0.2f, 0.f, 1.5f);
 	}
-	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Yellow, TEXT("StartingCheck"));
+	
 	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, ElementPer);
 	MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
 	MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
@@ -351,7 +351,6 @@ void ARogueWeapon::WeaponSynergy(float Slash, float Break, float Stab) {
 
 void ARogueWeapon::GetAttackQue(int32 NowQue) {
 	AttackQue = NowQue;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Attack Que %d"), AttackQue));
 }
 
 void ARogueWeapon::GetWeaponTotalDamegeValue(float FirstDamege, float SndDamege, float TrdDamege, float ElementPers) {
@@ -436,7 +435,7 @@ void ARogueWeapon::WeaponAttackEffectPlay(AActor* OtherActor, UPrimitiveComponen
 void ARogueWeapon::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
 	, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 		if (OtherComp->GetCollisionProfileName() == TEXT("WallCollision")) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("wall"));
+			
 			AttackWallCrashDelegate();
 			//WeaponAttackEffectPlay();
 		}
@@ -447,20 +446,19 @@ void ARogueWeapon::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 			HitPlace.Z = GetActorLocation().Z;
 			WeaponAttackEffectPlay(OtherActor, OtherComp);
 
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%d, %d, %d"), HitPlace.X, HitPlace.Y, HitPlace.Z));
+			
 		}
 
 		if (OtherComp->GetOwner() == OtherActor) {
 
 		}
-		//else
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("hit"));
+	
 }
 
 void ARogueWeapon::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
 	, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
 	if (OtherComp->GetCollisionProfileName() == TEXT("WallCollision")) {
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("wall"));
+		
 		//AttackCrashDelegate();
 		//WeaponAttackEffectPlay();
 	}
@@ -468,8 +466,7 @@ void ARogueWeapon::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		//WeaponAttackEffectPlay();
 		WeaponAttackCheck = true;
 	}
-	//else
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("hit"));
+	
 }
 
 void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
@@ -515,7 +512,7 @@ void ARogueWeapon::SetStun(float InputDamege) {
 	StateEffect[0] = true;
 	//DamegeTaken = InputDamege * 1.5;
 	SetDamegeTaken(InputDamege * 1.3f);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Stun : %f"), GetDamegeTaken()));
+	
 }
 
 void ARogueWeapon::SetBurn(float InputDamege) {
@@ -523,15 +520,14 @@ void ARogueWeapon::SetBurn(float InputDamege) {
 	StateEffect[1] = true;
 	SetDamegeTaken(InputDamege * 1.1f);
 	SetDotDamege(1, DamegeTaken, 0.1);
-		//GetWorldTimerManager().SetTimer(TimeHandle, this, &ARogueWeapon::SetDotDamege, 0.25, false);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Fire : %f"), GetDamegeTaken()));
+	
 }
 
 void ARogueWeapon::SetCold(float InputDamege) {
 	ElementStack[2]++;
 	StateEffect[2] = true;
 	SetDamegeTaken(InputDamege * 1.2f);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Ice : %f"), GetDamegeTaken()));
+	
 }
 
 void ARogueWeapon::SetPoison(float InputDamege) {
@@ -539,8 +535,7 @@ void ARogueWeapon::SetPoison(float InputDamege) {
 	StateEffect[3] = true;
 	SetDotDamege(3, 2.f, 0.5);
 	SetDamegeTaken(InputDamege);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Poison : %f"), GetDamegeTaken()));
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("PoisonDot : %f"), DotDamege[3]));
+	
 }
 
 void ARogueWeapon::SetElectricStack(float Per, float InputDamege) {
@@ -553,12 +548,12 @@ void ARogueWeapon::SetElectricStack(float Per, float InputDamege) {
 		SetDamegeTaken(InputDamege*2.5f);
 		ElementStack[4] = 0;
 		Per = 0.f;
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Elect : %f"), GetDamegeTaken()));
+		
 	}
 	else{
 		StateEffect[4] = false;
 		SetDamegeTaken(InputDamege);
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Elect : %f"), GetDamegeTaken()));
+		
 	}
 	
 }

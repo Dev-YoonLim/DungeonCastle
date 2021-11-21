@@ -13,6 +13,7 @@ ARogue::ARogue()
 	RogueStateInit();
 	RogueMovementInit();
 	RogueViewInit();
+	RogueDialogueInit();
 	RogueWeaponInit();
 	RogueTorchInit();
 	setCanHit(false);
@@ -24,7 +25,7 @@ ARogue::ARogue()
 void ARogue::BeginPlay()
 {
 	Super::BeginPlay();
-	//GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Red, FString::Printf(TEXT("RoguePlace %d"), GetWeaponNumber()));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueOn")));
 	UPlayerInput* PlayerInputControll = GetWorld()->GetFirstPlayerController()->PlayerInput;
 	AxisMapping(PlayerInputControll);
 	PostInitializeComponents();
@@ -33,8 +34,16 @@ void ARogue::BeginPlay()
 	RogueAbilityDelegateInit();
 	WeaponChange();
 	SetFOV(MyGameMode->FOVValue);
-	//WindowArm->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
+	
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
+	/*if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0") && MyRogueState->FirstDialogueState[0] == 0) {
+		MyRogueState->FirstDialogueState[0] = 1;
+		BeepCall();
+	}*/
+}
+
+void ARogue::BeepCall() {
+	BeepSound->Play();
 }
 
 void ARogue::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -50,10 +59,10 @@ void ARogue::Tick(float DeltaTime)
 	RogueMovementValue();
 	NotAttackState();
 	IdleState();
+	//if(OpenDialogueScreen == true)
+		//DialogueVideoPlay();
 	
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, FString::Printf(TEXT("Y : %f"), GetControlRotation().Vector().Y));
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, FString::Printf(TEXT("X : %f"), GetControlRotation().Vector().X));
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Green, FString::Printf(TEXT("Z : %f"), GetControlRotation().Vector().Z));
+	
 }
 
 // Called to bind functionality to input
@@ -98,17 +107,35 @@ void ARogue::WeaponTorchUnDelegate() {
 void ARogue::RogueAbilityDelegateInit(){
 	MyGameMode->Rogue_GetHpDelegate.BindUObject(this, &ARogue::CheckHp);
 	MyGameMode->Return_GameStartWeaponNumberDelegate.BindUObject(this, &ARogue::RogueWeaponNumberInit);
-	//MyGameMode->Call_GameStartWeaponNumberDelegate.ExecuteIfBound();
 	MyGameMode->Widget_MouseCursorOnRogueNotInputDelegate.BindUObject(this, &ARogue::RogueCanNotInput);
 	MyGameMode->RogueSpeedIncreaseDelegate.BindUObject(this, &ARogue::SetMultiplySpeed);
 	MyGameMode->RogueSuperArmorDelegate.BindUObject(this, &ARogue::SuperArmorCheck);
 	MyGameMode->Rogue_SpeedValueDelegate.ExecuteIfBound(Speed * 10);
 	MyGameMode->Call_RogueFOVDelegate.BindUObject(this, &ARogue::SetFOV);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("ddd %f"), Speed*10));
+	
+}
+
+void ARogue::DialogueVideoPlay() {
+	for (int i = 0; i < 7; i++) {
+		if (MyRogueState->FirstDialogueState[i] == 1) {
+			DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+				MyRogueState->FirstDialogueSourceRef[i]));
+			DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
+				TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
+			DialoguePlayer->OpenSource(DialogueSource);
+			MyRogueState->FirstDialogueState[i] = 2;
+		}
+	}
 }
 
 void ARogue::FrontDialogueWindow() {
 	WindowArm->AddRelativeRotation(FRotator(150.f, 0.f, 0.f));
+	BeepSound->Stop();
+	if (OpenDialogueScreen == false)
+		OpenDialogueScreen = true;
+	else
+		OpenDialogueScreen = false;
+	DialogueVideoPlay();
 }
 
 void ARogue::ReturnDialogueWindow() {
@@ -152,7 +179,7 @@ void ARogue::RogueStateInit() {
 	AttackFormFinsh = false;
 	SuperArmorPer = 0.f;
 	AttackStoping = false;
-	//RogueHp = 300;
+	RogueHp = 300;
 	//AttackForm = 0;
 
 	RoguePerceptionStimuliSource =
@@ -188,12 +215,44 @@ void ARogue::RogueMovementInit() {
 	LastInput = FVector::ZeroVector;
 	setAxel(0.00f);
 	setSpeed(0.1f);
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), getSpeed()));
+	
 	setTurnSpeed(0.3f);
 	setAttackQue(0);
 	setAttackAfterTime(0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 1500;
 	
+}
+
+void ARogue::RogueDialogueInit() {
+	WindowArm = CreateDefaultSubobject<USpringArmComponent>("WindowArm");
+	WindowArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, (TEXT("Head")));
+	WindowArm->TargetArmLength = 10.f;
+	WindowArm->CameraLagSpeed = 15.f;
+	WindowArm->CameraRotationLagSpeed = 10.f;
+	WindowArm->bEnableCameraLag = true;
+	WindowArm->bEnableCameraRotationLag = true;
+	WindowArm->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
+
+	DialogueWindowPlane = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowPlane");
+	DialogueWindowPlane->AttachToComponent(WindowArm, FAttachmentTransformRules::KeepRelativeTransform);
+	DialogueWindowCase = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowCase");
+	DialogueWindowCase->AttachToComponent(DialogueWindowPlane, FAttachmentTransformRules::KeepRelativeTransform);
+	auto DialogueWindowPlaneAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
+		(TEXT("StaticMesh'/Game/Dialogue_Video/DialoguePlane.DialoguePlane'"));
+	auto DialogueWindowCaseAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
+		(TEXT("StaticMesh'/Game/Dialogue_Video/DialogueCase.DialogueCase'"));
+	if (DialogueWindowCaseAsset.Succeeded())
+		DialogueWindowPlane->SetStaticMesh(DialogueWindowCaseAsset.Object);
+	if (DialogueWindowPlaneAsset.Succeeded())
+		DialogueWindowPlane->SetStaticMesh(DialogueWindowPlaneAsset.Object);
+
+	BeepSound = CreateDefaultSubobject<UAudioComponent>("BeepSound");
+	auto BeepSoundAsset = ConstructorHelpers::FObjectFinder<USoundBase>
+		(TEXT("SoundWave'/Game/Sound/SoundSource/Beep.Beep'"));
+	if (BeepSoundAsset.Succeeded()) {
+		BeepSound->SetSound(BeepSoundAsset.Object);
+	}
+
 }
 
 void ARogue::RogueViewInit() {
@@ -210,28 +269,6 @@ void ARogue::RogueViewInit() {
 	RogueView = CreateDefaultSubobject<UCameraComponent>("RogueView");
 	RogueView->AttachToComponent(ViewArm, FAttachmentTransformRules::KeepRelativeTransform);
 	//RogueView->SetFieldOfView(100.f);
-
-	WindowArm = CreateDefaultSubobject<USpringArmComponent>("WindowArm");
-	WindowArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, (TEXT("Head")));
-	WindowArm->TargetArmLength = 10.f;
-	//WindowArm->CameraLagSpeed = 8.f;
-	WindowArm->CameraRotationLagSpeed = 15.f;
-	//WindowArm->bEnableCameraLag = true;
-	WindowArm->bEnableCameraRotationLag = true;
-	//WindowArm->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
-
-	DialogueWindowPlane = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowPlane");
-	DialogueWindowPlane->AttachToComponent(WindowArm, FAttachmentTransformRules::KeepRelativeTransform);
-	DialogueWindowCase = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowCase");
-	DialogueWindowCase->AttachToComponent(DialogueWindowPlane, FAttachmentTransformRules::KeepRelativeTransform);
-	auto DialogueWindowPlaneAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
-		(TEXT("StaticMesh'/Game/Dialogue_Video/DialoguePlane.DialoguePlane'"));
-	auto DialogueWindowCaseAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
-		(TEXT("StaticMesh'/Game/Dialogue_Video/DialogueCase.DialogueCase'"));
-	if (DialogueWindowCaseAsset.Succeeded())
-		DialogueWindowPlane->SetStaticMesh(DialogueWindowCaseAsset.Object);
-	if (DialogueWindowPlaneAsset.Succeeded())
-		DialogueWindowPlane->SetStaticMesh(DialogueWindowPlaneAsset.Object);
 }
 
 void ARogue::RogueTorchInit() {
@@ -263,9 +300,9 @@ void ARogue::RogueWeaponNumberInit(int32 WeaponNumbers) {
 }
 
 bool ARogue::IdleState() {
+	//&& NotTakeHitCheck() == true && NotRogueDie() == true && TakeHitOn == false
 	if (right == false && forward == false && back == false 
-		&& left == false && attack == false && roll == false
-		&& NotTakeHitCheck() == true && NotRogueDie() == true && TakeHitOn == false) {
+		&& left == false && attack == false && roll == false && NotTakeHitCheck() == true && TakeHitOn == false && NotRogueDie() == true) {
 		ViewRotator = 0.f;
 		myAnimInst->Idle();
 		return true;
@@ -285,7 +322,7 @@ bool ARogue::NotAttackState() {
 		attack = false;
 		if (CombatStart == true && AttackFormFinsh == false){
 			AttackFormFinsh = true;
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("stoping???")));
+			
 			GetWorldTimerManager().SetTimer(AttackTimeHandle, this, &ARogue::AttackTimeLimit, 0.5, true);
 		}
 		return true;
@@ -311,7 +348,7 @@ bool ARogue::NotAttackCheck() {
 
 void ARogue::AttackTimeLimit() {
 	AttackAfterTime++;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("leftdddddddddddddd : %f"), AttackAfterTime));
+	
 	if (AttackAfterTime >= 3) {
 		AttackFinish();
 		GetWorldTimerManager().ClearTimer(AttackTimeHandle);
@@ -348,7 +385,7 @@ bool ARogue::NotTorchAttackState() {
 }
 
 void ARogue::WeaponChange() {
-	GEngine->AddOnScreenDebugMessage(-1, 20, FColor::Red, FString::Printf(TEXT("RogueWeaponCheck")));
+	
 	//MyGameMode->Call_WeaponChangeDelegate.ExecuteIfBound(GetWeaponNumber());
 	//myAnimInst->AttackFormToChangeAnimReferens(GetAttackForm());
 	/*if(GetWeaponNumber() == 4)
@@ -514,7 +551,7 @@ void ARogue::Back(float amount) {
 }
 
 void ARogue::Right(float amount) {
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("RIghtdddddddddddddd : %f"), amount));
+	
 	if (CanInput == true) {
 		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
 			LastInput.X += amount + Axel;
@@ -536,7 +573,7 @@ void ARogue::Right(float amount) {
 void ARogue::Left(float amount) {
 	if (CanInput == true) {
 		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("leftdddddddddddddd : %f"), amount));
+			
 			ViewRotator = -3.f;
 			LastInput.X -= (amount + Axel);
 			if (myAnimInst != nullptr) {
@@ -648,7 +685,7 @@ void ARogue::Turn(float amount) {
 				AddControllerYawInput(amount);
 		}
 	}
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("MoveVectorValue : %f"), amount));
+	
 }
 
 void ARogue::LookUp(float amount) {
@@ -752,61 +789,61 @@ void ARogue::BindAxis_func(UInputComponent* PlayerInputComponent) {
 }
 
 void ARogue::setZeroTorchElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	TorchElementForm = 0;
 	MyGameMode->TorchElementChangeDelegate.ExecuteIfBound(0, true);
 }
 
 void ARogue::setOneTorchElementForm() { 
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	TorchElementForm = 1; 
 	MyGameMode->TorchElementChangeDelegate.ExecuteIfBound(1, true);
 }
 
 void ARogue::setTwoTorchElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	TorchElementForm = 2;
 	MyGameMode->TorchElementChangeDelegate.ExecuteIfBound(2, true);
 }
 
 void ARogue::setThreeTorchElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	TorchElementForm = 3;
 	MyGameMode->TorchElementChangeDelegate.ExecuteIfBound(3, true);
 }
 
 void ARogue::setFourTorchElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	TorchElementForm = 4;
 	MyGameMode->TorchElementChangeDelegate.ExecuteIfBound(4, true);
 }
 
 void ARogue::setZeroWeaponElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	WeaponElementForm = 0;
 	MyGameMode->WeaponElementChangeDelegate.ExecuteIfBound(0, true);
 }
 
 void ARogue::setOneWeaponElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	WeaponElementForm = 1;
 	MyGameMode->WeaponElementChangeDelegate.ExecuteIfBound(1, true);
 }
 
 void ARogue::setTwoWeaponElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	WeaponElementForm = 2;
 	MyGameMode->WeaponElementChangeDelegate.ExecuteIfBound(2, true);
 }
 
 void ARogue::setThreeWeaponElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	WeaponElementForm = 3;
 	MyGameMode->WeaponElementChangeDelegate.ExecuteIfBound(3, true);
 }
 
 void ARogue::setFourWeaponElementForm() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("1st_Input"));
+	
 	WeaponElementForm = 4;
 	MyGameMode->WeaponElementChangeDelegate.ExecuteIfBound(4, true);
 }
@@ -872,7 +909,7 @@ bool ARogue::NotTakeHitCheck() {
 	else
 		return false;
 }
-
+//&& RogueHp > 0
 bool ARogue::NotRogueDie() {
 	if (myAnimInst->Montage_IsPlaying(myAnimInst->EnemyDownDeath1[0]) == false
 		&& myAnimInst->Montage_IsPlaying(myAnimInst->EnemyDownDeath2[0]) == false

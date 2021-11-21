@@ -11,8 +11,9 @@ bool UBTDecorator_CheckSense::CalculateRawConditionValue(
 	UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const {
 	auto EnemyAIController =
 		Cast<AEnemyAIController>(OwnerComp.GetAIOwner());
-	if (EnemyAIController->CheckSense() == true)
+	if (EnemyAIController->CheckSense() == true) {
 		return true;
+	}
 	else
 		return false;
 }

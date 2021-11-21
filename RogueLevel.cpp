@@ -50,7 +50,7 @@ void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 Pre
 
 			}
 			if ((i != NextDirection || j != DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)) {
-				//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("NextDoorCheck")));
+				
 				FloorDoorGuard[GuardCount]->SetRelativeLocation(DoorGuardFosition[i][j]);
 				if (i == 1)
 					FloorDoorGuard[GuardCount]->SetRelativeRotation(FRotator(0, 90, 0));

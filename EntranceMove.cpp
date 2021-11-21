@@ -40,13 +40,13 @@ void UEntranceMove::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 		if (getMoveType() == 1.f) {
 			Parent->AddActorLocalRotation(FRotator(0, getMoveLenValue(), 0));
 			setMoveLenValue(getMoveLenValue() + 0.001f);
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), getMoveLen()));
+			
 		}
 		else if (getMoveType() == 2.f) {
 
 			Parent->AddActorLocalTransform(FTransform(FRotator(0, 0, 0), 
 				FVector(FMath::FRandRange(-0.6, 0.6), FMath::FRandRange(-0.6, 0.6), getMoveLenValue()), Parent->GetActorScale3D()));
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("%f"), getMoveLenValue()));
+			
 			setMoveLenValue(getMoveLenValue() + 0.007f);
 		}
 		if (getMoveLenValue() > getMaxMoveValue()) {

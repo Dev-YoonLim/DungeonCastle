@@ -70,8 +70,10 @@ public:
 	void EnemyRoguePlayMovementAnimationInit();
 	void EnemyRoguePlayIdleAnimationInit();
 	void EnemyRoguePlayDeathAnimation();
-	void EnemyRoguePlayAttackAnimation();
+	void EnemyRogueAttackRefInit();
 	void EnemyRogueAttackFormSetting();
+
+	void EnemyRogueAttackFormIndex();
 
 public:
 	int32 AttackFormSlot;
@@ -85,8 +87,7 @@ public:
 	bool CheckDoubleForm[3];
 	int32 CheckAttackDirection[3][2];
 
-	int32 EnemyAttackFormRand[3];
-	int32 EnemyAttackFormIndexRand[3];
+	int32 EnemyAttackFormRand;
 
 	bool AnimationAllCheck;
 
@@ -130,7 +131,7 @@ public:
 		ACastle_in_DungeonGameModeBase* MyGameMode;
 
 public:
-	UAnimMontage* EnemyAttackForm[3];
+	UAnimMontage* EnemyAttackForm[13];
 	UAnimMontage* FinalEnemyAttackForm;
 	
 
@@ -179,7 +180,7 @@ public:
 	UAnimMontage* EnemyBackRoll;
 
 
-	TCHAR* EnemyAttackFormRef[4][6];
+	TCHAR* EnemyAttackFormRef[13];
 	TCHAR* SelectAttackFormRef[3];
 //private:
 //	int AttackFormforAnim;

@@ -11,6 +11,7 @@
 #include "Rogue.h"
 #include "Sound/SoundCue.h"
 #include "EnemyRogueWeapon.h"
+#include "BehaviorTree/BehaviorTree.h"
 #include "Components/SphereComponent.h"
 #include "Castle_in_DungeonGameModeBase.h"
 #include "EnemyRogue.generated.h"
@@ -152,6 +153,9 @@ public:
 	void AllStateInit();
 	void AllDotTickInit();
 	void StateEffectInit();
+
+	void EnemyRogueBodySetting();
+	void EnemyRogueStateSetting();
 	//void EnemyRogueAnimationInit();
 
 public:

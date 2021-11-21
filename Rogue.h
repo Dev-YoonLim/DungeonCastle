@@ -12,9 +12,13 @@
 #include "RogueAnimInstance.h"
 #include "RogueState.h"
 #include "Sound/SoundCue.h"
+#include "Components/AudioComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Castle_in_DungeonGameModeBase.h"
 #include "DeathZone.h"
+#include "MediaPlayer.h"
+#include "MediaTexture.h"
+#include "MediaSource.h"
 #include "Components/TextRenderComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Rogue.generated.h"
@@ -89,6 +93,7 @@ public:
 	void RogueViewInit();
 	void RogueMovementInit();
 	void RogueStateInit();
+	void RogueDialogueInit();
 	void DialogueInit();
 	void ChangeDialogueText();
 
@@ -175,6 +180,8 @@ public:
 	void DeathZoneDamege();
 	void DeathZoneDirectDie();
 	void SetFOV(float NewFOVValue);
+	void BeepCall();
+	void DialogueVideoPlay();
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
 
@@ -224,6 +231,7 @@ private:
 	bool AttackStoping;
 	bool WeaponBack = false;
 	bool TakeHitOn = false;
+	bool OpenDialogueScreen = false;
 
 public:
 	FVector LastInput;
@@ -281,4 +289,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AIPerceptionStimuliSourceValue)
 		class UAIPerceptionStimuliSourceComponent* RoguePerceptionStimuliSource;
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* BeepSound;
+	UMediaSource* DialogueSource;
+	UMediaPlayer* DialoguePlayer;
+	UMediaTexture* DialogueTexture;
+	UMediaPlaylist* DialogueList;
+
 };

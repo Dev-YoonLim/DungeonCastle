@@ -18,7 +18,7 @@ void AMyRogueController::BeginPlay() {
 	WorldGameModeInit();
 	SetInputMode(FInputModeUIOnly());
 	bShowMouseCursor = true;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("MyRogueControllerOk")));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueControllerOn")));
 	/*bEnableMouseOverEvents = true;
 	bEnableClickEvents = false;*/
 }

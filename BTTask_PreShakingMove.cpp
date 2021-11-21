@@ -20,9 +20,9 @@ EBTNodeResult::Type UBTTask_PreShakingMove::ExecuteTask(UBehaviorTreeComponent& 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	myRogue = Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
 	
-	ShakingForm = FMath::FRandRange(0, 2);
-	int32 NextFormIndex = FMath::FRandRange(0, 9);
-	int32 NextFormDirIndex = FMath::FRandRange(0, 4);
+	ShakingForm = FMath::RandRange(0, 2);
+	int32 NextFormIndex = FMath::RandRange(0, 9);
+	int32 NextFormDirIndex = FMath::RandRange(0, 4);
 	Blackboard->SetValueAsInt(AEnemyAIController::NextForm, NextFormIndex);
 	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
 		return EBTNodeResult::Failed;
@@ -30,7 +30,6 @@ EBTNodeResult::Type UBTTask_PreShakingMove::ExecuteTask(UBehaviorTreeComponent& 
 		Blackboard->SetValueAsInt(AEnemyAIController::RollDirection, NextFormDirIndex);
 	return EBTNodeResult::InProgress;
 
-	//return EBTNodeResult::Failed;
 
 }
 
@@ -43,8 +42,6 @@ void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	myRogue =
 		Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
-	//FVector RightNormal = EnemyRogue->GetActorRightVector();
-	//RightNormal.No
 	if (ShakingForm == 0) {
 		EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() +
 			(EnemyRogue->GetActorRightVector().GetSafeNormal()) / 2);

@@ -15,7 +15,7 @@ void URogueAttackNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 	if (Rogue) {
 		if (Rogue->getAttackQue() != 4) {
 			Rogue->setCanHit(true);
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("CanhitBegin"));
+			
 		}
 		else if (Rogue->getAttackQue() == 4) {
 			Rogue->SetTorchCanHit(true);
@@ -29,7 +29,7 @@ void URogueAttackNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimS
 	if (Rogue) {
 		if (Rogue->getAttackQue() != 4) {
 			Rogue->setCanHit(false);
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("CanhitEnd"));
+			
 		}
 		else if (Rogue->getAttackQue() == 4) {
 			Rogue->SetTorchCanHit(false);

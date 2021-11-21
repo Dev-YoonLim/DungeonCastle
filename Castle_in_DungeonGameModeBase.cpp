@@ -15,6 +15,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	WidgetPrePageNumber = 0;
 	WidgetCount = 0;
 	GameStartCheck = 0;
+	NewGameStart = true;
 	//FOVValue = 1.f;
 	SaveSlotName = TEXT("SaveSlot");
 	//StartSetting();
@@ -25,7 +26,6 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 		FXSoundClass = FXSoundClassAsset.Object;
 	}
 	
-
 	auto TitleWidget = ConstructorHelpers::FClassFinder<UMyRogueWidget>
 		(TEXT("WidgetBlueprint'/Game/UI/TitleMenu.TitleMenu_C'"));
 	if (TitleWidget.Succeeded()) {
@@ -60,7 +60,6 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 		(TEXT("WidgetBlueprint'/Game/UI/RogueEquipment.RogueEquipment_C'"));
 	if (EquipmentUIWidget.Succeeded()) {
 		EquipmentWidgetClass = EquipmentUIWidget.Class;
-		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
 	}
 
 	auto BurningTotemUIWidget = ConstructorHelpers::FClassFinder<UMyRogueWidget>
@@ -123,6 +122,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	//ChangedWidget(TitleMenuWidgetClass);
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("GameModeOn")));
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
 	if (LoadGame == nullptr) {
 		LoadGame = GetMutableDefault<URogueSaveGame>();
@@ -131,7 +131,6 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 		LoadGameData(LoadGame);
 	}
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap")) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("StartMapOk")));
 		StageIndex = 0;
 	}
 	if(GameStartCheck == 0)
@@ -141,13 +140,9 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	
 	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap"))
 		LevelLoading();
-	
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GameModeBaseOk")));
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("GameCount %d"), GameStartCheck));
 }
 
 void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Load")));
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
 	StageIndex = LoadGame->StageIndex;
 	StageSubIndex = LoadGame->StageSubIndex;
@@ -155,9 +150,6 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 	FOVValue = LoadGame->FOVValue;
 	for(int i = 0; i < 3; i ++)
 		StoryProgress[i] = LoadGame->StoryProgress[i];
-	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("VolumeLoad %f"), FXSoundClass->Properties.Volume));
-	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("FOVLoad %f"), FOVValue));
-	GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Blue, FString::Printf(TEXT("SystemLoad")));
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 }
 
@@ -204,14 +196,11 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 	if (TitleBorderAlphaValue >= 1.5f) {
 		TitleBorderAlphaMax = true;
 		GetWorldTimerManager().ClearTimer(TitleBorderBlackTimeHandle);
-		GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Next LevelIndex : %d"), StageIndex));
 		switch (StageIndex) {
 		case 0:
 			UGameplayStatics::OpenLevel(this, TEXT("Stage0"), false);
 			break;
 		case 1:
-			GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageIndex : %d"), StageIndex));
-			GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageSubIndex : %d"), StageSubIndex));
 			if (StageSubIndex == 0)
 				UGameplayStatics::OpenLevel(this, TEXT("Stage1_0_0"), false);
 			else if (StageSubIndex == 1)
@@ -247,12 +236,9 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 void ACastle_in_DungeonGameModeBase::GetStageIndex(int32 Index, int32 SubIndex) {
 	StageIndex = Index;
 	StageSubIndex = SubIndex;
-	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageIndex : %d"), StageIndex));
-	GEngine->AddOnScreenDebugMessage(-1, 100, FColor::Green, FString::Printf(TEXT("Select StageSubIndex : %d"), StageSubIndex));
 }
 
 void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewWidgetclass) {
-	//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Yellow, FString::Printf(TEXT("Test")));
 	ARogue* myRogue = Cast<ARogue>(DefaultPawnClass.GetDefaultObject());
 	if (WidgetPageNumber == 0) {
 		Widget_MouseCursorChangedDelegate.ExecuteIfBound(1);
@@ -423,7 +409,6 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			EquipmentWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (EquipmentWidget != nullptr) {
 				EquipmentWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
 			}
 		}
 	}
@@ -452,7 +437,6 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			BurningTotemWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (BurningTotemWidget != nullptr) {
 				BurningTotemWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
 			}
 		}
 	}
@@ -481,7 +465,6 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			ChangedWeaponWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (ChangedWeaponWidget != nullptr) {
 				ChangedWeaponWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
 			}
 		}
 	}
@@ -510,7 +493,6 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			ChangedAttackFormWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (ChangedAttackFormWidget != nullptr) {
 				ChangedAttackFormWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
 			}
 		}
 	}
@@ -539,7 +521,6 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			AddAbilityWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (AddAbilityWidget != nullptr) {
 				AddAbilityWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
 			}
 		}
 	}
@@ -568,7 +549,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			ChangedElementalFormWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (ChangedElementalFormWidget != nullptr) {
 				ChangedElementalFormWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
+				
 			}
 		}
 	}
@@ -596,7 +577,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			DialogueWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (DialogueWidget != nullptr) {
 				DialogueWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("OKOK")));
+				
 			}
 		}
 	}
@@ -623,9 +604,9 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			RevivalWidgetState = true;
 			RevivalWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (RevivalWidget != nullptr && WidgetPageNumber == -1) {
-				//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("cc%d"), WidgetPageNumber));
+				
 				RevivalWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("dd%d"), WidgetPageNumber));
+				
 			}
 		}
 	}
@@ -653,9 +634,9 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			TitleInRevivalWidgetState = true;
 			TitleInRevivalWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (TitleInRevivalWidget != nullptr) {
-				//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("cc")));
+				
 				TitleInRevivalWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("dd%d"), WidgetPageNumber));
+				
 			}
 		}
 	}
@@ -682,9 +663,9 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			KeyWidgetState = true;
 			KeyWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (KeyWidget != nullptr) {
-				//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("cc")));
+				
 				KeyWidget->AddToViewport();
-				//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("dd%d"), WidgetPageNumber));
+				
 			}
 		}
 	}
@@ -692,7 +673,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 
 void ACastle_in_DungeonGameModeBase::GetWidgetNumber(int32 PageNumber) {
 	WidgetPageNumber = PageNumber;
-	//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Red, FString::Printf(TEXT("%d"), WidgetPageNumber));
+	
 	if (WidgetPageNumber == 0) {
 		WidgetPush(TitleMenuWidgetClass);
 	}
@@ -851,7 +832,7 @@ void ACastle_in_DungeonGameModeBase::RemoveView(int32 StateNumber) {
 			RevivalWidget->RemoveFromViewport();
 			RevivalWidget = nullptr;
 			RevivalWidgetState = false;
-			//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Blue, FString::Printf(TEXT("delete")));
+			
 		}
 		break;
 	case -2:
@@ -887,13 +868,8 @@ void ACastle_in_DungeonGameModeBase::LevelLoading() {
 		RogueLevel = GetWorld()->SpawnActor<ARogueLevel>
 			(ARogueLevel::StaticClass(), LevelFloorPoint1[StageX][StageY]);		
 		LevelFloorCheck();
-		//if(StageCount == 0)
 		RogueLevel->DoorGuard(NextDirection, NextDirectionIndex, PreDirection, PreDirectionIndex, true);
-		//else
-			//RogueLevel->DoorGuard(NextDirection, NextDirectionIndex, PreDirection, PreDirectionIndex, false);
-		
-		//GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Blue, FString::Printf(TEXT("Level : %d, %d"), StageX, StageY));
-	//}
+	
 }
 
 void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {

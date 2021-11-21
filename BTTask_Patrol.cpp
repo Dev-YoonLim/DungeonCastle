@@ -20,18 +20,11 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 
 	myRogue =
 		Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
-	//EnemyController->MoveToActor(Target, 50.0f);
-	//EnemyRogue = Cast<AEnemyRogue>();
+	
 	FVector PrePosition = Blackboard->GetValueAsVector(AEnemyAIController::PrePosKeyName);
 	FNavLocation NextPosition;
 	if (NavSystem->GetRandomPointInNavigableRadius(EnemyRogue->GetActorLocation(), 300.f, NextPosition)) {
-		
-		/*GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Blue, FString::Printf(TEXT("x%f y%f z%f"),
-			EnemyRogue->GetActorLocation().X, EnemyRogue->GetActorLocation().Y, EnemyRogue->GetActorLocation().Z));
-
-		GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Yellow, FString::Printf(TEXT("x%f y%f z%f"),
-			NextPosition.Location.X, NextPosition.Location.Y, NextPosition.Location.Z));*/
-		
+				
 		Blackboard->SetValueAsVector(AEnemyAIController::NextPosKeyName, NextPosition.Location);
 		return EBTNodeResult::Succeeded;
 	}
