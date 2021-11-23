@@ -58,7 +58,7 @@ void ARogueState::AbilityInit() {
 	SaveSlotName = TEXT("SaveSlot");
 	DialogueIndex = 0;
 	for (int i = 0; i < 7; i++)
-		FirstDialogueState[i] = 0;
+		DialogueState[i] = 0;
 }
 
 void ARogueState::BeginPlay() {
@@ -175,7 +175,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}
 	for (int i = 0; i < 7; i++)
-		FirstDialogueState[i] = LoadGame->FirstDialogueState[i];
+		DialogueState[i] = LoadGame->DialogueState[i];
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
@@ -188,8 +188,8 @@ void ARogueState::SaveGameData() {
 	PlayerData->FOVValue = MyGameMode->FOVValue;
 	
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	PlayerData->StageIndex = MyGameMode->StageIndex;
-	PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
+	//PlayerData->StageIndex = MyGameMode->StageIndex;
+	//PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
 	PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
 	PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
 	PlayerData->TotalTakeElementalCount = TotalElementCount;
@@ -222,7 +222,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->StoryProgress[i] = MyGameMode->StoryProgress[i];
 	}
 	for (int i = 0; i < 7; i++)
-		PlayerData->FirstDialogueState[i] = FirstDialogueState[i];
+		PlayerData->DialogueState[i] = DialogueState[i];
 	//PlayerData->LastLocation = myRogue->GetActorLocation();
 	
 	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));

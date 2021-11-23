@@ -368,6 +368,6 @@ private:
 
 
 public:
-	int32 FirstDialogueState[7];
+	int32 DialogueState[7];
 	TCHAR* FirstDialogueSourceRef[7];
 };

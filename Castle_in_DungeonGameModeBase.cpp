@@ -196,6 +196,8 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 	if (TitleBorderAlphaValue >= 1.5f) {
 		TitleBorderAlphaMax = true;
 		GetWorldTimerManager().ClearTimer(TitleBorderBlackTimeHandle);
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("StageIndex : %d"), StageIndex));
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("StageSubIndex : %d"), StageIndex));
 		switch (StageIndex) {
 		case 0:
 			UGameplayStatics::OpenLevel(this, TEXT("Stage0"), false);

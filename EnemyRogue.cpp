@@ -22,7 +22,7 @@ AEnemyRogue::AEnemyRogue()
 // Called when the game starts or when spawned
 void AEnemyRogue::BeginPlay()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyRogueOn")));
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyRogueOn")));
 	Super::BeginPlay();
 	EnemyRogueBodySetting();
 	//EnemyRogueStateSetting();
@@ -1030,7 +1030,7 @@ bool AEnemyRogue::CheckAttack() {
 bool AEnemyRogue::DoAttack() {
 	EnemyAnimInst->EnemyRogueAttackFormIndex();
 	if (EnemyAnimInst->Montage_IsPlaying(EnemyAnimInst->FinalEnemyAttackForm) != true) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("EnemyAttack"));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("EnemyAttack"));
 			//EnemyRogueWeaponSpeed
 		//EnemyAnimInst->Montage_SetPlayRate(EnemyAnimInst->FinalEnemyAttackForm, EnemyRogueWeaponSpeed);
 		EnemyAnimInst->Montage_Play(EnemyAnimInst->FinalEnemyAttackForm, EnemyRogueWeaponSpeed*1.2f*SlowValue);

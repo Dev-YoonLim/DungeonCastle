@@ -91,7 +91,7 @@ public:
 		int32 DialogueIndex;
 	
 	UPROPERTY()
-		int32 FirstDialogueState[7];
+		int32 DialogueState[7];
 
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];

@@ -25,6 +25,7 @@ ARogue::ARogue()
 void ARogue::BeginPlay()
 {
 	Super::BeginPlay();
+	BeepSound->Stop();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueOn")));
 	UPlayerInput* PlayerInputControll = GetWorld()->GetFirstPlayerController()->PlayerInput;
 	AxisMapping(PlayerInputControll);
@@ -36,10 +37,10 @@ void ARogue::BeginPlay()
 	SetFOV(MyGameMode->FOVValue);
 	
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
-	/*if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0") && MyRogueState->FirstDialogueState[0] == 0) {
-		MyRogueState->FirstDialogueState[0] = 1;
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0") && MyRogueState->DialogueState[0] == 0) {
+		MyRogueState->DialogueState[0] = 1;
 		BeepCall();
-	}*/
+	}
 }
 
 void ARogue::BeepCall() {
@@ -116,26 +117,39 @@ void ARogue::RogueAbilityDelegateInit(){
 }
 
 void ARogue::DialogueVideoPlay() {
+	UMaterial* DialogueMat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Dialogue_Video/Dialogue_Mat.Dialogue_Mat'")));
 	for (int i = 0; i < 7; i++) {
-		if (MyRogueState->FirstDialogueState[i] == 1) {
+		if (MyRogueState->DialogueState[i] == 1) {
+			DialogueWindowPlane->SetMaterial(0, DialogueMat);
 			DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 				MyRogueState->FirstDialogueSourceRef[i]));
 			DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
 				TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
 			DialoguePlayer->OpenSource(DialogueSource);
-			MyRogueState->FirstDialogueState[i] = 2;
+			MyRogueState->DialogueState[i] = 2;
 		}
 	}
 }
 
 void ARogue::FrontDialogueWindow() {
-	WindowArm->AddRelativeRotation(FRotator(150.f, 0.f, 0.f));
-	BeepSound->Stop();
-	if (OpenDialogueScreen == false)
+	UMaterial* DialogueMat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("MaterialInstanceConstant'/Game/Dialogue_Video/DiscMaterial.DiscMaterial'")));
+	if (OpenDialogueScreen == false) {
+		WindowArm->SetRelativeRotation(FRotator(100.f, 87.f, 0.f));
+		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, 80.f));
 		OpenDialogueScreen = true;
-	else
+		BeepSound->Stop();
+		DialogueVideoPlay();
+	}
+	else {
+		for (int i = 1; i <= 180; i++) {
+			DialogueWindowPlane->SetMaterial(0, DialogueMat);
+			WindowArm->AddRelativeRotation(FRotator(i, 0.f, 0.f));
+			//if(i > 179)
+				//WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
+		}
 		OpenDialogueScreen = false;
-	DialogueVideoPlay();
+		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
+	}
 }
 
 void ARogue::ReturnDialogueWindow() {
@@ -231,8 +245,8 @@ void ARogue::RogueDialogueInit() {
 	WindowArm->CameraRotationLagSpeed = 10.f;
 	WindowArm->bEnableCameraLag = true;
 	WindowArm->bEnableCameraRotationLag = true;
-	WindowArm->SetRelativeRotation(FRotator(90.f, 0.f, -90.f));
-
+	WindowArm->SetRelativeRotation(FRotator(100.f, 87.f, 0.f));
+	WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
 	DialogueWindowPlane = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowPlane");
 	DialogueWindowPlane->AttachToComponent(WindowArm, FAttachmentTransformRules::KeepRelativeTransform);
 	DialogueWindowCase = CreateDefaultSubobject<UStaticMeshComponent>("DialogueWindowCase");
@@ -242,10 +256,12 @@ void ARogue::RogueDialogueInit() {
 	auto DialogueWindowCaseAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
 		(TEXT("StaticMesh'/Game/Dialogue_Video/DialogueCase.DialogueCase'"));
 	if (DialogueWindowCaseAsset.Succeeded())
-		DialogueWindowPlane->SetStaticMesh(DialogueWindowCaseAsset.Object);
+		DialogueWindowCase->SetStaticMesh(DialogueWindowCaseAsset.Object);
 	if (DialogueWindowPlaneAsset.Succeeded())
 		DialogueWindowPlane->SetStaticMesh(DialogueWindowPlaneAsset.Object);
 
+	DialogueWindowCase->SetRelativeLocation(FVector(0.f, 30.f, -21.f));
+	
 	BeepSound = CreateDefaultSubobject<UAudioComponent>("BeepSound");
 	auto BeepSoundAsset = ConstructorHelpers::FObjectFinder<USoundBase>
 		(TEXT("SoundWave'/Game/Sound/SoundSource/Beep.Beep'"));
