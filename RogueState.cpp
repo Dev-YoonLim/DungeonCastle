@@ -21,6 +21,7 @@ ARogueState::ARogueState() {
 }
 
 void ARogueState::AbilityInit() {
+	ItemCount = 0;
 	WeaponElementNumber = 0;
 	TorchElementNumber = 0;
 	Strength = 0;
@@ -164,6 +165,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	CurrentKarma = LoadGame->RogueKarma;
 	MyGameMode->NewGameStart = LoadGame->NewGameStart;
 	SetDialogueIndex(LoadGame->DialogueIndex);
+	ItemCount = LoadGame->ItemCount;
 	//MyGameMode->StageIndex = LoadGame->StageNumber;
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 	for (int i = 0; i < 3; i++) {
@@ -216,6 +218,7 @@ void ARogueState::SaveGameData() {
 	PlayerData->RogueData = CurrentData;
 	PlayerData->RogueKarma = CurrentKarma;
 	PlayerData->NewGameStart = MyGameMode->NewGameStart;
+	PlayerData->ItemCount = ItemCount;
 	for (int i = 0; i < 3; i++) {
 		PlayerData->AttackForm[i] = AttackForm[i];
 		PlayerData->AttackFormDetail[i] = AttackFormIndex[i];

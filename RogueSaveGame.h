@@ -93,6 +93,9 @@ public:
 	UPROPERTY()
 		int32 DialogueState[7];
 
+	UPROPERTY()
+		int32 ItemCount;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

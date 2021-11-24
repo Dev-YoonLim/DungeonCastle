@@ -61,6 +61,8 @@ private:
 		UParticleSystemComponent* ItemParticle;
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* TakeItem;
+	UPROPERTY(EditAnywhere)
+		ARogueState* MyRogueState;
 
 public:
 	int32 ItemIndex;

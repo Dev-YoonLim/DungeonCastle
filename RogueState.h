@@ -350,6 +350,7 @@ public:
 	float BreakIncreaseValue;
 	float StabIncreaseValue;
 	float TorchBurnAttackSynergyValue;
+	int32 ItemCount;
 
 private:
 	bool HadTorchElement[5];

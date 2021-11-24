@@ -62,8 +62,12 @@ void ARogue::Tick(float DeltaTime)
 	IdleState();
 	//if(OpenDialogueScreen == true)
 		//DialogueVideoPlay();
+	//DialogueEventCheck();
 	
-	
+}
+
+void ARogue::DialogueEventCheck() {
+
 }
 
 // Called to bind functionality to input
@@ -141,13 +145,9 @@ void ARogue::FrontDialogueWindow() {
 		DialogueVideoPlay();
 	}
 	else {
-		for (int i = 1; i <= 180; i++) {
-			DialogueWindowPlane->SetMaterial(0, DialogueMat);
-			WindowArm->AddRelativeRotation(FRotator(i, 0.f, 0.f));
-			//if(i > 179)
-				//WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
-		}
+		DialogueWindowPlane->SetMaterial(0, DialogueMat);
 		OpenDialogueScreen = false;
+		DialoguePlayer->Close();
 		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
 	}
 }

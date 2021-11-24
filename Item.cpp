@@ -22,6 +22,8 @@ void AItem::BeginPlay()
 	TakeRogueInit();
 	ItemIndex = FMath::FRandRange(0, 99);
 	UGameplayStatics::PlaySoundAtLocation(this, ItemIdleSound, GetActorLocation());
+	APawn* myPawn = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	MyRogueState = Cast<ARogueState>(myPawn->GetPlayerState());
 }
 
 // Called every frame
@@ -35,6 +37,11 @@ void AItem::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
+		MyRogueState->ItemCount++;
+		if (MyRogueState->ItemCount == 3) {
+			MyRogueState->DialogueState[1] = 1;
+			myRogue->BeepCall();
+		}
 		UGameplayStatics::PlaySoundAtLocation(this, GetItemSound, GetActorLocation());
 		if (ItemIndex <= 30) {
 			MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));

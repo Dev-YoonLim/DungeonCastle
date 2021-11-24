@@ -182,6 +182,7 @@ public:
 	void SetFOV(float NewFOVValue);
 	void BeepCall();
 	void DialogueVideoPlay();
+	void DialogueEventCheck();
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
 
