@@ -9,9 +9,14 @@
 #include "GameFramework/Actor.h"
 
 void UMyRogueWidget::WorldGameModeInit() {
+	BonFireMenuIn = false;
 	UWorld* TheWorld = GetWorld();
 	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
 	MyGameMode = Cast<ACastle_in_DungeonGameModeBase>(GameMode);
+	APawn* myPawn = Cast<APawn>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	MyRogue = Cast<ARogue>(myPawn);
+	//if (UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap"))
+		//MyRogueState = Cast<ARogueState>(myPawn->GetPlayerState());
 	//AActor* WeaponActor = UGameplayStatics::GetActorOfClass(TheWorld, TSubclassOf<AActor>(ARogueWeapon::StaticClass()));
 	//RogueWeapon = Cast<ARogueWeapon>(WeaponActor);
 }
@@ -115,10 +120,23 @@ void UMyRogueWidget::MainMenuInit() {
 	RogueHPValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueHpBlock")));
 	RogueDataValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueDataBlock")));
 	RogueKarmaValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueKarmaBlock")));
+	PressKeyText = Cast<UTextBlock>(GetWidgetFromName(TEXT("PressKeyTextBlock")));
 	if (RogueHPValue != nullptr && RogueDataValue != nullptr && RogueKarmaValue != nullptr) {
 		PageMain = true;
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
-		
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("Equip %d"), MyRogue->MyRogueState->TotalEquipCount));
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DialogueTu %d"), MyRogue->MyRogueState->DialogueTutorialCount));
+		if (MyRogue->MyRogueState->DialogueTutorialCount < 3 && MyRogue->MyRogueState->TotalEquipCount == MyRogue->MyRogueState->DialogueTutorialCount) {
+			MyRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogue->MyRogueState->FirstDialogueSourceRef[(MyRogue->MyRogueState->DialogueTutorialCount) + 3]));
+			MyRogue->MyRogueState->DialogueState[(MyRogue->MyRogueState->DialogueTutorialCount) + 3] = 1;
+			MyRogue->MyRogueState->DialogueTutorialCount++;
+			if(MyRogue->BeepOn == false)
+				MyRogue->BeepCall();
+		}
+		if (MyRogue->BeepOn == true) {
+			FText PressTextValue = FText::FromString(FString::Printf(TEXT("Press 'F' Key")));
+			PressKeyText->SetText(PressTextValue);
+		}
 	}
 }
 
@@ -253,6 +271,7 @@ void UMyRogueWidget::BurningTotemMenuInit() {
 	if (BurningTotemBackButtons != nullptr) {
 		MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 		PageMain = false;
+		BonFireMenuIn = true;
 		BurningTotemBackButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
 		ChangedWeaponButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetChangedWeaponMenu);
 		ChangedAttackFormButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetChangedAttackFormMenu);
@@ -703,6 +722,10 @@ void UMyRogueWidget::GetExitGame() {
 }
 
 void UMyRogueWidget::GetBackButton() {
+	if (BonFireMenuIn == true) {
+		BonFireMenuIn = false;
+		MyRogue->MyRogueState->TotalEquipCount++;
+	}
 	MyGameMode->WidgetPop();
 }
 
@@ -1767,7 +1790,6 @@ void UMyRogueWidget::GetSpecialList() {
 	Call_HaveAttackFormList();
 }
 void UMyRogueWidget::GetSelectRogueAbilityOne() {
-	
 	if (RogueData > AbilityCost * 100.f) {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;
@@ -1799,7 +1821,6 @@ void UMyRogueWidget::GetSelectRogueAbilityOne() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityTwo() {
-	
 	if (RogueData > AbilityCost * 100.f) {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;
@@ -1830,7 +1851,6 @@ void UMyRogueWidget::GetSelectRogueAbilityTwo() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityThree() {
-	
 	if (RogueData > AbilityCost * 100.f) {
 		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
 		AbilityCost = 1.f;

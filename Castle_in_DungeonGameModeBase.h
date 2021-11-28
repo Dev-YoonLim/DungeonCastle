@@ -121,6 +121,8 @@ DECLARE_DELEGATE(Call_GameSaveDelegateSignature);
 DECLARE_DELEGATE_OneParam(Call_StageIndexDelegateSignature, int32);
 DECLARE_DELEGATE_OneParam(Call_RogueFOVDelegateSignature, float);
 
+DECLARE_DELEGATE(Call_DialogueDelegateSignature);
+
 ////------------버그보완
 
 DECLARE_DELEGATE(RogueTorchAttackFinishDelegateSignature);
@@ -236,6 +238,8 @@ public:
 	Call_GameSaveDelegateSignature Call_GameSaveDelegate;
 	Call_StageIndexDelegateSignature Call_StageIndexDelegate;
 	Call_RogueFOVDelegateSignature Call_RogueFOVDelegate;
+
+	Call_DialogueDelegateSignature Call_DialogueDelegate;
 	//Return_GameStartAttackFormNumberDelegateSignature Return_GameStartAttackFormNumberDelegate;
 
 public:

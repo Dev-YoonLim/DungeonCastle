@@ -21,6 +21,9 @@ ARogueState::ARogueState() {
 }
 
 void ARogueState::AbilityInit() {
+	TotalEquipCount = 0;
+	EquipAbilityCount = 0;
+	DialogueTutorialCount = 1;
 	ItemCount = 0;
 	WeaponElementNumber = 0;
 	TorchElementNumber = 0;
@@ -186,6 +189,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 
 void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
 	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 	PlayerData->FOVValue = MyGameMode->FOVValue;
 	
@@ -1046,6 +1050,7 @@ void ARogueState::DeleteAbility() {
 	DataInit();
 	FullMaxHp = 300;
 	KarmaInit();
+	TotalEquipCount = 0;
 	TotalAbilityCount = 0;
 	TotalWeaponCount = 0;
 	TotalElementCount = 0;

@@ -4,6 +4,7 @@
 #include "Rogue.h"
 #include "EnemyRogue.h"
 #include "EnemyRogueWeapon.h"
+#include "DialogueZone.h"
 #include "RogueWeapon.h"
 
 // Sets default values
@@ -38,13 +39,18 @@ void ARogue::BeginPlay()
 	
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0") && MyRogueState->DialogueState[0] == 0) {
+		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+			MyRogueState->FirstDialogueSourceRef[0]));
 		MyRogueState->DialogueState[0] = 1;
 		BeepCall();
 	}
 }
 
 void ARogue::BeepCall() {
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("BeepRing")));
 	BeepSound->Play();
+	BeepOn = true;
+	MyGameMode->MainUIUpdate();
 }
 
 void ARogue::EndPlay(const EEndPlayReason::Type EndPlayReason) {
@@ -122,16 +128,18 @@ void ARogue::RogueAbilityDelegateInit(){
 
 void ARogue::DialogueVideoPlay() {
 	UMaterial* DialogueMat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Dialogue_Video/Dialogue_Mat.Dialogue_Mat'")));
-	for (int i = 0; i < 7; i++) {
-		if (MyRogueState->DialogueState[i] == 1) {
-			DialogueWindowPlane->SetMaterial(0, DialogueMat);
-			DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
-				MyRogueState->FirstDialogueSourceRef[i]));
-			DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
-				TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
+		DialogueWindowPlane->SetMaterial(0, DialogueMat);
+		DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
+			TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
+		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
-			MyRogueState->DialogueState[i] = 2;
-		}
+			//MyRogueState->DialogueState[i] = 2;
+	}
+}
+
+void ARogue::DialgoueVideoCancle() {
+	for (int i = 0; i < 7; i++) {
+		MyRogueState->DialogueState[i] = 2;
 	}
 }
 
@@ -141,7 +149,11 @@ void ARogue::FrontDialogueWindow() {
 		WindowArm->SetRelativeRotation(FRotator(100.f, 87.f, 0.f));
 		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, 80.f));
 		OpenDialogueScreen = true;
-		BeepSound->Stop();
+		if (BeepOn == true) {
+			BeepOn = false;
+			BeepSound->Stop();
+		}
+		MyGameMode->MainUIUpdate();
 		DialogueVideoPlay();
 	}
 	else {
@@ -983,13 +995,21 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			DeathZoneDirectDie();
 	}
 	if (OtherComp->GetCollisionProfileName() == TEXT("DungeonEnd")) {
-
 		MyGameMode->StageIndex = 0;
 		MyGameMode->StageSubIndex = 0;
 		MyGameMode->WidgetCount = 0;
 		MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 		MyGameMode->GetWidgetNumber(-2);
 		//ADungeonEnd* DungeonEnd = Cast<ADungeonEnd>(OtherActor);
+	}
+	if (OtherComp->GetCollisionProfileName() == TEXT("DialogueEvent")) {
+		ADialogueZone* DialogueZone = Cast<ADialogueZone>(OtherActor);
+		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, 
+			MyRogueState->FirstDialogueSourceRef[DialogueZone->DialogueZoneNumber]));
+		/*if (MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] == 0) {
+			MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] = 1;
+			BeepCall();
+		}*/
 	}
 }
 

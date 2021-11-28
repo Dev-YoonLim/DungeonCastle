@@ -71,6 +71,9 @@ public:
 		class UTextBlock* RogueDataValue;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UTextBlock* RogueKarmaValue;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UTextBlock* PressKeyText;
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UTextBlock* RogueStatMaxHPValue;
@@ -464,6 +467,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		ARogueWeapon* RogueWeapon;
 
+	UPROPERTY(EditAnywhere)
+		ARogueState* MyRogueState;
+
+	UPROPERTY(EditAnywhere)
+		ARogue* MyRogue;
 public:
 	void WorldGameModeInit();
 	void GetRogueHpValue(int32 SetHp);
@@ -554,6 +562,7 @@ public:
 	float HaveAttackFormOverlap[4][10];
 	bool HaveAbilityList[24];
 	bool HaveElementalList[10];
+	bool BonFireMenuIn;
 	int32 HaveAbilityOverlap[24];
 
 public:
@@ -561,7 +570,7 @@ public:
 	UFont* UseNanumMyeonjo;
 	UFont* UseCardo;
 	TCHAR* CinzelDir;
-	
+
 	int32 AbilityLastIndex;
 	int32 PreIndex;
 	int32 SelectAbilityIndex[4];

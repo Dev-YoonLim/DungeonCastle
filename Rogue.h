@@ -182,6 +182,7 @@ public:
 	void SetFOV(float NewFOVValue);
 	void BeepCall();
 	void DialogueVideoPlay();
+	void DialgoueVideoCancle();
 	void DialogueEventCheck();
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
@@ -296,5 +297,5 @@ public:
 	UMediaPlayer* DialoguePlayer;
 	UMediaTexture* DialogueTexture;
 	UMediaPlaylist* DialogueList;
-
+	bool BeepOn = false;
 };

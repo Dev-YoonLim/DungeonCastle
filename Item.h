@@ -66,6 +66,7 @@ private:
 
 public:
 	int32 ItemIndex;
+	int32 ItemCount;
 	USoundCue* GetItemSound;
 	USoundCue* ItemIdleSound;
 };

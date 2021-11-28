@@ -324,6 +324,7 @@ private:
 	bool HadAbilityCheck[24];
 	bool HadElementalCheck[10];
 	bool EquipAbilityOverlap;
+	bool DialogueStepCheck[4];
 	float HadAbilityOverlap[24];
 	float HadAttackFormOverlap[4][10];
 	float HadWeaponOverlap[10];
@@ -343,6 +344,7 @@ public:
 	int32 StartTorchElementNumber;
 	int32 EquipAbilityCount;
 	int32 TotalAbilityCount;
+	int32 TotalEquipCount;
 	int32 TotalWeaponCount;
 	int32 TotalElementCount;
 	int32 TotalAttackFormCount;
@@ -351,6 +353,7 @@ public:
 	float StabIncreaseValue;
 	float TorchBurnAttackSynergyValue;
 	int32 ItemCount;
+	int32 DialogueTutorialCount;
 
 private:
 	bool HadTorchElement[5];
