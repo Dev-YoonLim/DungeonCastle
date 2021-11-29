@@ -100,10 +100,10 @@ void ARogueState::BeginPlay() {
 	MyGameMode->Call_TakeAttackFormDelegate.BindUObject(this, &ARogueState::AttackFormChange);
 	MyGameMode->Call_RogueDamageDelegate.BindUObject(this, &ARogueState::SetDamegedRogue);
 	MyGameMode->Call_GameSaveDelegate.BindUObject(this, &ARogueState::SaveGameData);
+	/*RogueDataInit();
 	Call_RogueStartAttackFormNumber();
 	Call_RogueStartWeaponNumber();
-	Call_RogueStartTorchElementalNumber();
-	RogueDataInit();
+	Call_RogueStartTorchElementalNumber();*/
 }
 
 void ARogueState::RogueDataInit() {
