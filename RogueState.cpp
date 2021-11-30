@@ -100,8 +100,8 @@ void ARogueState::BeginPlay() {
 	MyGameMode->Call_TakeAttackFormDelegate.BindUObject(this, &ARogueState::AttackFormChange);
 	MyGameMode->Call_RogueDamageDelegate.BindUObject(this, &ARogueState::SetDamegedRogue);
 	MyGameMode->Call_GameSaveDelegate.BindUObject(this, &ARogueState::SaveGameData);
-	/*RogueDataInit();
-	Call_RogueStartAttackFormNumber();
+	RogueDataInit();
+	/*Call_RogueStartAttackFormNumber();
 	Call_RogueStartWeaponNumber();
 	Call_RogueStartTorchElementalNumber();*/
 }
@@ -122,7 +122,7 @@ void ARogueState::RogueDataInit() {
 void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
 	//if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, FString::Printf(TEXT("Load")));
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("Load")));
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
 		int Index = LoadGame->TotalEquipAbilityDataList[i];
@@ -154,10 +154,11 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
 		SetElementLevelUp();
 	}
-	//MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
-	//MyGameMode->FOVValue = LoadGame->FOVValue;
+	MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
+	MyGameMode->FOVValue = LoadGame->FOVValue;
 	MyGameMode->StageIndex = LoadGame->StageIndex;
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
+	MyGameMode->StageSubIndex = LoadGame->StageSubIndex;
+	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
 	WeaponNumber = LoadGame->WeaponNumber;
 	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Orange, FString::Printf(TEXT("LoadWeapon %d"), WeaponNumber));
 	WeaponElementNumber = LoadGame->WeaponElemental;
@@ -194,8 +195,8 @@ void ARogueState::SaveGameData() {
 	PlayerData->FOVValue = MyGameMode->FOVValue;
 	
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	//PlayerData->StageIndex = MyGameMode->StageIndex;
-	//PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
+	PlayerData->StageIndex = MyGameMode->StageIndex;
+	PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
 	PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
 	PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
 	PlayerData->TotalTakeElementalCount = TotalElementCount;
@@ -236,7 +237,6 @@ void ARogueState::SaveGameData() {
 	if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
 	}
-
 }
 
 void ARogueState::Call_RogueStartWeaponNumber() {

@@ -17,7 +17,7 @@ URogueAnimInstance::URogueAnimInstance() {
 
 void URogueAnimInstance::NativeBeginPlay() {
 	Super::NativeBeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueAnimOn")));
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueAnimOn")));
 	GetWorldGameModeBase();
 	AttackAnimationDelegateInit();
 	AttackFormInit();

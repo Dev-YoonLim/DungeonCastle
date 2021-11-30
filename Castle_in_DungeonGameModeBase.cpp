@@ -123,13 +123,13 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	//ChangedWidget(TitleMenuWidgetClass);
 	Super::BeginPlay();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("GameModeOn")));
-	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	/*URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
 	if (LoadGame == nullptr) {
 		LoadGame = GetMutableDefault<URogueSaveGame>();
 	}
 	else {
 		LoadGameData(LoadGame);
-	}
+	}*/
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap")) {
 		StageIndex = 0;
 	}
@@ -875,7 +875,15 @@ void ACastle_in_DungeonGameModeBase::LevelLoading() {
 }
 
 void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {
-	if (StageX < 4) {
+	PreDirection = 0;
+	NextDirection = FMath::RandRange(0, 3);
+	PreDirectionIndex = StageSubIndex;
+	if (PreDirection == NextDirection) {
+		while (NextDirectionIndex == PreDirectionIndex) {
+			NextDirectionIndex = FMath::RandRange(0, 2);
+		}
+	}
+	/*if (StageX < 4) {
 		if (LevelFloorCheck1[StageX + 1][StageY] == true) {
 			NextStageDirection[0] = true;
 		}
@@ -909,7 +917,7 @@ void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {
 		if (NextStageDirection[0] == false && NextStageDirection[1] == false
 			&& NextStageDirection[2] == false && NextStageDirection[3] == false)
 			break;
-	}*/
+	}
 	if (StageCount != 0) {
 		if (NextDirection == 0)
 			PreDirection = 2;
@@ -955,5 +963,5 @@ void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {
 	}
 	NextDirectionIndex = FMath::FRandRange(0, 3);
 	for (int32 i = 0; i < 4; i++)
-		NextStageDirection[i] = false;
+		NextStageDirection[i] = false;*/
 }

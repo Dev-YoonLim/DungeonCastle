@@ -30,14 +30,14 @@ void ARogueLevel::Tick(float DeltaTime)
 void ARogueLevel::DoorGuardPositionInit() {
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 3; j++) {
-			if(i == 0)
-				DoorGuardFosition[i][j] = GetActorLocation() + FVector(-2700 + j*3000, -3900, 150);
-			else if(i == 1)
-				DoorGuardFosition[i][j] = GetActorLocation() + FVector(3900, -2700 + j*3000, 150);
-			else if (i == 2)
-				DoorGuardFosition[i][j] = GetActorLocation() + FVector(-3300 + j*3000, 3900, 150);
+			if(i == 1)
+				DoorGuardFosition[i][j] = GetActorLocation() + FVector(-3000 + j*3000, -3800, 50);
+			else if(i == 2)
+				DoorGuardFosition[i][j] = GetActorLocation() + FVector(3800, -3000 + j*3000, 50);
 			else if (i == 3)
-				DoorGuardFosition[i][j] = GetActorLocation() + FVector(-3900, -3300 + j*3000, 150);
+				DoorGuardFosition[i][j] = GetActorLocation() + FVector(-3000 + j*3000, 3800, 50);
+			else if (i == 0)
+				DoorGuardFosition[i][j] = GetActorLocation() + FVector(-3800, -3000 + j*3000, 50);
 		}
 	}
 }
@@ -46,11 +46,7 @@ void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 Pre
 	int32 GuardCount = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (Start == true) {
-
-			}
 			if ((i != NextDirection || j != DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)) {
-				
 				FloorDoorGuard[GuardCount]->SetRelativeLocation(DoorGuardFosition[i][j]);
 				if (i == 1)
 					FloorDoorGuard[GuardCount]->SetRelativeRotation(FRotator(0, 90, 0));
@@ -65,7 +61,6 @@ void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 Pre
 				if (i == 0) {
 					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, -3900, 150));
 				}
-				//DoorGuardFosition[i][j] = GetActorLocation() + FVector(-2700 + j * 3000, -3900, 150);
 				else if (i == 1) {
 					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3900, -3000 + j * 3000, 150));
 					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
@@ -106,11 +101,12 @@ void ARogueLevel::LevelFloorInit() {
 	}
 
 	auto DoorGuard = ConstructorHelpers::FObjectFinder<UStaticMesh>
-		(TEXT("StaticMesh'/Game/Level/DoorGuard.DoorGuard'"));
+		(TEXT("StaticMesh'/Game/Level/DecoLamp/SM_Env_Fire_OddsnEnds_Pillar3.SM_Env_Fire_OddsnEnds_Pillar3'"));
 	if (DoorGuard.Succeeded()) {
 		for (int i = 0; i < 10; i++) {
 			FloorDoorGuard[i]->SetStaticMesh(DoorGuard.Object);
 			FloorDoorGuard[i]->AttachToComponent(LevelFloorStaticMeshComp, FAttachmentTransformRules::KeepRelativeTransform);
+			FloorDoorGuard[i]->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
 		}
 	}
 
