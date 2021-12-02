@@ -42,11 +42,34 @@ void ARogueLevel::DoorGuardPositionInit() {
 	}
 }
 
-void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 PreDirection, int32 PreDirectionIndex, bool Start) {
+void ARogueLevel::DoorGuard(int32 NextDirection, int32 NextDirectionIndex, int32 PreDirection, int32 PreDirectionIndex, bool Start) {
 	int32 GuardCount = 0;
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 3; j++) {
-			if ((i != NextDirection || j != DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)) {
+			if (i == NextDirection && j == NextDirectionIndex) {
+				if (i == 1) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, -3800, 150));
+					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
+				}
+				else if (i == 2) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3800, -3000 + j * 3000, 150));
+				}
+				else if (i == 3) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, 3800, 150));
+					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
+				}
+				else if (i == 0) {
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3800, -3000 + j * 3000, 150));
+				}
+			}
+			else {
+				if (i != PreDirection && j != PreDirectionIndex) {
+					FloorDoorGuard[GuardCount]->SetRelativeLocation(DoorGuardFosition[i][j]);
+					GuardCount++;
+				}
+			}
+
+			/*if ((i != NextDirection || j != DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)) {
 				FloorDoorGuard[GuardCount]->SetRelativeLocation(DoorGuardFosition[i][j]);
 				if (i == 1)
 					FloorDoorGuard[GuardCount]->SetRelativeRotation(FRotator(0, 90, 0));
@@ -59,20 +82,20 @@ void ARogueLevel::DoorGuard(int32 NextDirection, int32 DirectionIndex, int32 Pre
 			}
 			else if((i == NextDirection && j == DirectionIndex) && (i != PreDirection || j != PreDirectionIndex)){
 				if (i == 0) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, -3900, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3800, -3000 + j * 3000, 150));
 				}
 				else if (i == 1) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3900, -3000 + j * 3000, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, -3800, 150));
 					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
 				}
 				else if (i == 2) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, 3900, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(3800, -3000 + j * 3000, 150));
 				}
 				else if (i == 3) {
-					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3900, -3000 + j * 3000, 150));
+					EndPointActor->SetRelativeLocation(GetActorLocation() + FVector(-3000 + j * 3000, 3800, 150));
 					EndPointActor->SetRelativeRotation(FRotator(0, 90, 0));
 				}
-			}
+			}*/
 		}
 	}
 }

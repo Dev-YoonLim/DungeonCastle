@@ -126,7 +126,8 @@ void UMyRogueWidget::MainMenuInit() {
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("Equip %d"), MyRogue->MyRogueState->TotalEquipCount));
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DialogueTu %d"), MyRogue->MyRogueState->DialogueTutorialCount));
-		if (MyRogue->MyRogueState->DialogueTutorialCount < 4 && MyRogue->MyRogueState->TotalEquipCount == MyRogue->MyRogueState->DialogueTutorialCount) {
+		if (MyRogue->MyRogueState->DialogueTutorialCount < 4 && 
+			MyRogue->MyRogueState->TotalEquipCount == MyRogue->MyRogueState->DialogueTutorialCount) {
 			MyRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogue->MyRogueState->FirstDialogueSourceRef[(MyRogue->MyRogueState->DialogueTutorialCount) + 3]));
 			MyRogue->MyRogueState->DialogueState[(MyRogue->MyRogueState->DialogueTutorialCount) + 3] = 1;
 			MyRogue->MyRogueState->DialogueTutorialCount++;

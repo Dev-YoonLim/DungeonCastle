@@ -25,7 +25,7 @@ AEnemyAIController::AEnemyAIController() {
 
 	SightConfig->SightRadius = AISightRadius;
 	SightConfig->LoseSightRadius = AILoseSightRadius;
-	SightConfig->PeripheralVisionAngleDegrees = AIFOW;
+	SightConfig->PeripheralVisionAngleDegrees = AIFOW+30.f;
 	SightConfig->SetMaxAge(AISightAge);
 
 	SightConfig->DetectionByAffiliation.bDetectEnemies = true;

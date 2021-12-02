@@ -31,7 +31,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AILoseSightRadiusValue)
 		float AILoseSightRadius = AISightRadius + 50.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AIFOWValue)
-		float AIFOW = 90.f;
+		float AIFOW = 120.f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = SightConfigValue)
 		class UAISenseConfig_Sight* SightConfig;

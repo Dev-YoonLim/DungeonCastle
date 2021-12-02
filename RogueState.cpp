@@ -328,6 +328,8 @@ void ARogueState::SetDamegedRogue(float Dameged) {
 
 void ARogueState::SetStaticRogueData(int32 UseDataValue) {
 	CurrentData -= UseDataValue;
+	if (CurrentData <= 0)
+		CurrentData = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current StaticData : %d"), CurrentData));
 	MyGameMode->Widget_GetRogueDataDelegate.ExecuteIfBound(CurrentData);
 	if(MyGameMode->MainWidgetState == true)
@@ -336,6 +338,8 @@ void ARogueState::SetStaticRogueData(int32 UseDataValue) {
 
 void ARogueState::SetDynamicRogueData(int32 UseDataValue) {
 	CurrentData -= UseDataValue * UseDataValuePercent;
+	if (CurrentData <= 0)
+		CurrentData = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current DynamicData : %d"), CurrentData));
 	MyGameMode->Widget_GetRogueDataDelegate.ExecuteIfBound(CurrentData);
 	if (MyGameMode->MainWidgetState == true)

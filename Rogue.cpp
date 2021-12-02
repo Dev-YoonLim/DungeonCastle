@@ -126,7 +126,7 @@ void ARogue::BeepCall() {
 	if (OpenDialogueScreen == false) {
 		BeepSound->Play();
 		BeepOn = true;
-		MyGameMode->MainUIUpdate();
+		//MyGameMode->MainUIUpdate();
 	}
 	else
 		DialogueVideoPlay();
@@ -143,7 +143,7 @@ void ARogue::FrontDialogueWindow() {
 			BeepOn = false;
 			BeepSound->Stop();
 		}
-		MyGameMode->MainUIUpdate();
+		//MyGameMode->MainUIUpdate();
 		DialogueVideoPlay();
 	}
 	else {

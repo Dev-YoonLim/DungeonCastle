@@ -11,6 +11,7 @@ ADeathZone::ADeathZone()
 	PrimaryActorTick.bCanEverTick = true;
 	EventBox = CreateDefaultSubobject<UBoxComponent>("EventBox");
 	EventBox->SetCollisionProfileName(TEXT("DeathZone"));
+	DeathZoneNumber = 0;
 }
 
 // Called when the game starts or when spawned

@@ -877,6 +877,7 @@ void ACastle_in_DungeonGameModeBase::LevelLoading() {
 void ACastle_in_DungeonGameModeBase::LevelFloorCheck() {
 	PreDirection = 0;
 	NextDirection = FMath::RandRange(0, 3);
+	NextDirectionIndex = FMath::RandRange(0, 2);
 	PreDirectionIndex = StageSubIndex;
 	if (PreDirection == NextDirection) {
 		while (NextDirectionIndex == PreDirectionIndex) {
