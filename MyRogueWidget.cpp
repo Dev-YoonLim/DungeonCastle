@@ -755,7 +755,7 @@ void UMyRogueWidget::GetNewGame() {
 	MyGameMode->StageIndex = 0;
 	MyGameMode->StageSubIndex = 0;
 	MyGameMode->WidgetCount = 0;
-	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+	//MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 	MyGameMode->GetWidgetNumber(-2);
 	//이거 나중에 초기값스타트 정보 들어가야함
 	//MyGameMode->GetWidgetNumber(1);

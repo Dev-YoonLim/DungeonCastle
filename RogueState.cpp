@@ -100,10 +100,11 @@ void ARogueState::BeginPlay() {
 	MyGameMode->Call_TakeAttackFormDelegate.BindUObject(this, &ARogueState::AttackFormChange);
 	MyGameMode->Call_RogueDamageDelegate.BindUObject(this, &ARogueState::SetDamegedRogue);
 	MyGameMode->Call_GameSaveDelegate.BindUObject(this, &ARogueState::SaveGameData);
-	RogueDataInit();
-	/*Call_RogueStartAttackFormNumber();
-	Call_RogueStartWeaponNumber();
-	Call_RogueStartTorchElementalNumber();*/
+	MyGameMode->Call_GameSettingSaveDelegate.BindUObject(this, &ARogueState::SaveSettingData);
+	//RogueDataInit();
+	//Call_RogueStartAttackFormNumber();
+	//Call_RogueStartWeaponNumber();
+	//Call_RogueStartTorchElementalNumber();
 }
 
 void ARogueState::RogueDataInit() {
@@ -188,54 +189,63 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	}*/
 }
 
-void ARogueState::SaveGameData() {
+void ARogueState::SaveSettingData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSettingSave")));
 	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 	PlayerData->FOVValue = MyGameMode->FOVValue;
+}
+
+void ARogueState::SaveGameData() {
+	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	PlayerData->StageIndex = MyGameMode->StageIndex;
-	PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
-	PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
-	PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
-	PlayerData->TotalTakeElementalCount = TotalElementCount;
-	PlayerData->TotalAttackFormCount = TotalAttackFormCount;
+	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
+	PlayerData->FOVValue = MyGameMode->FOVValue;
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap")) {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
+		PlayerData->StageIndex = MyGameMode->StageIndex;
+		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
+		PlayerData->TotalEquipAbilityCount = TotalAbilityCount;
+		PlayerData->TotalTakeWeaponCount = TotalWeaponCount;
+		PlayerData->TotalTakeElementalCount = TotalElementCount;
+		PlayerData->TotalAttackFormCount = TotalAttackFormCount;
 
-	PlayerData->TotalEquipAbilityDataList = TotalEquipAbilityDataList;
-	PlayerData->TotalTakeWeaponDataList = TotalWeaponDataList;
-	PlayerData->TotalTakeElementalDataList = TotalElementDataList;
-	PlayerData->TotalAttackFormDataList1 = TotalAttackFormDataList1;
-	PlayerData->TotalAttackFormDataList2 = TotalAttackFormDataList2;
+		PlayerData->TotalEquipAbilityDataList = TotalEquipAbilityDataList;
+		PlayerData->TotalTakeWeaponDataList = TotalWeaponDataList;
+		PlayerData->TotalTakeElementalDataList = TotalElementDataList;
+		PlayerData->TotalAttackFormDataList1 = TotalAttackFormDataList1;
+		PlayerData->TotalAttackFormDataList2 = TotalAttackFormDataList2;
 
-	PlayerData->WeaponNumber = WeaponNumber;
-	
-	PlayerData->TorchElemental = TorchElementNumber;
-	PlayerData->WeaponElemental = WeaponElementNumber;
-	/*PlayerData->WeaponElemental = WeaponElementNumber;
-	PlayerData->TorchElemental = TorchElementNumber;*/
+		PlayerData->WeaponNumber = WeaponNumber;
 
-	PlayerData->WeaponLevel = WeaponLevel;
-	PlayerData->TorchLevel = TorchLevel;
-	PlayerData->ElementalLevel = ElementLevel;
+		PlayerData->TorchElemental = TorchElementNumber;
+		PlayerData->WeaponElemental = WeaponElementNumber;
+		/*PlayerData->WeaponElemental = WeaponElementNumber;
+		PlayerData->TorchElemental = TorchElementNumber;*/
 
-	PlayerData->RogueHp = GetRogueFullHp();
-	PlayerData->RogueData = CurrentData;
-	PlayerData->RogueKarma = CurrentKarma;
-	PlayerData->NewGameStart = MyGameMode->NewGameStart;
-	PlayerData->ItemCount = ItemCount;
-	for (int i = 0; i < 3; i++) {
-		PlayerData->AttackForm[i] = AttackForm[i];
-		PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
-		PlayerData->StoryProgress[i] = MyGameMode->StoryProgress[i];
-	}
-	for (int i = 0; i < 7; i++)
-		PlayerData->DialogueState[i] = DialogueState[i];
-	//PlayerData->LastLocation = myRogue->GetActorLocation();
-	
-	//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
-	if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
+		PlayerData->WeaponLevel = WeaponLevel;
+		PlayerData->TorchLevel = TorchLevel;
+		PlayerData->ElementalLevel = ElementLevel;
+
+		PlayerData->RogueHp = GetRogueFullHp();
+		PlayerData->RogueData = CurrentData;
+		PlayerData->RogueKarma = CurrentKarma;
+		PlayerData->NewGameStart = MyGameMode->NewGameStart;
+		PlayerData->ItemCount = ItemCount;
+		for (int i = 0; i < 3; i++) {
+			PlayerData->AttackForm[i] = AttackForm[i];
+			PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
+			PlayerData->StoryProgress[i] = MyGameMode->StoryProgress[i];
+		}
+		for (int i = 0; i < 7; i++)
+			PlayerData->DialogueState[i] = DialogueState[i];
+		//PlayerData->LastLocation = myRogue->GetActorLocation();
+
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
+		if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
+			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
+		}
 	}
 }
 
@@ -297,7 +307,6 @@ void ARogueState::AttackFormChange(int32 TakeAttackForm, int32 TakeAttackFormInd
 void ARogueState::AttackFormInit() {
 	if(MyGameMode->NewGameStart == true && TotalAttackFormCount == 0){
 		for (int i = 0; i < 3; i++) {
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("AttackFormIndexInit")));
 			AttackForm[i] = FMath::RandRange(0, 2);
 			switch (AttackForm[i]) {
 			case 0:
@@ -1026,7 +1035,6 @@ void ARogueState::DeleteHpIncrease() {
 }
 
 void ARogueState::DeleteAbility() {
-	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Death")));
 	DeleteSlashSynergyIncrease();
 	DeleteBreakSynergyIncrease();
 	DeleteStabSynergyIncrease();

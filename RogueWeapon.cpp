@@ -28,7 +28,7 @@ void ARogueWeapon::BeginPlay()
 	//WeaponNumberChange();
 	//WeaponChangeElement(0, 1.f);
 	//WeaponNumberChange(myRogueState->StartWeaponNumber);
-	MyGameMode->Call_GameStartWeaponNumberDelegate.ExecuteIfBound();
+	//MyGameMode->Call_GameStartWeaponNumberDelegate.ExecuteIfBound();
 }
 
 void ARogueWeapon::Tick(float DeltaTime)

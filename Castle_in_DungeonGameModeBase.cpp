@@ -123,13 +123,13 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	//ChangedWidget(TitleMenuWidgetClass);
 	Super::BeginPlay();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("GameModeOn")));
-	/*URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
 	if (LoadGame == nullptr) {
 		LoadGame = GetMutableDefault<URogueSaveGame>();
 	}
 	else {
 		LoadGameData(LoadGame);
-	}*/
+	}
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap")) {
 		StageIndex = 0;
 	}
@@ -148,8 +148,8 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 	StageSubIndex = LoadGame->StageSubIndex;
 	FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
 	FOVValue = LoadGame->FOVValue;
-	for(int i = 0; i < 3; i ++)
-		StoryProgress[i] = LoadGame->StoryProgress[i];
+	//for(int i = 0; i < 3; i ++)
+		//StoryProgress[i] = LoadGame->StoryProgress[i];
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 }
 

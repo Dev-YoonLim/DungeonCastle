@@ -30,7 +30,7 @@ void ARogueTorch::BeginPlay()
 	WorldGameModeInit();
 	TorchChangeElementDelegateInit();
 	TorchChangeElement(0, 1.f);
-	MyGameMode->Call_GameStartTorchElementalNumberDelegate.ExecuteIfBound();
+	//MyGameMode->Call_GameStartTorchElementalNumberDelegate.ExecuteIfBound();
 }
 
 void ARogueTorch::EndPlay(const EEndPlayReason::Type EndPlayReason) {

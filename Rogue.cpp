@@ -122,7 +122,6 @@ void ARogue::RogueAbilityDelegateInit(){
 }
 
 void ARogue::BeepCall() {
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("BeepRing")));
 	if (OpenDialogueScreen == false) {
 		BeepSound->Play();
 		BeepOn = true;
@@ -1020,6 +1019,12 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] = 1;
 			BeepCall();
 		}*/
+	}
+	if (OtherComp->GetCollisionProfileName() == TEXT("LoadData")) {
+		MyRogueState->RogueDataInit();
+		MyRogueState->Call_RogueStartAttackFormNumber();
+		MyRogueState->Call_RogueStartWeaponNumber();
+		MyRogueState->Call_RogueStartTorchElementalNumber();
 	}
 }
 

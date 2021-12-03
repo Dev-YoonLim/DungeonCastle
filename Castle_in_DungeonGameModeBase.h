@@ -118,6 +118,7 @@ DECLARE_DELEGATE_OneParam(Call_TakeAttackFormRefDelegateSignature, TCHAR**);
 DECLARE_DELEGATE_OneParam(Call_RogueDamageDelegateSignature, float);
 
 DECLARE_DELEGATE(Call_GameSaveDelegateSignature);
+DECLARE_DELEGATE(Call_GameSettingSaveDelegateSignature);
 DECLARE_DELEGATE_OneParam(Call_StageIndexDelegateSignature, int32);
 DECLARE_DELEGATE_OneParam(Call_RogueFOVDelegateSignature, float);
 
@@ -236,6 +237,7 @@ public:
 	Call_TakeAttackFormRefDelegateSignature Call_TakeAttackFormRefDelegate;
 	Call_RogueDamageDelegateSignature Call_RogueDamageDelegate;
 	Call_GameSaveDelegateSignature Call_GameSaveDelegate;
+	Call_GameSettingSaveDelegateSignature Call_GameSettingSaveDelegate;
 	Call_StageIndexDelegateSignature Call_StageIndexDelegate;
 	Call_RogueFOVDelegateSignature Call_RogueFOVDelegate;
 

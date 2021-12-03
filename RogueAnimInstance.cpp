@@ -20,7 +20,7 @@ void URogueAnimInstance::NativeBeginPlay() {
 	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueAnimOn")));
 	GetWorldGameModeBase();
 	AttackAnimationDelegateInit();
-	AttackFormInit();
+	//AttackFormInit(); 
 	EnemyRogueAttackFormIndex();
 	//EnemyRogueAttackFormIndex();
 	//EnemyRogueAttackFormSetting();
@@ -341,6 +341,10 @@ void URogueAnimInstance::DaggerAttackAnimationInit() {
 		AttackTwoMontage = AttackTwoMontageAsset.Object;
 	if (AttackThreeMontageAsset.Succeeded()) 
 		AttackThreeMontage = AttackThreeMontageAsset.Object;
+
+	SelectAttackForm[0] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'");
+	SelectAttackForm[1] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'");
+	SelectAttackForm[2] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'");
 }
 
 void URogueAnimInstance::TorchAttackAnimationInit() {

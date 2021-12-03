@@ -220,6 +220,7 @@ public:
 	void LastSpeedSetting();
 	void DeleteAbility();
 	void SaveGameData();
+	void SaveSettingData();
 	void RogueDataInit();
 	void LoadGameData(URogueSaveGame* SaveData);
 	void DialogueRefInit();
