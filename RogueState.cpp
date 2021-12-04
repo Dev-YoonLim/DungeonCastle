@@ -128,17 +128,14 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
 		int Index = LoadGame->TotalEquipAbilityDataList[i];
 		AbilityRandTake(Index);
-		
 	}
 	for (int i = 0; i < LoadGame->TotalTakeWeaponCount; i++) {
 		int Index = LoadGame->TotalTakeWeaponDataList[i];
 		WeaponHadCheck(Index);
-		
 	}
 	for (int i = 0; i < LoadGame->TotalTakeElementalCount; i++) {
 		int Index = LoadGame->TotalTakeElementalDataList[i];
 		ElementalHadCheck(Index);
-		
 	}
 	for (int i = 0; i < LoadGame->TotalAttackFormCount; i++) {
 		int Index1 = LoadGame->TotalAttackFormDataList1[i];
@@ -183,6 +180,8 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	}
 	for (int i = 0; i < 7; i++)
 		DialogueState[i] = LoadGame->DialogueState[i];
+
+	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
@@ -204,6 +203,7 @@ void ARogueState::SaveGameData() {
 	PlayerData->FOVValue = MyGameMode->FOVValue;
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap")) {
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
+		PlayerData->DialogueTutorialCount = DialogueTutorialCount;
 		PlayerData->StageIndex = MyGameMode->StageIndex;
 		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
 		PlayerData->TotalEquipAbilityCount = TotalAbilityCount;

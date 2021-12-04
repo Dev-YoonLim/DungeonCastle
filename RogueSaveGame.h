@@ -96,6 +96,9 @@ public:
 	UPROPERTY()
 		int32 ItemCount;
 
+	UPROPERTY()
+		int32 DialogueTutorialCount;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

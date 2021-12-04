@@ -35,15 +35,7 @@ void ARogue::BeginPlay()
 	WeaponTorchDelegateInit();
 	RogueAbilityDelegateInit();
 	WeaponChange();
-	SetFOV(MyGameMode->FOVValue);
-	
-	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0") && MyRogueState->DialogueState[0] == 0) {
-		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
-			MyRogueState->FirstDialogueSourceRef[0]));
-		MyRogueState->DialogueState[0] = 1;
-		BeepCall();
-	}
+	SetFOV(100.f);
 }
 
 
@@ -1025,6 +1017,14 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		MyRogueState->Call_RogueStartAttackFormNumber();
 		MyRogueState->Call_RogueStartWeaponNumber();
 		MyRogueState->Call_RogueStartTorchElementalNumber();
+		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
+		SetFOV(MyGameMode->FOVValue);
+		if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0") && MyRogueState->DialogueState[0] == 0) {
+			DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+				MyRogueState->FirstDialogueSourceRef[0]));
+			MyRogueState->DialogueState[0] = 1;
+			BeepCall();
+		}
 	}
 }
 

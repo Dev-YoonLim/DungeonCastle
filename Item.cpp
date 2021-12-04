@@ -99,7 +99,7 @@ void AItem::NotifyActorEndOverlap(AActor* OtherActor) {
 
 void AItem::CapsuleInit() {
 	TakeItemRange = CreateDefaultSubobject<UCapsuleComponent>("ItemCapsule");
-	TakeItemRange->SetCapsuleRadius(200);
+	TakeItemRange->SetCapsuleRadius(150);
 	TakeItemRange->SetCapsuleHalfHeight(70);
 	TakeItemRange->SetCollisionProfileName("EventZoneCollision");
 	TakeItemRange->AttachToComponent(ItemMesh, FAttachmentTransformRules::KeepRelativeTransform);
