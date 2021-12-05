@@ -94,10 +94,12 @@ void AMyRogueController::OnStatWidget() {
 }
 
 void AMyRogueController::OnReSumeWidget() {
-	if (MyGameMode->GetPageNumber() == 1)
-		MyGameMode->GetWidgetNumber(2);
-	else
-		MyGameMode->WidgetPop();
+	if (myRogue->GetRogueSettingOn() == true) {
+		if (MyGameMode->GetPageNumber() == 1)
+			MyGameMode->GetWidgetNumber(2);
+		else
+			MyGameMode->WidgetPop();
+	}
 }
 
 void AMyRogueController::OnTabWidget() {

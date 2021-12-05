@@ -199,10 +199,10 @@ void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
 	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 	PlayerData->FOVValue = MyGameMode->FOVValue;
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap")) {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
 		PlayerData->DialogueTutorialCount = DialogueTutorialCount;
 		PlayerData->StageIndex = MyGameMode->StageIndex;
 		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;

@@ -95,7 +95,7 @@ public:
 	void RogueStateInit();
 	void RogueDialogueInit();
 	void DialogueInit();
-	void ChangeDialogueText();
+	//void ChangeDialogueText();
 
 	void RogueViewWork();
 	void RogueMovementValue();
@@ -184,6 +184,8 @@ public:
 	void DialogueVideoPlay();
 	void DialgoueVideoCancle();
 	void DialogueEventCheck();
+
+	bool GetRogueSettingOn() { return GameSettingOn; }
 	//void setZeroWeaponElementForm();
 	//void setOneWeaponElementForm();
 
@@ -234,6 +236,7 @@ private:
 	bool WeaponBack = false;
 	bool TakeHitOn = false;
 	bool OpenDialogueScreen = false;
+	bool GameSettingOn = false;
 
 public:
 	FVector LastInput;
