@@ -1014,8 +1014,8 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		}*/
 	}
 	if (OtherComp->GetCollisionProfileName() == TEXT("LoadData")) {
-		if (GameSettingOn == false) {
-			GameSettingOn = true;
+		if (MyGameMode->GameSettingOn == false) {
+			MyGameMode->GameSettingOn = true;
 			MyGameMode->GetWidgetNumber(1);
 			MyRogueState->RogueDataInit();
 			MyRogueState->Call_RogueStartAttackFormNumber();

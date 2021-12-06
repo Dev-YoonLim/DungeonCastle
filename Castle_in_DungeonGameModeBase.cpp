@@ -184,6 +184,8 @@ void ACastle_in_DungeonGameModeBase::RevivalTextAlphaPlus() {
 void ACastle_in_DungeonGameModeBase::RevivalTextAlphaMinus() {
 	if (RevivalTextAlphaMax == true && RevivalTextAlphaValue <= 0.00f) {
 		GetWorldTimerManager().ClearTimer(RevivalAlphaMinusTimeHandle);
+		if(GameSettingOn == true)
+			GetWidgetNumber(1);
 	}
 	else {
 		RevivalTextAlphaValue -= 0.01f;

@@ -10,26 +10,23 @@
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Actor.h"
-#include "Item.generated.h"
+#include "StartItem.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class CASTLE_IN_DUNGEON_API AItem : public AActor
+class CASTLE_IN_DUNGEON_API AStartItem : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
-	// Sets default values for this actor's properties
-	AItem();
-
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+	AStartItem();
 
-public:	
+public:
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	virtual void BeginPlay() override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
-	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 
 public:
 	virtual void CapsuleInit();
@@ -40,33 +37,62 @@ public:
 	virtual void SoundInit();
 
 
-public:
+/*public:
 	virtual ARogue* GetRogue();
 	virtual ACastle_in_DungeonGameModeBase* GetGameMode();
 	virtual UCapsuleComponent* GetCapsuleComponent();
 	virtual UStaticMeshComponent* GetItemMesh();
-	virtual UParticleSystemComponent* GetParticle();
+	virtual UParticleSystemComponent* GetParticle();*/
+public:
+	void GameStartSetting();
 
 
 protected:
 	UPROPERTY(EditAnywhere)
-		UCapsuleComponent* TakeItemRange;
+		UCapsuleComponent* TakeItemRange1;
+	UPROPERTY(EditAnywhere)
+		UCapsuleComponent* TakeItemRange2;
+	UPROPERTY(EditAnywhere)
+		UCapsuleComponent* TakeItemRange3;
+	UPROPERTY(EditAnywhere)
+		UCapsuleComponent* TakeItemRange4;
+	UPROPERTY(EditAnywhere)
+		UCapsuleComponent* TakeItemRange5;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* ItemMesh1;
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* ItemParticle1;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* ItemMesh2;
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* ItemParticle2;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* ItemMesh3;
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* ItemParticle3;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* ItemMesh4;
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* ItemParticle4;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* ItemMesh5;
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* ItemParticle5;
+
 	UPROPERTY(EditAnywhere)
 		ARogue* myRogue;
 	UPROPERTY(EditAnywhere)
 		ACastle_in_DungeonGameModeBase* MyGameMode;
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* ItemMesh;
-	UPROPERTY(EditAnywhere)
-		UParticleSystemComponent* ItemParticle;
+
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* TakeItem;
 	UPROPERTY(EditAnywhere)
 		ARogueState* MyRogueState;
-
-public:
 	UPROPERTY(EditAnywhere)
 		int32 ItemIndex;
+
+public:
 	int32 ItemCount;
 	USoundCue* GetItemSound;
 	USoundCue* ItemIdleSound;

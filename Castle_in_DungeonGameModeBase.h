@@ -261,6 +261,7 @@ public:
 	bool RevivalWidgetState;
 	bool TitleInRevivalWidgetState;
 	bool KeyWidgetState;
+	bool GameSettingOn = false;
 
 private:
 	TSubclassOf<UUserWidget> PreViewWidgetClass;
