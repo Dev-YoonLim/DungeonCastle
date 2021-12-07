@@ -12,10 +12,83 @@ AStartItem::AStartItem() {
 
 void AStartItem::BeginPlay() {
 	Super::BeginPlay();
+	TakeWorldInit();
+	TakeItemRange1->OnComponentBeginOverlap.AddDynamic(this, &AStartItem::FireOverlap);
+	TakeItemRange2->OnComponentBeginOverlap.AddDynamic(this, &AStartItem::FireOverlap);
+	TakeItemRange3->OnComponentBeginOverlap.AddDynamic(this, &AStartItem::FireOverlap);
+	TakeItemRange4->OnComponentBeginOverlap.AddDynamic(this, &AStartItem::FireOverlap);
+	TakeItemRange5->OnComponentBeginOverlap.AddDynamic(this, &AStartItem::FireOverlap);
+	GameStartSetting();
 }
 
 void AStartItem::GameStartSetting() {
+	for (int i = 0; i < 5; i++) {
+		ItemCount[i] = FMath::RandRange(1, 3);
+	}
+	ParticleSetting();
 
+}
+
+void AStartItem::ParticleSetting() {
+	UParticleSystem* HpFire = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL, TEXT("ParticleSystem'/Game/Level/ItemFire/HpFire.HpFire'")));
+	UParticleSystem* DataFire = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL, TEXT("ParticleSystem'/Game/Level/ItemFire/DataFIre.DataFIre'")));;
+	UParticleSystem* AbilityFire = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL, TEXT("ParticleSystem'/Game/Level/ItemFire/AbilityFire.AbilityFire'")));;
+	UParticleSystem* RandomFire = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL, TEXT("ParticleSystem'/Game/Level/ItemFire/RandomFire.RandomFire'")));;
+	switch (ItemCount[0]){
+	case 1:
+		ItemParticle1->SetTemplate(HpFire);
+		break;
+	case 2:
+		ItemParticle1->SetTemplate(DataFire);
+		break;
+	case 3:
+		ItemParticle1->SetTemplate(AbilityFire);
+		break;
+	}
+	switch (ItemCount[1]) {
+	case 1:
+		ItemParticle2->SetTemplate(HpFire);
+		break;
+	case 2:
+		ItemParticle2->SetTemplate(DataFire);
+		break;
+	case 3:
+		ItemParticle2->SetTemplate(AbilityFire);
+		break;
+	}
+	switch (ItemCount[2]) {
+	case 1:
+		ItemParticle3->SetTemplate(HpFire);
+		break;
+	case 2:
+		ItemParticle3->SetTemplate(DataFire);
+		break;
+	case 3:
+		ItemParticle3->SetTemplate(AbilityFire);
+		break;
+	}
+	switch (ItemCount[3]) {
+	case 1:
+		ItemParticle4->SetTemplate(HpFire);
+		break;
+	case 2:
+		ItemParticle4->SetTemplate(DataFire);
+		break;
+	case 3:
+		ItemParticle4->SetTemplate(AbilityFire);
+		break;
+	}
+	switch (ItemCount[4]) {
+	case 1:
+		ItemParticle5->SetTemplate(HpFire);
+		break;
+	case 2:
+		ItemParticle5->SetTemplate(DataFire);
+		break;
+	case 3:
+		ItemParticle5->SetTemplate(AbilityFire);
+		break;
+	}
 }
 
 void AStartItem::SoundInit() {
@@ -33,10 +106,105 @@ void AStartItem::SoundInit() {
 }
 
 void AStartItem::NotifyActorBeginOverlap(AActor* OtherActor) {
+	
+}
+
+void AStartItem::FireOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
 		UGameplayStatics::PlaySoundAtLocation(this, GetItemSound, GetActorLocation());
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TakeItem, GetActorTransform());
+		if (OverlappedComponent == TakeItemRange1) {
+			switch (ItemCount[0]){
+			case 1:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(23);
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HpUp"));
+				break;
+			case 2:
+				MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
+				break;
+			case 3:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(FMath::RandRange(0, 23));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("AbilityUp"));
+				break;
+			case 4:
+				break;
+			}
+		}
+		else if (OverlappedComponent == TakeItemRange2) {
+			switch (ItemCount[1]) {
+			case 1:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(23);
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HpUp"));
+				break;
+			case 2:
+				MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
+				break;
+			case 3:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(FMath::RandRange(0, 23));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("AbilityUp"));
+				break;
+			case 4:
+				break;
+			}
+		}
+		else if (OverlappedComponent == TakeItemRange3) {
+			switch (ItemCount[2]) {
+			case 1:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(23);
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HpUp"));
+				break;
+			case 2:
+				MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
+				break;
+			case 3:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(FMath::RandRange(0, 23));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("AbilityUp"));
+				break;
+			case 4:
+				break;
+			}
+		}
+		else if (OverlappedComponent == TakeItemRange4) {
+			switch (ItemCount[3]){
+			case 1:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(23);
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HpUp"));
+				break;
+			case 2:
+				MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
+				break;
+			case 3:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(FMath::RandRange(0, 23));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("AbilityUp"));
+				break;
+			case 4:
+				break;
+			}
+		}
+		else if (OverlappedComponent == TakeItemRange5) {
+			switch (ItemCount[4]) {
+			case 1:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(23);
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HpUp"));
+				break;
+			case 2:
+				MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
+				break;
+			case 3:
+				MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(FMath::RandRange(0, 23));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("AbilityUp"));
+				break;
+			case 4:
+				break;
+			}
+		}
 		Destroy();
 	}
 }

@@ -6,6 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Castle_in_DungeonGameModeBase.h"
+#include "Components/PrimitiveComponent.h"
 #include "Rogue.h"
 #include "Sound/SoundCue.h"
 #include "Kismet/GameplayStatics.h"
@@ -27,6 +28,10 @@ public:
 	// Called every frame
 	virtual void BeginPlay() override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	
+	UFUNCTION()
+		void FireOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
 	virtual void CapsuleInit();
@@ -45,6 +50,7 @@ public:
 	virtual UParticleSystemComponent* GetParticle();*/
 public:
 	void GameStartSetting();
+	void ParticleSetting();
 
 
 protected:
@@ -93,7 +99,7 @@ protected:
 		int32 ItemIndex;
 
 public:
-	int32 ItemCount;
+	int32 ItemCount[5];
 	USoundCue* GetItemSound;
 	USoundCue* ItemIdleSound;
 };
