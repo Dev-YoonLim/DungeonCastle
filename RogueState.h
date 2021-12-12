@@ -44,6 +44,8 @@ public:
 	int32 GetRogueData() { return CurrentData; }
 	void SetStaticRogueData(int32 UseDataValue);
 
+	void SetRogueDeshData(float UseDataValue);
+
 	void SetDynamicRogueData(int32 UseDataValue);
 
 	bool getTorchElementOne(int32 SelectElementNumber) { return HadTorchElement[SelectElementNumber]; }
@@ -238,6 +240,7 @@ private:
 	int32 CurrentData;
 	int32 DialogueIndex;
 	float UseDataValuePercent;
+	float UseDeshData;
 
 	float WeaponElementSynergy;
 	float SlashSynergy;

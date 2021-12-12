@@ -28,7 +28,8 @@ public:
 
 public:
 	UStaticMeshComponent* BigLamp;
-	UParticleSystemComponent* Fire;
+	UPROPERTY(EditAnywhere)
+		UParticleSystemComponent* Fire;
 	USoundCue* SoundCue;
 
 };

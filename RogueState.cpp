@@ -21,6 +21,7 @@ ARogueState::ARogueState() {
 }
 
 void ARogueState::AbilityInit() {
+	DialogueRefInit();
 	TotalEquipCount = 0;
 	EquipAbilityCount = 0;
 	DialogueTutorialCount = 1;
@@ -333,6 +334,18 @@ void ARogueState::SetDamegedRogue(float Dameged) {
 	MyGameMode->Rogue_GetHpDelegate.ExecuteIfBound(GetRogueHp());
 	MyGameMode->Widget_GetRogueHpDelegate.ExecuteIfBound(GetRogueHp());
 	MyGameMode->MainUIUpdate();
+}
+
+void ARogueState::SetRogueDeshData(float UseDataValue) {
+	UseDeshData += UseDataValue;
+	if (UseDeshData >= 5.f) {
+		CurrentData -= 1.f;
+		MyGameMode->Widget_GetRogueDataDelegate.ExecuteIfBound(CurrentData);
+		if (MyGameMode->MainWidgetState == true)
+			MyGameMode->MainUIUpdate();
+		UseDeshData = 0.f;
+	}
+
 }
 
 void ARogueState::SetStaticRogueData(int32 UseDataValue) {

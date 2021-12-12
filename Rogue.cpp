@@ -242,12 +242,10 @@ void ARogue::RogueMovementInit() {
 	LastInput = FVector::ZeroVector;
 	setAxel(0.00f);
 	setSpeed(0.1f);
-	
 	setTurnSpeed(0.3f);
 	setAttackQue(0);
 	setAttackAfterTime(0.f);
 	GetCharacterMovement()->MaxWalkSpeed = 1500;
-	
 }
 
 void ARogue::RogueDialogueInit() {
@@ -329,6 +327,10 @@ void ARogue::RogueWeaponNumberInit(int32 WeaponNumbers) {
 }
 
 bool ARogue::IdleState() {
+	if (GetCharacterMovement()->IsFalling() == true)
+		Falling = true;
+	else
+		Falling = false;
 	//&& NotTakeHitCheck() == true && NotRogueDie() == true && TakeHitOn == false
 	if (right == false && forward == false && back == false 
 		&& left == false && attack == false && roll == false && NotTakeHitCheck() == true && TakeHitOn == false && NotRogueDie() == true) {
@@ -535,7 +537,7 @@ void ARogue::Attack() {
 
 void ARogue::Forward(float amount) {
 	if (CanInput == true) {
-		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
+		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
 			forward = true;
 			back = false;
 			LastInput.Y += (amount + Axel);
@@ -546,6 +548,7 @@ void ARogue::Forward(float amount) {
 				}
 				else if (right == false && left == false && roll == false) {
 					ViewRotator = 0.f;
+					MyRogueState->SetRogueDeshData(0.1f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -558,7 +561,7 @@ void ARogue::Forward(float amount) {
 
 void ARogue::Back(float amount) {
 	if (CanInput == true) {
-		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
+		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
 			forward = false;
 			back = true;
 			LastInput.Y -= (amount + Axel);
@@ -582,7 +585,7 @@ void ARogue::Back(float amount) {
 void ARogue::Right(float amount) {
 	
 	if (CanInput == true) {
-		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
+		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
 			LastInput.X += amount + Axel;
 			if (myAnimInst != nullptr) {
 				right = true;
@@ -601,7 +604,7 @@ void ARogue::Right(float amount) {
 
 void ARogue::Left(float amount) {
 	if (CanInput == true) {
-		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
+		if (amount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
 			
 			ViewRotator = -3.f;
 			LastInput.X -= (amount + Axel);
@@ -621,7 +624,7 @@ void ARogue::Left(float amount) {
 }
 
 void ARogue::Dash(float Dashamount) {
-	if (Dashamount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false) {
+	if (Dashamount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
 		if (Axel < 0.2f)
 			Axel += 0.01;
 		/*RogueWeapons->AttachToComponent(GetMesh(), 
@@ -647,7 +650,7 @@ void ARogue::Dash(float Dashamount) {
 }
 
 void ARogue::Roll() {
-	if (CanInput == true) {
+	if (CanInput == true && Falling == false) {
 		if (NotAttackState() == true && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false
 			&& myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false && NotTakeHitCheck() == true && TakeHitOn == false) {
 			RollStepQue = 1;
@@ -1004,6 +1007,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		//ADungeonEnd* DungeonEnd = Cast<ADungeonEnd>(OtherActor);
 	}
 	if (OtherComp->GetCollisionProfileName() == TEXT("DialogueEvent")) {
+		MyRogueState->DialogueRefInit();
 		ADialogueZone* DialogueZone = Cast<ADialogueZone>(OtherActor);
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, 
 			MyRogueState->FirstDialogueSourceRef[DialogueZone->DialogueZoneNumber]));

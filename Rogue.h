@@ -237,6 +237,7 @@ private:
 	bool TakeHitOn = false;
 	bool OpenDialogueScreen = false;
 	bool GameSettingOn = false;
+	bool Falling;
 
 public:
 	FVector LastInput;

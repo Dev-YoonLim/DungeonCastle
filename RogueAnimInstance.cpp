@@ -566,10 +566,12 @@ void URogueAnimInstance::Desh(bool right, bool left, bool forward, bool back, bo
 }
 
 void URogueAnimInstance::Roll() {
+	MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(10);
 	Montage_Play(Roll_Montage);
 }
 
 void URogueAnimInstance::BackStep() {
+	MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(10);
 	Montage_Play(Roll_BackMontage);
 }
 
