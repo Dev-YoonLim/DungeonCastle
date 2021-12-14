@@ -173,7 +173,7 @@ public:
 	void EnemyRogueTakeElectriFicationDotTimer();
 	void EnemyRogueSlow(int32, bool);
 	void EnemyRogueDie();
-	void EnemyRogueTakeHitAnimation();
+	//void EnemyRogueTakeHitAnimation();
 
 public:
 	void TakeWeaponKnockBackCheck(bool);
@@ -277,4 +277,7 @@ public:
 	TCHAR* ElectriFicationRef3;
 
 	FVector EnemyRogueVectors;
+
+	UPROPERTY(EditAnywhere)
+		int32 StartWeaponNumber;
 };

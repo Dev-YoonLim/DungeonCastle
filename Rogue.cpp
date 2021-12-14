@@ -54,6 +54,8 @@ void ARogue::Tick(float DeltaTime)
 	RogueMovementValue();
 	NotAttackState();
 	IdleState();
+	if (BeepOn == true)
+		Axel = 0.f;
 	//if(OpenDialogueScreen == true)
 		//DialogueVideoPlay();
 	//DialogueEventCheck();
@@ -116,9 +118,9 @@ void ARogue::RogueAbilityDelegateInit(){
 
 void ARogue::BeepCall() {
 	if (OpenDialogueScreen == false) {
+		MyGameMode->DialogueUICall();
 		BeepSound->Play();
 		BeepOn = true;
-		//MyGameMode->MainUIUpdate();
 	}
 	else
 		DialogueVideoPlay();
@@ -127,6 +129,7 @@ void ARogue::BeepCall() {
 void ARogue::FrontDialogueWindow() {
 	UMaterial* DialogueMat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("MaterialInstanceConstant'/Game/Dialogue_Video/DiscMaterial.DiscMaterial'")));
 	if (OpenDialogueScreen == false) {
+		MyGameMode->MainUIUpdate();
 		MyRogueState->DialogueState[0] = 2;
 		WindowArm->SetRelativeRotation(FRotator(100.f, 87.f, 0.f));
 		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, 80.f));
@@ -139,6 +142,7 @@ void ARogue::FrontDialogueWindow() {
 		DialogueVideoPlay();
 	}
 	else {
+		DialogueSequence = false;
 		DialogueWindowPlane->SetMaterial(0, DialogueMat);
 		OpenDialogueScreen = false;
 		DialoguePlayer->Close();
@@ -151,6 +155,8 @@ void ARogue::DialogueVideoPlay() {
 		DialogueWindowPlane->SetMaterial(0, DialogueMat);
 		DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
 			TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
+		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+			MyRogueState->FirstDialogueSourceRef[DialogueIndex]));
 		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
 			//MyRogueState->DialogueState[i] = 2;
@@ -572,6 +578,7 @@ void ARogue::Back(float amount) {
 				}
 				else if (right == false && left == false && roll == false) {
 					ViewRotator = 0.f;
+					MyRogueState->SetRogueDeshData(0.1f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -592,8 +599,10 @@ void ARogue::Right(float amount) {
 				left = false;
 				if (Axel == 0)
 					myAnimInst->Walking(right, left, forward, back, roll);
-				else
+				else {
+					MyRogueState->SetRogueDeshData(0.1f);
 					myAnimInst->Desh(right, left, forward, back, roll);
+				}
 			}
 		}
 		else {
@@ -613,8 +622,10 @@ void ARogue::Left(float amount) {
 				left = true;
 				if (Axel == 0)
 					myAnimInst->Walking(right, left, forward, back, roll);
-				else
+				else {
 					myAnimInst->Desh(right, left, forward, back, roll);
+					MyRogueState->SetRogueDeshData(0.1f);
+				}
 			}
 		}
 		else {
@@ -625,7 +636,7 @@ void ARogue::Left(float amount) {
 
 void ARogue::Dash(float Dashamount) {
 	if (Dashamount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
-		if (Axel < 0.2f)
+		if (Axel < 0.2f && BeepOn == false)
 			Axel += 0.01;
 		/*RogueWeapons->AttachToComponent(GetMesh(), 
 			FAttachmentTransformRules::KeepRelativeTransform, TEXT("WeaponBack"));
@@ -1009,8 +1020,10 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (OtherComp->GetCollisionProfileName() == TEXT("DialogueEvent")) {
 		MyRogueState->DialogueRefInit();
 		ADialogueZone* DialogueZone = Cast<ADialogueZone>(OtherActor);
+		DialogueIndex = DialogueZone->DialogueZoneNumber;
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, 
-			MyRogueState->FirstDialogueSourceRef[DialogueZone->DialogueZoneNumber]));
+			MyRogueState->FirstDialogueSourceRef[DialogueIndex]));
+		DialogueSequence = true;
 		BeepCall();
 		/*if (MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] == 0) {
 			MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] = 1;

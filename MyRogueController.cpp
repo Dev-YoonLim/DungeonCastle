@@ -79,6 +79,7 @@ void AMyRogueController::BindAxis_func() {
 
 void AMyRogueController::TurnDialogueWindow() {
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("FCheck")));
+	MyGameMode->DeleteDialogueUICall();
 	myRogue->FrontDialogueWindow();
 }
 

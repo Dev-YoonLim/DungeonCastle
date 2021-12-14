@@ -329,6 +329,8 @@ public:
 	void MainUIUpdate();
 	void RevivalUIUpdate();
 	void TitleUIUpdate();
+	void DialogueUICall();
+	void DeleteDialogueUICall();
 	//void StartSetting();
 	void LevelLoading();
 	void LevelFloorCheck();

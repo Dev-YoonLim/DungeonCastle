@@ -583,7 +583,6 @@ void URogueAnimInstance::AttackFormInit() {
 
 
 void URogueAnimInstance::EnemyRogueAnimationInit() {
-	//
 	EnemyRoguePlayHitAnimationInit();
 	EnemyRoguePlayMovementAnimationInit();
 	EnemyRoguePlayIdleAnimationInit();

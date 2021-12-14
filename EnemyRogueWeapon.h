@@ -29,7 +29,7 @@ public:
 	void EnemyRogueWeaponMeshInit();
 
 public:
-	void EnemyRogueWeaponChange();
+	void EnemyRogueWeaponChange(int32 SelectWeaponNumber);
 	void EnemyRgoueWeaponTransform();
 	bool GetTakeHit() { return AttackCanHit; }
 	void SetTakeHit(bool newTakeHitState) { AttackCanHit = newTakeHitState; }
@@ -41,7 +41,8 @@ public:
 	bool AttackCanHit;
 	
 public:
-	int32 EnemyWeaponIndex;
+	UPROPERTY(EditAnywhere)
+		int32 EnemyWeaponIndex;
 	TCHAR* EnemyRogueWeaponRef;
 
 public:

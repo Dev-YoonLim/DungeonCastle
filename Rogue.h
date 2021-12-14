@@ -192,6 +192,8 @@ public:
 	UFUNCTION(BlueprintCallable) void FrontDialogueWindow();
 	UFUNCTION(BlueprintCallable) void ReturnDialogueWindow();
 
+	bool GetDialogueSequence() { return DialogueSequence; }
+
 private:
 	float Axel;
 	float Speed;
@@ -204,6 +206,7 @@ private:
 	int32 WeaponNumber;//간이용 웨펀넘버
 	int32 AttackFormSlot; //간이용 애님넘버
 	int32 RogueHp;
+	int32 DialogueIndex;
 	int RollStepQue;
 	float TempRollRotatorValue;
 	float SuperArmorPer;
@@ -238,6 +241,7 @@ private:
 	bool OpenDialogueScreen = false;
 	bool GameSettingOn = false;
 	bool Falling;
+	bool DialogueSequence;
 
 public:
 	FVector LastInput;

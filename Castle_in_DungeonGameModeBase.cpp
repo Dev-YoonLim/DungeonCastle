@@ -154,7 +154,21 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 }
 
 void ACastle_in_DungeonGameModeBase::MainUIUpdate() {
+	WidgetPageNumber = 1;
 	ChangedWidget(MainWidgetClass);
+}
+
+void ACastle_in_DungeonGameModeBase::DialogueUICall() {
+	WidgetPageNumber = 99;
+	ChangedWidget(DialogueWidgetClass);
+}
+
+void ACastle_in_DungeonGameModeBase::DeleteDialogueUICall() {
+	if (DialogueWidget != nullptr) {
+		DialogueWidgetState = false;
+		DialogueWidget->RemoveFromViewport();
+		DialogueWidget = nullptr;
+	}
 }
 
 void ACastle_in_DungeonGameModeBase::RevivalUIUpdate() {
@@ -289,7 +303,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(9);
 		RemoveView(10);
 		RemoveView(11);
-		RemoveView(99);
+		//RemoveView(99);
 		RemoveView(-1);
 		RemoveView(-2);
 		RemoveView(-3);

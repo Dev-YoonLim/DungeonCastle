@@ -18,7 +18,7 @@ void AEnemyRogueWeapon::BeginPlay()
 	Super::BeginPlay();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyWeaponOn")));
 	//EnemyRogueWeaponInit();
-	EnemyRogueWeaponChange();
+	//EnemyRogueWeaponChange();
 	//EnemyRgoueWeaponTransform();
 }
 
@@ -49,9 +49,9 @@ void AEnemyRogueWeapon::EnemyRogueWeaponMeshInit() {
 	EnemyWeapons->SetCollisionProfileName("EnemyRogueWeaponCollision");
 }
 
-void AEnemyRogueWeapon::EnemyRogueWeaponChange() {
-	EnemyWeaponIndex = FMath::FRandRange(0, 8);
-
+void AEnemyRogueWeapon::EnemyRogueWeaponChange(int32 SelectWeaponNumber) {
+	//EnemyWeaponIndex = FMath::FRandRange(0, 8);
+	EnemyWeaponIndex = SelectWeaponNumber;
 	switch (EnemyWeaponIndex) {
 	case 0:
 		EnemyRogueWeaponRef

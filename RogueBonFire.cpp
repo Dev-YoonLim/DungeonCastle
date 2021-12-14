@@ -42,8 +42,7 @@ void ARogueBonFire::GetWorldGameMode() {
 void ARogueBonFire::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
-	if (myRogue) {
-		
+	if (myRogue && myRogue->GetDialogueSequence() == false) {
 		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
 		myRogue->myAnimInst->Idle();
 	}

@@ -125,9 +125,9 @@ void AEnemyRogue::EnemyRogueBodyInit() {
 }
 
 void AEnemyRogue::EnemyRogueBodySetting() {
-	float RandScale1 = FMath::FRandRange(1, 1.3);
-	float RandScale2 = FMath::FRandRange(1, 1.3);
-	float RandScale3 = FMath::FRandRange(1, 1.3);
+	float RandScale1 = FMath::FRandRange(1, 1.15);
+	float RandScale2 = FMath::FRandRange(1, 1.15);
+	float RandScale3 = FMath::FRandRange(1, 1.15);
 	GetMesh()->SetRelativeScale3D(FVector(RandScale1, RandScale2, RandScale3));
 	GetCapsuleComponent()->SetRelativeScale3D(FVector(RandScale1, RandScale2, RandScale3));
 }
@@ -160,6 +160,7 @@ void AEnemyRogue::EnemyWeaponInit() {
 void AEnemyRogue::EnemyRogueWeaponInfo() {
 	EnemyRogueWeapon =
 		Cast<AEnemyRogueWeapon>(EnemyWeapon->GetChildActor());
+	EnemyRogueWeapon->EnemyRogueWeaponChange(StartWeaponNumber);
 	if (EnemyRogueWeapon) {
 		EnemyRogueWeaponRange = EnemyRogueWeapon->EnemyWeaponRange;
 		EnemyRogueWeaponDamage = EnemyRogueWeapon->EnemyWeaponDamage;
@@ -168,6 +169,7 @@ void AEnemyRogue::EnemyRogueWeaponInfo() {
 }
 
 void AEnemyRogue::EnemyRogueStateInit() {
+	StartWeaponNumber = 0.f;
 	SlowValue = 1.f;
 	DeathData = 100;
 	Karma = DeathData * 1.5;
@@ -177,14 +179,52 @@ void AEnemyRogue::EnemyRogueStateInit() {
 	EnemyDownFinish = false;
 	AIControllerClass = AEnemyAIController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 95.f;
-	auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+
+
+
+	/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
 		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
 	if (BlandAnim.Succeeded()) {
 		GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
 	}
 	GetCharacterMovement()->MaxWalkSpeed = 145.f;
-	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;
+	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;*/
 
+	if (EnemyForm <= 6) {
+		/*UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'")));*/
+		auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
+		if (BlandAnim.Succeeded()) {
+			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+			GetCharacterMovement()->MaxWalkSpeed = 145.f;
+		}
+	}
+	else if (EnemyForm <= 8) {
+		/*UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'")));
+		GetMesh()->SetAnimInstanceClass(EnemyAnim->StaticClass());
+		GetCharacterMovement()->MaxWalkSpeed = 165.f;*/
+		auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'"));
+		if (BlandAnim.Succeeded()) {
+			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+			GetCharacterMovement()->MaxWalkSpeed = 165.f;
+		}
+	}
+	else if (EnemyForm <= 9) {
+		/*UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
+			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'")));
+		GetMesh()->SetAnimInstanceClass(EnemyAnim->StaticClass());
+		GetCharacterMovement()->MaxWalkSpeed = 85.f;*/
+		auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
+			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'"));
+		if (BlandAnim.Succeeded()) {
+			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
+			GetCharacterMovement()->MaxWalkSpeed = 75.f;
+		}
+	}
+	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;
 	auto EnemyBehaviorTreeAsset = ConstructorHelpers::FObjectFinder<UBehaviorTree>
 		(TEXT("BehaviorTree'/Game/EnemyRogue/BT/EnemyBehaviorTree.EnemyBehaviorTree'"));
 	if (EnemyBehaviorTreeAsset.Succeeded())
