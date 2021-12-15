@@ -14,18 +14,24 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 
 	auto Blackboard = OwnerComp.GetBlackboardComponent();
 
-	ARogue* Goal =
-		Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
+	Goal = Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
+
 
 	if (Goal) {
 		if (EnemyController->SenseRogue == true) {
-			if (EnemyController->CheckDie() == true)
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("CheckSense"));
+			if (EnemyController->CheckDie() == true) {
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveToDie"));
 				return EBTNodeResult::Failed;
+			}
 			EnemyController->MoveToActor(Goal, EnemyRogue->EnemyRogueWeaponRange);
 			EnemyController->DoWalk();
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveTo"));
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("GoalSuccess"));
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("MoveTo"));
 			return EBTNodeResult::Succeeded;
 		}
+		//else
+			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("NotSense"));
 	}
 	return EBTNodeResult::Failed;
 

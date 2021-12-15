@@ -194,6 +194,9 @@ public:
 
 	bool GetDialogueSequence() { return DialogueSequence; }
 
+	int32 GetDialogueIndex() { return DialogueIndex; }
+	void SetDialogueIndex(int32 SetDialogueIndex) { DialogueIndex = SetDialogueIndex; }
+
 private:
 	float Axel;
 	float Speed;

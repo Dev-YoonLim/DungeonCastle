@@ -22,4 +22,5 @@ public:
 public:
 	AEnemyRogue* EnemyRogue;
 	AEnemyAIController* EnemyController;
+	ARogue* Goal;
 };

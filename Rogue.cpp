@@ -56,6 +56,24 @@ void ARogue::Tick(float DeltaTime)
 	IdleState();
 	if (BeepOn == true)
 		Axel = 0.f;
+	if (MyRogueState->DialogueTutorialCount < 4 &&
+		MyRogueState->TotalEquipCount == MyRogueState->DialogueTutorialCount) {
+		SetDialogueIndex((MyRogueState->DialogueTutorialCount) + 3);
+		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogueState->FirstDialogueSourceRef[GetDialogueIndex()]));
+		MyRogueState->DialogueState[(MyRogueState->DialogueTutorialCount) + 3] = 1;
+		MyRogueState->DialogueTutorialCount++;
+		if (BeepOn == false)
+			BeepCall();
+	}
+	/*if (MyRogue->MyRogueState->DialogueTutorialCount < 4 &&
+		MyRogue->MyRogueState->TotalEquipCount == MyRogue->MyRogueState->DialogueTutorialCount) {
+		MyRogue->SetDialogueIndex((MyRogue->MyRogueState->DialogueTutorialCount) + 3);
+		MyRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogue->MyRogueState->FirstDialogueSourceRef[MyRogue->GetDialogueIndex()]));
+		MyRogue->MyRogueState->DialogueState[(MyRogue->MyRogueState->DialogueTutorialCount) + 3] = 1;
+		MyRogue->MyRogueState->DialogueTutorialCount++;
+		if (MyRogue->BeepOn == false)
+			MyRogue->BeepCall();
+	}*/
 	//if(OpenDialogueScreen == true)
 		//DialogueVideoPlay();
 	//DialogueEventCheck();
@@ -128,6 +146,7 @@ void ARogue::BeepCall() {
 
 void ARogue::FrontDialogueWindow() {
 	UMaterial* DialogueMat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("MaterialInstanceConstant'/Game/Dialogue_Video/DiscMaterial.DiscMaterial'")));
+	DialogueWindowPlane->SetMaterial(0, DialogueMat);
 	if (OpenDialogueScreen == false) {
 		MyGameMode->MainUIUpdate();
 		MyRogueState->DialogueState[0] = 2;
@@ -143,7 +162,6 @@ void ARogue::FrontDialogueWindow() {
 	}
 	else {
 		DialogueSequence = false;
-		DialogueWindowPlane->SetMaterial(0, DialogueMat);
 		OpenDialogueScreen = false;
 		DialoguePlayer->Close();
 		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
@@ -159,6 +177,7 @@ void ARogue::DialogueVideoPlay() {
 			MyRogueState->FirstDialogueSourceRef[DialogueIndex]));
 		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
+			MyRogueState->DialogueState[DialogueIndex] = 2;
 			//MyRogueState->DialogueState[i] = 2;
 	}
 }
@@ -1021,10 +1040,13 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		MyRogueState->DialogueRefInit();
 		ADialogueZone* DialogueZone = Cast<ADialogueZone>(OtherActor);
 		DialogueIndex = DialogueZone->DialogueZoneNumber;
-		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, 
-			MyRogueState->FirstDialogueSourceRef[DialogueIndex]));
-		DialogueSequence = true;
-		BeepCall();
+		if (MyRogueState->DialogueState[DialogueIndex] == 0) {
+			DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+				MyRogueState->FirstDialogueSourceRef[DialogueIndex]));
+			DialogueSequence = true;
+			MyRogueState->DialogueState[DialogueIndex] = 1;
+			BeepCall();
+		}
 		/*if (MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] == 0) {
 			MyRogueState->DialogueState[DialogueZone->DialogueZoneNumber] = 1;
 			BeepCall();

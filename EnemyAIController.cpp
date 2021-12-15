@@ -41,12 +41,12 @@ AEnemyAIController::AEnemyAIController() {
 void AEnemyAIController::OnPossess(APawn* InPawn) {
 	Super::OnPossess(InPawn);
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyPossessOn")));
+	EnemyRogue = Cast<AEnemyRogue>(InPawn);
+
 	if (PerceptionComponent != nullptr) {
 		GetPerceptionComponent()->OnPerceptionUpdated.AddDynamic(this, &AEnemyAIController::FindSenseRogue);
 		GetPerceptionComponent()->OnTargetPerceptionUpdated.AddDynamic(this, &AEnemyAIController::FindSenseRogueTarget);
 	}
-
-	EnemyRogue = Cast<AEnemyRogue>(InPawn);
 
 	if (EnemyRogue && EnemyRogue->EnemyBehaviorTree) {
 		BlackboardComp->InitializeBlackboard(*EnemyRogue->EnemyBehaviorTree->BlackboardAsset);
@@ -109,15 +109,22 @@ void AEnemyAIController::FindSenseRogue(const TArray<AActor*>& myRogues) {
 		}
 	}*/
 }
-
+//&& Stimul.WasSuccessfullySensed() == true
 void AEnemyAIController::FindSenseRogueTarget(AActor* myRogue, FAIStimulus Stimul) {
-	ARogue* Rogue = Cast<ARogue>(GetWorld()->GetFirstPlayerController()->GetPawn());
-	if ((myRogue == GetWorld()->GetFirstPlayerController()->GetPawn()
-		&& Stimul.WasSuccessfullySensed() == true)) {
-		SenseRogue = true;
+	Rogue = Cast<ARogue>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if (Stimul.WasSuccessfullySensed() == true) {
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("FindRogue!!!"));
+		if(myRogue == GetWorld()->GetFirstPlayerController()->GetPawn())
+			SenseRogue = true;
+		else {
+			if (SenseRogue == true)
+				SenseRogue = true;
+			else
+				SenseRogue = false;
+		}
 	}
-	else
-		SenseRogue = false;
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("NotFindRogue???"));
+		//SenseRogue = false;
 	/*else {
 		if (SenseRogue == true) {
 			//DoConfused();

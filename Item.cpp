@@ -39,8 +39,9 @@ void AItem::NotifyActorBeginOverlap(AActor* OtherActor) {
 	if (myRogue) {
 		myRogue->MyRogueState->ItemCount++;
 		if (myRogue->MyRogueState->ItemCount == 3) {
+			myRogue->SetDialogueIndex(1);
 			myRogue->MyRogueState->DialogueState[1] = 1;
-			myRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, myRogue->MyRogueState->FirstDialogueSourceRef[1]));
+			myRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, myRogue->MyRogueState->FirstDialogueSourceRef[myRogue->GetDialogueIndex()]));
 			myRogue->BeepCall();
 		}
 		UGameplayStatics::PlaySoundAtLocation(this, GetItemSound, GetActorLocation());

@@ -126,15 +126,7 @@ void UMyRogueWidget::MainMenuInit() {
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("Equip %d"), MyRogue->MyRogueState->TotalEquipCount));
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DialogueTu %d"), MyRogue->MyRogueState->DialogueTutorialCount));
-		if (MyRogue->MyRogueState->DialogueTutorialCount < 4 && 
-			MyRogue->MyRogueState->TotalEquipCount == MyRogue->MyRogueState->DialogueTutorialCount) {
-			MyRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogue->MyRogueState->FirstDialogueSourceRef[(MyRogue->MyRogueState->DialogueTutorialCount) + 3]));
-			MyRogue->MyRogueState->DialogueState[(MyRogue->MyRogueState->DialogueTutorialCount) + 3] = 1;
-			MyRogue->MyRogueState->DialogueTutorialCount++;
-			if (MyRogue->BeepOn == false)
-				MyRogue->BeepCall();
-		}
-		if (MyRogue->MyRogueState->DialogueState[0] == 1) {
+		/*if (MyRogue->MyRogueState->DialogueState[0] == 1) {
 			FText PressTextValue = FText::FromString(FString::Printf(TEXT("Press 'F' Key")));
 			PressKeyText->SetText(PressTextValue);
 		}
@@ -142,7 +134,7 @@ void UMyRogueWidget::MainMenuInit() {
 			FText PressTextValue = FText::FromString(FString::Printf(TEXT("")));
 			PressKeyText->SetText(PressTextValue);
 		}
-		/*if (MyRogue->BeepOn == true) {
+		if (MyRogue->BeepOn == true) {
 			GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DialogueState  %d"), MyRogue->MyRogueState->DialogueState[0]));
 			if (MyRogue->MyRogueState->DialogueState[0] == 1) {
 				MyRogue->MyRogueState->DialogueState[0] = 2;

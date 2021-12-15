@@ -22,6 +22,7 @@ private:
 	UBehaviorTreeComponent* BehaviorComp;
 	UBlackboardComponent* BlackboardComp;
 	AEnemyRogue* EnemyRogue;
+	ARogue* Rogue;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AISightRadiusValue)
