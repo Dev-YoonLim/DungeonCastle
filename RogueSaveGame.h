@@ -99,6 +99,9 @@ public:
 	UPROPERTY()
 		int32 DialogueTutorialCount;
 
+	UPROPERTY()
+		float RogueMoveSpeed;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

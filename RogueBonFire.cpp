@@ -67,7 +67,7 @@ void ARogueBonFire::MeshInit() {
 	
 	BonFireFlame = CreateDefaultSubobject<UParticleSystemComponent>("BonFireFlame");
 	auto BonFireFlameAsset = ConstructorHelpers::FObjectFinder<UParticleSystem>
-		(TEXT("ParticleSystem'/Game/DataBornFire/Fire_02.Fire_02'"));
+		(TEXT("ParticleSystem'/Game/DataBornFire/Fire_3.Fire_3'"));
 
 	if (BonFireFlameAsset.Succeeded()) {
 		BonFireFlame->SetTemplate(BonFireFlameAsset.Object);

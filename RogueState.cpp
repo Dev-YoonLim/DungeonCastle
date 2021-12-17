@@ -62,13 +62,13 @@ void ARogueState::AbilityInit() {
 	ElementLevelValue = 1.f + ElementLevel * 0.05;
 	SaveSlotName = TEXT("SaveSlot");
 	DialogueIndex = 0;
-	for (int i = 0; i < 7; i++)
-		DialogueState[i] = 0;
 }
 
 void ARogueState::BeginPlay() {
 	Super::BeginPlay();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueStateOn")));
+	for (int i = 0; i < 7; i++)
+		DialogueState[i] = 0;
 	getWorldGameModeBase();
 	TorchElementDelegateInit();
 	WeaponElementDelegateInit();
@@ -169,6 +169,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	MyGameMode->NewGameStart = LoadGame->NewGameStart;
 	SetDialogueIndex(LoadGame->DialogueIndex);
 	ItemCount = LoadGame->ItemCount;
+	//RogueMoveSpeed = LoadGame->RogueMoveSpeed;
 	//MyGameMode->StageIndex = LoadGame->StageNumber;
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
 	for (int i = 0; i < 3; i++) {
@@ -234,6 +235,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->RogueKarma = CurrentKarma;
 		PlayerData->NewGameStart = MyGameMode->NewGameStart;
 		PlayerData->ItemCount = ItemCount;
+		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
 		for (int i = 0; i < 3; i++) {
 			PlayerData->AttackForm[i] = AttackForm[i];
 			PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
@@ -573,7 +575,6 @@ void ARogueState::SetElementLevelUp() {
 
 void ARogueState::GetMoveSpeed(float MoveSpeed) {
 	RogueMoveSpeed = MoveSpeed;
-	
 }
 
 void ARogueState::SetEquipmentStrings() {
@@ -1365,7 +1366,7 @@ void ARogueState::LastSpeedSetting() {
 }
 
 void ARogueState::DialogueRefInit() {
-	FirstDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening.Opening'");
+	FirstDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening_0.Opening_0'");
 	FirstDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
 	FirstDialogueSourceRef[2] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Castle_main_in.Castle_main_in'");
 	FirstDialogueSourceRef[3] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Enemy.Enemy'");

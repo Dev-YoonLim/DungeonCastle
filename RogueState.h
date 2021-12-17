@@ -252,7 +252,7 @@ private:
 	bool DoubleAttackCheck[3];
 	int32 AttackDirectionCheck[3][2];
 	float RogueMoveSpeed;
-	float MoveSpeedIncreaseCountValue;
+	
 	
 	float WeaponPhysicsDamege[3];
 	float WeaponElementDamege;
@@ -358,6 +358,7 @@ public:
 	float TorchBurnAttackSynergyValue;
 	int32 ItemCount;
 	int32 DialogueTutorialCount;
+	float MoveSpeedIncreaseCountValue;
 
 private:
 	bool HadTorchElement[5];
