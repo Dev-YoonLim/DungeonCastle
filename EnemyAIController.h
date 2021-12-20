@@ -26,7 +26,7 @@ private:
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AISightRadiusValue)
-		float AISightRadius = 1000.f;
+		float AISightRadius = 800.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AISightAgeValue)
 		float AISightAge = 5.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = AILoseSightRadiusValue)

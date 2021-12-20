@@ -44,7 +44,7 @@ public:
 	int32 GetRogueData() { return CurrentData; }
 	void SetStaticRogueData(int32 UseDataValue);
 
-	void SetRogueDeshData(float UseDataValue);
+	void SetRogueDeshData(float UseDataValue, float Data);
 
 	void SetDynamicRogueData(int32 UseDataValue);
 
@@ -379,4 +379,5 @@ private:
 public:
 	int32 DialogueState[7];
 	TCHAR* FirstDialogueSourceRef[7];
+	TCHAR* FirstDialogueSoundRef[7];
 };

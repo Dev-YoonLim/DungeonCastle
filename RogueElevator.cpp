@@ -38,12 +38,12 @@ void ARogueElevator::NotifyActorBeginOverlap(AActor* Rogue) {
 			Vibrations->setMoveReady(true);
 			Move = true;
 			if (Upfloor == false) {
-				setElevatorSpeed(0.1f);
-				setElevatorAxel(0.005f);
+				setElevatorSpeed(0.2f);
+				setElevatorAxel(0.007f);
 			}
 			else {
-				setElevatorSpeed(-0.1f);
-				setElevatorAxel(-0.005f);
+				setElevatorSpeed(-0.2f);
+				setElevatorAxel(-0.007f);
 			}
 		}
 	}
@@ -85,7 +85,7 @@ void ARogueElevator::ElevatorMove() {
 			//UGameplayStatics::PlaySoundAtLocation(this, MoveSoundComponent->Sound, GetActorLocation());
 			MoveStart = false;
 		}
-		if (getElevatorSpeed() < 1.5f && getElevatorSpeed() > -1.5f) {
+		if (getElevatorSpeed() < 2.5f && getElevatorSpeed() > -2.5f) {
 			setElevatorSpeed(getElevatorSpeed() + getElevatorAxel());
 			Vibrations->setRadius(1.f);
 		}

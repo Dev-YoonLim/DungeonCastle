@@ -184,6 +184,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		DialogueState[i] = LoadGame->DialogueState[i];
 
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
+	myRogue->ViewArm->bUsePawnControlRotation = LoadGame->HeadTracking;
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
@@ -235,6 +236,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->RogueKarma = CurrentKarma;
 		PlayerData->NewGameStart = MyGameMode->NewGameStart;
 		PlayerData->ItemCount = ItemCount;
+		PlayerData->HeadTracking = myRogue->ViewArm->bUsePawnControlRotation;
 		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
 		for (int i = 0; i < 3; i++) {
 			PlayerData->AttackForm[i] = AttackForm[i];
@@ -338,10 +340,12 @@ void ARogueState::SetDamegedRogue(float Dameged) {
 	MyGameMode->MainUIUpdate();
 }
 
-void ARogueState::SetRogueDeshData(float UseDataValue) {
+void ARogueState::SetRogueDeshData(float UseDataValue, float Data) {
 	UseDeshData += UseDataValue;
 	if (UseDeshData >= 5.f) {
-		CurrentData -= 1.f;
+		CurrentData -= Data;
+		if (CurrentData <= 0)
+			CurrentData = 0;
 		MyGameMode->Widget_GetRogueDataDelegate.ExecuteIfBound(CurrentData);
 		if (MyGameMode->MainWidgetState == true)
 			MyGameMode->MainUIUpdate();
@@ -1370,7 +1374,15 @@ void ARogueState::DialogueRefInit() {
 	FirstDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
 	FirstDialogueSourceRef[2] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Castle_main_in.Castle_main_in'");
 	FirstDialogueSourceRef[3] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Enemy.Enemy'");
-	FirstDialogueSourceRef[4] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Attack_Info.Attack_Info'");
-	FirstDialogueSourceRef[5] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Attack_Synergy.Attack_Synergy'");
-	FirstDialogueSourceRef[6] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/UnknowAbility.UnknowAbility'");
+	FirstDialogueSourceRef[4] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_One.Smelting_One'");
+	FirstDialogueSourceRef[5] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Two.Smelting_Two'");
+	FirstDialogueSourceRef[6] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Three.Smelting_Three'");
+
+	FirstDialogueSoundRef[0] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'");
+	FirstDialogueSoundRef[1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GetFire_Cue.GetFire_Cue'");
+	FirstDialogueSoundRef[2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/StartCamp_Cue.StartCamp_Cue'");
+	FirstDialogueSoundRef[3] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstEnemy_Cue.FirstEnemy_Cue'");
+	FirstDialogueSoundRef[4] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstBonFire_Cue.FirstBonFire_Cue'");
+	FirstDialogueSoundRef[5] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/SecondBonFire_Cue.SecondBonFire_Cue'");
+	FirstDialogueSoundRef[6] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");
 }

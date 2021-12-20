@@ -59,6 +59,6 @@ void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 			(EnemyRogue->GetActorForwardVector().GetSafeNormal())); 
 		EnemyRogue->DoWalk(0);
 	}
-	if (EnemyController->CheckDie() == true)
+	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 }

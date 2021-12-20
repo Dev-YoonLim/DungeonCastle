@@ -9,7 +9,7 @@ public class Castle_in_Dungeon : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
 		PublicDependencyModuleNames.AddRange(new string[] { "MediaAssets", "Core", "CoreUObject", 
-			"Engine", "InputCore", "UMG"});
+			"Engine", "InputCore", "UMG", "AudioMixer"});
 
 		PublicDependencyModuleNames.AddRange(new string[]{
 			 "AIModule", "GameplayTasks", "NavigationSystem"});

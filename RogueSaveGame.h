@@ -102,6 +102,9 @@ public:
 	UPROPERTY()
 		float RogueMoveSpeed;
 
+	UPROPERTY()
+		bool HeadTracking;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

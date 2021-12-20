@@ -7,12 +7,14 @@
 #include "GameFramework\CharacterMovementComponent.h"
 #include "GameFramework/PlayerInput.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Components/AudioComponent.h"
+#include "Components/SynthComponent.h"
+#include "MediaSoundComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "RogueAnimInstance.h"
 #include "RogueState.h"
 #include "Sound/SoundCue.h"
-#include "Components/AudioComponent.h"
 #include "Perception/AIPerceptionStimuliSourceComponent.h"
 #include "Castle_in_DungeonGameModeBase.h"
 #include "DeathZone.h"
@@ -262,6 +264,9 @@ public:
 	USoundCue* TakeHitSoundCue;
 
 	UPROPERTY(EditAnywhere)
+		UMediaSoundComponent* RogueDialogueSound;
+
+	UPROPERTY(EditAnywhere)
 		UTextRenderComponent* RogueDialogue;
 
 	UPROPERTY(EditAnyWhere)
@@ -304,6 +309,9 @@ public:
 		class UAIPerceptionStimuliSourceComponent* RoguePerceptionStimuliSource;
 	UPROPERTY(EditAnywhere)
 		UAudioComponent* BeepSound;
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* DialogueSound;
+	
 	UMediaSource* DialogueSource;
 	UMediaPlayer* DialoguePlayer;
 	UMediaTexture* DialogueTexture;

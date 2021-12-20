@@ -27,6 +27,7 @@ void ARogue::BeginPlay()
 {
 	Super::BeginPlay();
 	BeepSound->Stop();
+	DialogueSound->Stop();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueOn")));
 	UPlayerInput* PlayerInputControll = GetWorld()->GetFirstPlayerController()->PlayerInput;
 	AxisMapping(PlayerInputControll);
@@ -163,6 +164,7 @@ void ARogue::FrontDialogueWindow() {
 		DialogueSequence = false;
 		OpenDialogueScreen = false;
 		DialoguePlayer->Close();
+		DialogueSound->Stop();
 		WindowArm->SetRelativeLocation(FVector(-20.f, -20.f, -80.f));
 	}
 }
@@ -170,17 +172,18 @@ void ARogue::FrontDialogueWindow() {
 void ARogue::DialogueVideoPlay() {
 	UMaterial* DialogueMat = Cast<UMaterial>(StaticLoadObject(UMaterial::StaticClass(), NULL, TEXT("Material'/Game/Dialogue_Video/Dialogue_Mat.Dialogue_Mat'")));
 		DialogueWindowPlane->SetMaterial(0, DialogueMat);
-		DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
-			TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
 		if (MyRogueState->DialogueState[0] == 0) {
 			DialogueIndex = 0;
 		}
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 			MyRogueState->FirstDialogueSourceRef[DialogueIndex]));
+		USoundBase* DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
+			MyRogueState->FirstDialogueSoundRef[DialogueIndex]));
+		DialogueSound->SetSound(DialogueSoundBase);
 		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
+			DialogueSound->Play();
 			MyRogueState->DialogueState[DialogueIndex] = 2;
-			//MyRogueState->DialogueState[i] = 2;
 	}
 }
 
@@ -273,7 +276,7 @@ void ARogue::RogueMovementInit() {
 	setTurnSpeed(0.3f);
 	setAttackQue(0);
 	setAttackAfterTime(0.f);
-	GetCharacterMovement()->MaxWalkSpeed = 1500;
+	GetCharacterMovement()->MaxWalkSpeed = 1700;
 }
 
 void ARogue::RogueDialogueInit() {
@@ -308,21 +311,33 @@ void ARogue::RogueDialogueInit() {
 		BeepSound->SetSound(BeepSoundAsset.Object);
 	}
 
+	DialogueSound = CreateDefaultSubobject<UAudioComponent>("DialogueSound");
+	auto DialogueSoundAsset = ConstructorHelpers::FObjectFinder<USoundBase>
+		(TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'"));
+	if (DialogueSoundAsset.Succeeded()) {
+		DialogueSound->SetSound(DialogueSoundAsset.Object);
+	}
+
+	DialoguePlayer = Cast<UMediaPlayer>(StaticLoadObject(UMediaPlayer::StaticClass(), NULL,
+		TEXT("MediaPlayer'/Game/Dialogue_Video/DialoguePlayer.DialoguePlayer'")));
 }
 
 void ARogue::RogueViewInit() {
 	ViewRotator = 0.0f;
 	ViewArm = CreateDefaultSubobject<USpringArmComponent>("ViewArm");
 	ViewArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, (TEXT("Head")));
-
+	//ViewArm->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepWorldTransform, (TEXT("Head")));
+	
 	ViewArm->TargetArmLength = 0.f;
 	ViewArm->CameraLagSpeed = 3.f;
 	ViewArm->CameraRotationLagSpeed = 10.f;
 	ViewArm->bEnableCameraLag = true;
 	ViewArm->bEnableCameraRotationLag = true;
 	ViewArm->AddRelativeRotation(FRotator(90.f, 0, -90.f));
+	ViewArm->bUsePawnControlRotation = false;
 	RogueView = CreateDefaultSubobject<UCameraComponent>("RogueView");
 	RogueView->AttachToComponent(ViewArm, FAttachmentTransformRules::KeepRelativeTransform);
+	//RogueView->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, (TEXT("Head")));
 	//RogueView->SetFieldOfView(100.f);
 }
 
@@ -479,7 +494,6 @@ void ARogue::RogueMovementValue() {
 	if (NowSpeed > getSpeed() && Axel == 0) {
 		LastInput = (LastInput / NowSpeed) * getSpeed();
 	}
-
 	else if (NowSpeed > getSpeed() + Axel && Axel != 0) {
 		LastInput = (LastInput / NowSpeed) * (getSpeed() + Axel);
 	}
@@ -572,11 +586,12 @@ void ARogue::Forward(float amount) {
 			if (myAnimInst != nullptr) {
 				if (Axel == 0 && right == false && left == false && roll == false) {
 					ViewRotator = -3.5f;
+					MyRogueState->SetRogueDeshData(0.01f, -1.f);
 					myAnimInst->Walking(right, left, forward, back, roll);
 				}
 				else if (right == false && left == false && roll == false) {
 					ViewRotator = 0.f;
-					MyRogueState->SetRogueDeshData(0.1f);
+					MyRogueState->SetRogueDeshData(0.1f, 1.f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -600,7 +615,7 @@ void ARogue::Back(float amount) {
 				}
 				else if (right == false && left == false && roll == false) {
 					ViewRotator = 0.f;
-					MyRogueState->SetRogueDeshData(0.1f);
+					MyRogueState->SetRogueDeshData(0.1f, 1.f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -622,7 +637,7 @@ void ARogue::Right(float amount) {
 				if (Axel == 0)
 					myAnimInst->Walking(right, left, forward, back, roll);
 				else {
-					MyRogueState->SetRogueDeshData(0.1f);
+					MyRogueState->SetRogueDeshData(0.1f, 1.f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -646,7 +661,7 @@ void ARogue::Left(float amount) {
 					myAnimInst->Walking(right, left, forward, back, roll);
 				else {
 					myAnimInst->Desh(right, left, forward, back, roll);
-					MyRogueState->SetRogueDeshData(0.1f);
+					MyRogueState->SetRogueDeshData(0.1f, 1.f);
 				}
 			}
 		}
@@ -657,7 +672,7 @@ void ARogue::Left(float amount) {
 }
 
 void ARogue::Dash(float Dashamount) {
-	if (Dashamount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false) {
+	if (Dashamount != 0 && NotAttackState() == true && NotTakeHitCheck() == true && TakeHitOn == false && Falling == false && MyRogueState->GetRogueData() > 0) {
 		if (Axel < 0.2f && BeepOn == false)
 			Axel += 0.01;
 		/*RogueWeapons->AttachToComponent(GetMesh(), 
@@ -674,11 +689,12 @@ void ARogue::Dash(float Dashamount) {
 			RogueWeapons->AddRelativeRotation(FRotator(0.f, -90.f, 0));
 			WeaponBack = false;
 		}*/
+		if (Axel >= 0.f) {
+			Axel -= 0.01;
+		}
 		if (Axel < 0.f) {
 			Axel = 0.0f;
 		}
-		if (Axel >- 0.f)
-			Axel -= 0.01;
 	}
 }
 

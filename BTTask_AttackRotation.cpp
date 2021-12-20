@@ -21,7 +21,7 @@ EBTNodeResult::Type UBTTask_AttackRotation::ExecuteTask(UBehaviorTreeComponent& 
 
 	Direction = myRogue->GetActorForwardVector() - EnemyRogue->GetActorForwardVector();
 	Direction.Normalize();
-	if (EnemyController->CheckDie() == true)
+	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
 		return EBTNodeResult::Failed;
 	
 	return EBTNodeResult::InProgress;
@@ -63,6 +63,6 @@ void UBTTask_AttackRotation::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 
 	//	FinishLatentTask(OwnerComp, EBTNodeResult::Succeeded);
 	}
-	if (EnemyController->CheckDie() == true)
+	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
 		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 }
