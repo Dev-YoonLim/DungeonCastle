@@ -16,6 +16,7 @@
 #include "Components/Overlay.h"
 #include "Components/CircularThrobber.h"
 #include "Components/Slider.h"
+#include "Components/CheckBox.h"
 #include "Sound/SoundCue.h"
 #include "MediaPlayer.h"
 #include "MediaTexture.h"
@@ -54,6 +55,10 @@ public:
 		class UTextBlock* Revival;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UBorder* RevivalOutLine;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UCheckBox* CheckBox;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UCheckBox* CheckBox2;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UButton* NewGameButton;
@@ -449,6 +454,8 @@ public:
 	UFUNCTION(BlueprintCallable) void GetControllOptionMenu();
 	UFUNCTION(BlueprintCallable) void SetSoundVolume(float Value);
 	UFUNCTION(BlueprintCallable) void SetFOVVolume(float Value);
+	UFUNCTION(BlueprintCallable) void ChangeHeadShake(bool Check);
+	UFUNCTION(BlueprintCallable) void ChangeTrdCamera(bool Check);
 
 		/*UFUNCTION(BlueprintCallable)	   X-Slash");
 			void SlashButtonsFuntion();		   DownUpperCombo"

@@ -37,7 +37,9 @@ void ARogue::BeginPlay()
 	RogueAbilityDelegateInit();
 	WeaponChange();
 	SetFOV(100.f);
+	//ViewArm->bUsePawnControlRotation = true;
 	GameSettingOn = false;
+	//ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -25, 5), FVector(0, 0, 0)));
 }
 
 
@@ -132,7 +134,8 @@ void ARogue::RogueAbilityDelegateInit(){
 	MyGameMode->RogueSuperArmorDelegate.BindUObject(this, &ARogue::SuperArmorCheck);
 	MyGameMode->Rogue_SpeedValueDelegate.ExecuteIfBound(Speed * 10);
 	MyGameMode->Call_RogueFOVDelegate.BindUObject(this, &ARogue::SetFOV);
-	
+	MyGameMode->Call_HeadShakeDelegate.BindUObject(this, &ARogue::SetHeadShacke);
+	MyGameMode->Call_RollingTrdCameraDelegate.BindUObject(this, &ARogue::SetRollingTrdCamera);
 }
 
 void ARogue::BeepCall() {
@@ -386,6 +389,21 @@ bool ARogue::IdleState() {
 	}
 }
 
+void ARogue::SetHeadShacke(bool HeadShake) {
+	if (HeadShake == true) {
+		RogueHeadShake = true;
+		ViewArm->bUsePawnControlRotation = false;
+	}
+	else {
+		RogueHeadShake = false;
+		ViewArm->bUsePawnControlRotation = true;
+	}
+}
+
+void ARogue::SetRollingTrdCamera(bool TrdCamera) {
+	RollingTrdCamera = TrdCamera;
+}
+
 bool ARogue::NotAttackState() {
 	if (myAnimInst->Montage_IsPlaying(myAnimInst->AttackOneMontage) == false
 		&& myAnimInst->Montage_IsPlaying(myAnimInst->AttackTwoMontage) == false
@@ -484,7 +502,10 @@ bool ARogue::CanSideCheck() {
 }
 
 void ARogue::RogueViewWork() {
-	ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -25, 5), FVector(0, 0, 0)));
+	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false) {
+		ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -25, 5), FVector(0, 0, 0)));
+		//ViewArm->SetRelativeRotation(FRotator(90, 0, (-88 + ViewRotator)));
+	}
 	RogueView->SetRelativeTransform(FTransform(FRotator(ViewUp, 0, 0), FVector(0, 0, 0), FVector(0, 0, 0)));
 }
 
@@ -591,7 +612,7 @@ void ARogue::Forward(float amount) {
 				}
 				else if (right == false && left == false && roll == false) {
 					ViewRotator = 0.f;
-					MyRogueState->SetRogueDeshData(0.1f, 1.f);
+					MyRogueState->SetRogueDeshData(0.7f, 1.f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -729,6 +750,12 @@ void ARogue::Roll() {
 						myAnimInst->Roll();
 					}
 				}
+				if (RollingTrdCamera == true) {
+					ViewArm->bUsePawnControlRotation = true;
+					ViewArm->ResetRelativeTransform();
+					ViewArm->SetRelativeRotation(FRotator(90, 0, (-88 + ViewRotator)));
+					//ViewArm->TargetArmLength = 50.f;
+				}
 			}
 		}
 	}
@@ -739,6 +766,13 @@ void ARogue::RollEnd() {
 	if (RollStepQue == 1)
 		AddControllerYawInput(-TempRollRotatorValue);
 	RollStepQue = 0;
+	if (RollingTrdCamera == true) {
+		if(RogueHeadShake == true)
+			ViewArm->bUsePawnControlRotation = false;
+		else
+			ViewArm->bUsePawnControlRotation = true;
+		ViewArm->TargetArmLength = 0.f;
+	}
 }
 
 void ARogue::Turn(float amount) {

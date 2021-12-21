@@ -198,6 +198,9 @@ public:
 
 	int32 GetDialogueIndex() { return DialogueIndex; }
 	void SetDialogueIndex(int32 SetDialogueIndex) { DialogueIndex = SetDialogueIndex; }
+	void SetHeadShacke(bool Shake);
+	void SetRollingTrdCamera(bool Check);
+	bool GetRollingTrdCamera() { return RollingTrdCamera; }
 
 private:
 	float Axel;
@@ -247,6 +250,8 @@ private:
 	bool GameSettingOn = false;
 	bool Falling;
 	bool DialogueSequence;
+	bool RogueHeadShake;
+	bool RollingTrdCamera;
 
 public:
 	FVector LastInput;

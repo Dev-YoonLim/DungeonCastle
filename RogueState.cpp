@@ -185,6 +185,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
 	myRogue->ViewArm->bUsePawnControlRotation = LoadGame->HeadTracking;
+	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
@@ -237,6 +238,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->NewGameStart = MyGameMode->NewGameStart;
 		PlayerData->ItemCount = ItemCount;
 		PlayerData->HeadTracking = myRogue->ViewArm->bUsePawnControlRotation;
+		PlayerData->RollingTrdCamera = myRogue->GetRollingTrdCamera();
 		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
 		for (int i = 0; i < 3; i++) {
 			PlayerData->AttackForm[i] = AttackForm[i];

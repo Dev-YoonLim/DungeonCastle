@@ -105,6 +105,9 @@ public:
 	UPROPERTY()
 		bool HeadTracking;
 
+	UPROPERTY()
+		bool RollingTrdCamera;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

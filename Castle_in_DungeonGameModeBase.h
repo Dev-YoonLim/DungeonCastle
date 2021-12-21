@@ -123,6 +123,8 @@ DECLARE_DELEGATE_OneParam(Call_StageIndexDelegateSignature, int32);
 DECLARE_DELEGATE_OneParam(Call_RogueFOVDelegateSignature, float);
 
 DECLARE_DELEGATE(Call_DialogueDelegateSignature);
+DECLARE_DELEGATE_OneParam(Call_HeadShakeDelegateSignature, bool);
+DECLARE_DELEGATE_OneParam(Call_RollingTrdCameraDelegateSignature, bool);
 
 ////------------버그보완
 
@@ -242,6 +244,8 @@ public:
 	Call_RogueFOVDelegateSignature Call_RogueFOVDelegate;
 
 	Call_DialogueDelegateSignature Call_DialogueDelegate;
+	Call_HeadShakeDelegateSignature Call_HeadShakeDelegate;
+	Call_RollingTrdCameraDelegateSignature Call_RollingTrdCameraDelegate;
 	//Return_GameStartAttackFormNumberDelegateSignature Return_GameStartAttackFormNumberDelegate;
 
 public:

@@ -173,6 +173,24 @@ void UMyRogueWidget::ControllUIInit() {
 	SoundVolumeValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("SoundVolumeValue")));
 	FOVSlider = Cast<USlider>(GetWidgetFromName(TEXT("FOVSlide")));
 	FOVValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("FOVValue")));
+	CheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs")));
+	CheckBox2 = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs2")));
+	if (CheckBox != nullptr) {
+		if(MyRogue->ViewArm->bUsePawnControlRotation == true)
+			CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+		else
+			CheckBox->SetCheckedState(ECheckBoxState::Checked);
+		CheckBox->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeHeadShake);
+	}
+	
+	if (CheckBox2 != nullptr) {
+		if (MyRogue->GetRollingTrdCamera() == true)
+			CheckBox2->SetCheckedState(ECheckBoxState::Checked);
+		else
+			CheckBox2->SetCheckedState(ECheckBoxState::Unchecked);
+		CheckBox2->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeTrdCamera);
+	}
+	
 	if (ControllBack != nullptr) {
 		ControllBack->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
 	}
@@ -706,6 +724,21 @@ void UMyRogueWidget::RevivalMenuInit() {
 
 void UMyRogueWidget::DialogueMenuInit() {
 	Dialogue = Cast<UTextBlock>(GetWidgetFromName(TEXT("NPC_Dialogue")));
+}
+
+void UMyRogueWidget::ChangeHeadShake(bool Check) {
+	if(Check == true)
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("HeadTrue")));
+	else
+		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("HeadFalse")));
+	MyGameMode->Call_HeadShakeDelegate.ExecuteIfBound(Check);
+	//MyRogue->ViewArm->bUsePawnControlRotation = Check;
+	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+}
+
+void UMyRogueWidget::ChangeTrdCamera(bool Check) {
+	MyGameMode->Call_RollingTrdCameraDelegate.ExecuteIfBound(Check);
+	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 }
 
 void UMyRogueWidget::SetSoundVolume(float Value) {
