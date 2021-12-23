@@ -502,7 +502,7 @@ bool ARogue::CanSideCheck() {
 }
 
 void ARogue::RogueViewWork() {
-	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false) {
+	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false) {
 		ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -25, 5), FVector(0, 0, 0)));
 		//ViewArm->SetRelativeRotation(FRotator(90, 0, (-88 + ViewRotator)));
 	}
@@ -525,28 +525,54 @@ void ARogue::RogueMovementValue() {
 	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == true) {
 		if (back == true) {
 			if (Axel == 0.f) {
-				AddMovementInput(GetActorForwardVector(), LastInput.Y * 4);
-				AddMovementInput(GetActorRightVector(), LastInput.X * 4);
+				AddMovementInput(GetActorForwardVector(), LastInput.Y * -1-0.3f);
+				if (right == true)
+					AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.3f);
+				else if (left == true)
+					AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.3f);
 			}
 			else {
-				AddMovementInput(GetActorForwardVector(), LastInput.Y * 1.2);
-				AddMovementInput(GetActorRightVector(), LastInput.X * 1.2);
+				AddMovementInput(GetActorForwardVector(), LastInput.Y * -1-0.2f);
+				if (right == true)
+					AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.2f);
+				else if (left == true)
+					AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.2f);
 			}
 		}
 	}
 	else if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == true) {
-		if (right == true)
-			LastInput.Y += LastInput.X;
+		/*if (right == true)
+			//LastInput.Y += LastInput.X;
 		else if (left == true)
-			LastInput.Y -= LastInput.X;
+			//LastInput.Y -= LastInput.X;*/
 		if (Axel == 0.f) {
-			AddMovementInput(GetActorForwardVector(), LastInput.Y * 4);
+			AddMovementInput(GetActorForwardVector(), LastInput.Y * 1+0.3f);
+			if (right == true)
+				AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.3f);
+			else if (left == true)
+				AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.3f);
 			//AddMovementInput(GetActorRightVector(), LastInput.X * 3);
 		}
 		else {
-			AddMovementInput(GetActorForwardVector(), LastInput.Y * 1.2);
+			AddMovementInput(GetActorForwardVector(), LastInput.Y * 1+0.2f);
+			if (right == true)
+				AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.2f);
+			else if (left == true)
+				AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.2f);
 			//AddMovementInput(GetActorRightVector(), LastInput.X * 1.2);
 		}
+	}
+	else if (myAnimInst->Montage_IsPlaying(myAnimInst->Dodge_Right) == true) {
+		if(Axel == 0.f)
+			AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.1f);
+		else
+			AddMovementInput(GetActorRightVector(), LastInput.X * 1);
+	}
+	else if (myAnimInst->Montage_IsPlaying(myAnimInst->Dodge_Left) == true) {
+		if (Axel == 0.f)
+			AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.1f);
+		else
+			AddMovementInput(GetActorRightVector(), LastInput.X * 1);
 	}
 	
 	else {
@@ -607,12 +633,12 @@ void ARogue::Forward(float amount) {
 			if (myAnimInst != nullptr) {
 				if (Axel == 0 && right == false && left == false && roll == false) {
 					ViewRotator = -3.5f;
-					MyRogueState->SetRogueDeshData(0.01f, -1.f);
+					MyRogueState->SetRogueDeshData(0.03f, -1.f);
 					myAnimInst->Walking(right, left, forward, back, roll);
 				}
 				else if (right == false && left == false && roll == false) {
 					ViewRotator = 0.f;
-					MyRogueState->SetRogueDeshData(0.7f, 1.f);
+					MyRogueState->SetRogueDeshData(0.1f, 1.f);
 					myAnimInst->Desh(right, left, forward, back, roll);
 				}
 			}
@@ -632,6 +658,7 @@ void ARogue::Back(float amount) {
 			if (myAnimInst != nullptr) {
 				if (Axel == 0 && right == false && left == false && roll == false) {
 					ViewRotator = -4;
+					MyRogueState->SetRogueDeshData(0.03f, -1.f);
 					myAnimInst->Walking(right, left, forward, back, roll);
 				}
 				else if (right == false && left == false && roll == false) {
@@ -655,8 +682,10 @@ void ARogue::Right(float amount) {
 			if (myAnimInst != nullptr) {
 				right = true;
 				left = false;
-				if (Axel == 0)
+				if (Axel == 0) {
+					MyRogueState->SetRogueDeshData(0.03f, -1.f);
 					myAnimInst->Walking(right, left, forward, back, roll);
+				}
 				else {
 					MyRogueState->SetRogueDeshData(0.1f, 1.f);
 					myAnimInst->Desh(right, left, forward, back, roll);
@@ -678,8 +707,10 @@ void ARogue::Left(float amount) {
 			if (myAnimInst != nullptr) {
 				right = false;
 				left = true;
-				if (Axel == 0)
+				if (Axel == 0) {
+					MyRogueState->SetRogueDeshData(0.03f, -1.f);
 					myAnimInst->Walking(right, left, forward, back, roll);
+				}
 				else {
 					myAnimInst->Desh(right, left, forward, back, roll);
 					MyRogueState->SetRogueDeshData(0.1f, 1.f);
@@ -722,21 +753,51 @@ void ARogue::Dash(float Dashamount) {
 void ARogue::Roll() {
 	if (CanInput == true && Falling == false) {
 		if (NotAttackState() == true && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false
-			&& myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false && NotTakeHitCheck() == true && TakeHitOn == false) {
+			&& myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false && NotTakeHitCheck() == true && TakeHitOn == false && MyRogueState->GetRogueData() > 9) {
 			RollStepQue = 1;
 			if (myAnimInst != nullptr) {
 				RightRotator = GetControlRotation();
 				roll = true;
+				if (forward == false && back == false) {
+					if (right == true) {
+						myAnimInst->RightStep();
+					}
+					else if (left == true) {
+						myAnimInst->LeftStep();
+					}
+				}
+				else {
+					if (forward == true) {
+						myAnimInst->Roll();
+					}
+					else if (back == true) {
+						RollStepQue = 3;
+						myAnimInst->BackStep();
+					}
+				}
+
+
+				/*if (forward == true) {
+					RollStepQue = 1;
+					myAnimInst->Roll();
+				}
+				else if (back == true) {
+					RollStepQue = 3;
+					myAnimInst->BackStep();
+				}
 				if (right == false && left == false) {
 					TempRollRotatorValue = 0.f;
 					if (back == true) {
 						RollStepQue = 3;
 						myAnimInst->BackStep();
 					}
-					else
+					else if (forward == true)
+						RollStepQue = 1;
 						myAnimInst->Roll();
+					else
+						
 				}
-				else if (right == true || left == true) {
+				else if (right == true) {
 					if(right == true)
 						TempRollRotatorValue = 40 - (RollRotator.Yaw) * 0.33;
 					else if(left == true)
@@ -750,6 +811,16 @@ void ARogue::Roll() {
 						myAnimInst->Roll();
 					}
 				}
+				else if (left == true) {
+					if (back == true) {
+						RollStepQue = 3;
+						myAnimInst->BackStep();
+					}
+					else {
+						AddControllerYawInput(TempRollRotatorValue);
+						myAnimInst->Roll();
+					}
+				}*/
 				if (RollingTrdCamera == true) {
 					ViewArm->bUsePawnControlRotation = true;
 					ViewArm->ResetRelativeTransform();
@@ -763,8 +834,8 @@ void ARogue::Roll() {
 
 void ARogue::RollEnd() {
 	roll = false;
-	if (RollStepQue == 1)
-		AddControllerYawInput(-TempRollRotatorValue);
+	/*if (RollStepQue == 1)
+		AddControllerYawInput(-TempRollRotatorValue);*/
 	RollStepQue = 0;
 	if (RollingTrdCamera == true) {
 		if(RogueHeadShake == true)

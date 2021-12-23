@@ -42,6 +42,12 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void BackStep();
 
+	UFUNCTION(BlueprintCallable)
+		void RightStep();
+
+	UFUNCTION(BlueprintCallable)
+		void LeftStep();
+
 public:
 	void AnimationInit();
 	void DaggerAttackAnimationInit();
@@ -102,6 +108,9 @@ public:
 	UAnimMontage* AttackTestMontage;
 	UAnimMontage* Roll_Montage;
 	UAnimMontage* Roll_BackMontage;
+	UAnimMontage* Dodge_Right;
+	UAnimMontage* Dodge_Left;
+
 	UAnimMontage* IdleMontage;
 	
 	UAnimMontage* WalkMontage;

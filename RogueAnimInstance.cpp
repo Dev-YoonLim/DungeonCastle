@@ -298,9 +298,13 @@ void URogueAnimInstance::MovementAnimationInit() {
 	auto DeshBackMontageAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 		(TEXT("AnimMontage'/Game/Character/BP_DeshBackMontage.BP_DeshBackMontage'"));
 	auto Roll_DodgeAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
-		(TEXT("AnimMontage'/Game/Character/Animation/Roll/Rolling.Rolling'"));
+		(TEXT("AnimMontage'/Game/Character/Animation/Roll/FrontStep.FrontStep'"));
 	auto Roll_BackDodgetAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
-		(TEXT("AnimMontage'/Game/Character/Animation/Roll/Rolling_2.Rolling_2'"));
+		(TEXT("AnimMontage'/Game/Character/Animation/Roll/BackStep.BackStep'"));
+	auto DodgeStep_RightAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
+		(TEXT("AnimMontage'/Game/Character/Animation/Roll/RStep.RStep'"));
+	auto DodgeStep_LeftAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
+		(TEXT("AnimMontage'/Game/Character/Animation/Roll/LStep.LStep'"));
 	
 	
 	if (WalkMontageAsset.Succeeded())
@@ -325,6 +329,10 @@ void URogueAnimInstance::MovementAnimationInit() {
 		Roll_Montage = Roll_DodgeAsset.Object;
 	if (Roll_BackDodgetAsset.Succeeded()) 
 		Roll_BackMontage = Roll_BackDodgetAsset.Object;
+	if (DodgeStep_RightAsset.Succeeded())
+		Dodge_Right = DodgeStep_RightAsset.Object;
+	if (DodgeStep_LeftAsset.Succeeded())
+		Dodge_Left = DodgeStep_LeftAsset.Object;
 }
 
 void URogueAnimInstance::DaggerAttackAnimationInit() {
@@ -573,6 +581,16 @@ void URogueAnimInstance::Roll() {
 void URogueAnimInstance::BackStep() {
 	MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(10);
 	Montage_Play(Roll_BackMontage);
+}
+
+void URogueAnimInstance::RightStep() {
+	MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(10);
+	Montage_Play(Dodge_Right);
+}
+
+void URogueAnimInstance::LeftStep() {
+	MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(10);
+	Montage_Play(Dodge_Left);
 }
 
 void URogueAnimInstance::AttackFormInit() {
