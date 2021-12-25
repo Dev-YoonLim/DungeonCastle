@@ -215,9 +215,11 @@ private:
 	int32 AttackFormSlot; //간이용 애님넘버
 	int32 RogueHp;
 	int32 DialogueIndex;
+	int32 SubDialogueIndex;
 	int RollStepQue;
 	float TempRollRotatorValue;
 	float SuperArmorPer;
+	int32 DialogueKinds;
 
 	
 

@@ -31,7 +31,7 @@ public:
 		UBoxComponent* EndingBox;
 
 	UPROPERTY(EditAnywhere)
-		int32 EndingEventNumber;
+		int32 DungeonNumber;
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* DungeonFinishMesh;

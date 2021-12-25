@@ -91,7 +91,13 @@ public:
 		int32 DialogueIndex;
 	
 	UPROPERTY()
-		int32 DialogueState[7];
+		int32 StartDialogueState[7];
+
+	UPROPERTY()
+		int32 MainDialogueState[5];
+
+	UPROPERTY()
+		int32 SubDialogueState[8];
 
 	UPROPERTY()
 		int32 ItemCount;
@@ -107,6 +113,15 @@ public:
 
 	UPROPERTY()
 		bool RollingTrdCamera;
+
+	UPROPERTY()
+		int DungeonClearCount[3];
+
+	UPROPERTY()
+		int DungeonClearAllCount;
+
+	UPROPERTY()
+		int32 AllData;
 
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];

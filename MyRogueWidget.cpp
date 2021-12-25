@@ -174,7 +174,7 @@ void UMyRogueWidget::ControllUIInit() {
 	FOVSlider = Cast<USlider>(GetWidgetFromName(TEXT("FOVSlide")));
 	FOVValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("FOVValue")));
 	CheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs")));
-	CheckBox2 = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs2")));
+	//CheckBox2 = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs2")));
 	if (CheckBox != nullptr) {
 		if(MyRogue->ViewArm->bUsePawnControlRotation == true)
 			CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
@@ -183,13 +183,13 @@ void UMyRogueWidget::ControllUIInit() {
 		CheckBox->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeHeadShake);
 	}
 	
-	if (CheckBox2 != nullptr) {
+	/*if (CheckBox2 != nullptr) {
 		if (MyRogue->GetRollingTrdCamera() == true)
 			CheckBox2->SetCheckedState(ECheckBoxState::Checked);
 		else
 			CheckBox2->SetCheckedState(ECheckBoxState::Unchecked);
 		CheckBox2->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeTrdCamera);
-	}
+	}*/
 	
 	if (ControllBack != nullptr) {
 		ControllBack->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);

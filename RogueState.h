@@ -44,6 +44,8 @@ public:
 	int32 GetRogueData() { return CurrentData; }
 	void SetStaticRogueData(int32 UseDataValue);
 
+	int32 GetRogueAllData() { return AllData; }
+
 	void SetRogueDeshData(float UseDataValue, float Data);
 
 	void SetDynamicRogueData(int32 UseDataValue);
@@ -226,6 +228,10 @@ public:
 	void RogueDataInit();
 	void LoadGameData(URogueSaveGame* SaveData);
 	void DialogueRefInit();
+	void DialgoueStateInit();
+	void PlusDungeonClearCount(int32 DungeonIndex);
+	int32 GetDungeonClearCount(int32 DungeonIndex);
+	int32 GetDungeonClearAllCount();
 	//void GetRogue();
 
 public:
@@ -238,6 +244,7 @@ private:
 	int32 CurrentKarma;
 	int32 RogueKill;
 	int32 CurrentData;
+	int32 AllData;
 	int32 DialogueIndex;
 	float UseDataValuePercent;
 	float UseDeshData;
@@ -375,9 +382,17 @@ private:
 	bool Mad;
 	bool Stablity;
 
+	int DungeonClearCount[3];
+	int DungeonClearAllCount;
+
+
 
 public:
-	int32 DialogueState[7];
+	int32 StartDialogueState[7];
+	int32 MainDialogueState[5];
+	int32 SubDialogueState[2][4];
 	TCHAR* FirstDialogueSourceRef[7];
 	TCHAR* FirstDialogueSoundRef[7];
+	TCHAR* MainStoryDialogueSourceRef[5][2];
+	TCHAR* SubStoryDialogueSourceRef[2][4][2];
 };

@@ -67,8 +67,7 @@ void ARogueState::AbilityInit() {
 void ARogueState::BeginPlay() {
 	Super::BeginPlay();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueStateOn")));
-	for (int i = 0; i < 7; i++)
-		DialogueState[i] = 0;
+	DialgoueStateInit();
 	getWorldGameModeBase();
 	TorchElementDelegateInit();
 	WeaponElementDelegateInit();
@@ -166,12 +165,17 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	RogueHp = LoadGame->RogueHp;
 	CurrentData = LoadGame->RogueData;
 	CurrentKarma = LoadGame->RogueKarma;
+	AllData = LoadGame->AllData;
 	MyGameMode->NewGameStart = LoadGame->NewGameStart;
 	SetDialogueIndex(LoadGame->DialogueIndex);
 	ItemCount = LoadGame->ItemCount;
 	//RogueMoveSpeed = LoadGame->RogueMoveSpeed;
 	//MyGameMode->StageIndex = LoadGame->StageNumber;
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
+	DungeonClearAllCount = LoadGame->DungeonClearAllCount;
+	for (int i = 0; i < 3; i++) {
+		DungeonClearCount[i] = LoadGame->DungeonClearCount[i];
+	}
 	for (int i = 0; i < 3; i++) {
 		AttackForm[i] = LoadGame->AttackForm[i];
 		AttackFormIndex[i] = LoadGame->AttackFormDetail[i];
@@ -181,7 +185,16 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}
 	for (int i = 0; i < 7; i++)
-		DialogueState[i] = LoadGame->DialogueState[i];
+		StartDialogueState[i] = LoadGame->StartDialogueState[i];
+
+	for (int i = 0; i < 5; i++) {
+		MainDialogueState[i] = LoadGame->MainDialogueState[i];
+	}
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 4; j++) {
+			SubDialogueState[i][j] = LoadGame->SubDialogueState[(i*4)+j];
+		}
+	}
 
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
 	myRogue->ViewArm->bUsePawnControlRotation = LoadGame->HeadTracking;
@@ -234,19 +247,38 @@ void ARogueState::SaveGameData() {
 
 		PlayerData->RogueHp = GetRogueFullHp();
 		PlayerData->RogueData = CurrentData;
+		PlayerData->AllData = AllData;
 		PlayerData->RogueKarma = CurrentKarma;
 		PlayerData->NewGameStart = MyGameMode->NewGameStart;
 		PlayerData->ItemCount = ItemCount;
 		PlayerData->HeadTracking = myRogue->ViewArm->bUsePawnControlRotation;
 		PlayerData->RollingTrdCamera = myRogue->GetRollingTrdCamera();
 		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
+		PlayerData->DungeonClearAllCount = DungeonClearAllCount;
+		for (int i = 0; i < 3; i++) {
+			PlayerData->DungeonClearCount[i] = DungeonClearCount[i];
+		}
 		for (int i = 0; i < 3; i++) {
 			PlayerData->AttackForm[i] = AttackForm[i];
 			PlayerData->AttackFormDetail[i] = AttackFormIndex[i];
 			PlayerData->StoryProgress[i] = MyGameMode->StoryProgress[i];
 		}
 		for (int i = 0; i < 7; i++)
-			PlayerData->DialogueState[i] = DialogueState[i];
+			PlayerData->StartDialogueState[i] = StartDialogueState[i];
+
+		for (int i = 0; i < 5; i++) {
+			PlayerData->MainDialogueState[i] = MainDialogueState[i];
+		}
+		for (int i = 0; i < 2; i++) {
+			for (int j = 0; j < 4; j++) {
+				int index;
+				if (i == 0)
+					index = j;
+				else
+					index = 4 * i + j;
+				PlayerData->SubDialogueState[index] = SubDialogueState[i][j];
+			}
+		}
 		//PlayerData->LastLocation = myRogue->GetActorLocation();
 
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
@@ -358,6 +390,8 @@ void ARogueState::SetRogueDeshData(float UseDataValue, float Data) {
 
 void ARogueState::SetStaticRogueData(int32 UseDataValue) {
 	CurrentData -= UseDataValue;
+	if (UseDataValue < 0)
+		AllData -= UseDataValue;
 	if (CurrentData <= 0)
 		CurrentData = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current StaticData : %d"), CurrentData));
@@ -368,6 +402,8 @@ void ARogueState::SetStaticRogueData(int32 UseDataValue) {
 
 void ARogueState::SetDynamicRogueData(int32 UseDataValue) {
 	CurrentData -= UseDataValue * UseDataValuePercent;
+	if (UseDataValue < 0)
+		AllData -= UseDataValue;
 	if (CurrentData <= 0)
 		CurrentData = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current DynamicData : %d"), CurrentData));
@@ -1371,6 +1407,20 @@ void ARogueState::LastSpeedSetting() {
 	MyGameMode->TorchSpeedSynergyDelegate.ExecuteIfBound(TorchLevelValue);
 }
 
+void ARogueState::DialgoueStateInit() {
+	for (int i = 0; i < 7; i++) {
+		StartDialogueState[i] = 0;
+	}
+	for (int i = 0; i < 5; i++) {
+		MainDialogueState[i] = 0;
+	}
+	for (int i = 0; i < 2; i++) {
+		for (int j = 0; j < 4; j++) {
+			SubDialogueState[i][j] = 0;
+		}
+	}
+}
+
 void ARogueState::DialogueRefInit() {
 	FirstDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening_0.Opening_0'");
 	FirstDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
@@ -1387,4 +1437,46 @@ void ARogueState::DialogueRefInit() {
 	FirstDialogueSoundRef[4] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstBonFire_Cue.FirstBonFire_Cue'");
 	FirstDialogueSoundRef[5] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/SecondBonFire_Cue.SecondBonFire_Cue'");
 	FirstDialogueSoundRef[6] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");
+
+	MainStoryDialogueSourceRef[0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_1.Main1_1'");
+	MainStoryDialogueSourceRef[0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_1_Cue.Main1_1_Cue'");
+	MainStoryDialogueSourceRef[1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_2.Main1_2'");
+	MainStoryDialogueSourceRef[1][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_2_Cue.Main1_2_Cue'");
+	MainStoryDialogueSourceRef[2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_3.Main1_3'");
+	MainStoryDialogueSourceRef[2][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_3_Cue.Main1_3_Cue'");
+	MainStoryDialogueSourceRef[3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_4.Main1_4'");
+	MainStoryDialogueSourceRef[3][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_4_Cue.Main1_4_Cue'");
+	MainStoryDialogueSourceRef[4][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_5.Main1_5'");
+	MainStoryDialogueSourceRef[4][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_5_Cue.Main1_5_Cue'");
+
+	SubStoryDialogueSourceRef[0][0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_1.Sub1_1'");
+	SubStoryDialogueSourceRef[0][0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_1_Cue.Sub1_1_Cue'");
+	SubStoryDialogueSourceRef[0][1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_2.Sub1_2'");
+	SubStoryDialogueSourceRef[0][1][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_2_Cue.Sub1_2_Cue'");
+	SubStoryDialogueSourceRef[0][2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_3.Sub1_3'");
+	SubStoryDialogueSourceRef[0][2][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_3_Cue.Sub1_3_Cue'");
+	SubStoryDialogueSourceRef[0][3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_4.Sub1_4'");
+	SubStoryDialogueSourceRef[0][3][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_4_Cue.Sub1_4_Cue'");
+	
+	SubStoryDialogueSourceRef[1][0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_1.Sub2_1'");
+	SubStoryDialogueSourceRef[1][0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_1_Cue.Sub2_1_Cue'");
+	SubStoryDialogueSourceRef[1][1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_2.Sub2_2'");
+	SubStoryDialogueSourceRef[1][1][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_2_Cue.Sub2_2_Cue'");
+	SubStoryDialogueSourceRef[1][2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_3.Sub2_3'");
+	SubStoryDialogueSourceRef[1][2][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_3_Cue.Sub2_3_Cue'");
+	SubStoryDialogueSourceRef[1][3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_4.Sub2_4'");
+	SubStoryDialogueSourceRef[1][3][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_4_Cue.Sub2_4_Cue'");
+}
+
+void ARogueState::PlusDungeonClearCount(int32 DungeonIndex) {
+	DungeonClearCount[DungeonIndex - 1]++;
+	DungeonClearAllCount++;
+}
+
+int32 ARogueState::GetDungeonClearCount(int32 DungeonIndex) {
+	return DungeonClearCount[DungeonIndex - 1];
+}
+
+int32 ARogueState::GetDungeonClearAllCount() {
+	return DungeonClearAllCount;
 }
