@@ -1422,21 +1422,21 @@ void ARogueState::DialgoueStateInit() {
 }
 
 void ARogueState::DialogueRefInit() {
-	FirstDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening_0.Opening_0'");
-	FirstDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
-	FirstDialogueSourceRef[2] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Castle_main_in.Castle_main_in'");
-	FirstDialogueSourceRef[3] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Enemy.Enemy'");
-	FirstDialogueSourceRef[4] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_One.Smelting_One'");
-	FirstDialogueSourceRef[5] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Two.Smelting_Two'");
-	FirstDialogueSourceRef[6] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Three.Smelting_Three'");
+	StartDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening_0.Opening_0'");
+	StartDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
+	StartDialogueSourceRef[2] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Castle_main_in.Castle_main_in'");
+	StartDialogueSourceRef[3] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Enemy.Enemy'");
+	StartDialogueSourceRef[4] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_One.Smelting_One'");
+	StartDialogueSourceRef[5] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Two.Smelting_Two'");
+	StartDialogueSourceRef[6] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Three.Smelting_Three'");
 
-	FirstDialogueSoundRef[0] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'");
-	FirstDialogueSoundRef[1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GetFire_Cue.GetFire_Cue'");
-	FirstDialogueSoundRef[2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/StartCamp_Cue.StartCamp_Cue'");
-	FirstDialogueSoundRef[3] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstEnemy_Cue.FirstEnemy_Cue'");
-	FirstDialogueSoundRef[4] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstBonFire_Cue.FirstBonFire_Cue'");
-	FirstDialogueSoundRef[5] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/SecondBonFire_Cue.SecondBonFire_Cue'");
-	FirstDialogueSoundRef[6] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");
+	StartDialogueSoundRef[0] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'");
+	StartDialogueSoundRef[1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GetFire_Cue.GetFire_Cue'");
+	StartDialogueSoundRef[2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/StartCamp_Cue.StartCamp_Cue'");
+	StartDialogueSoundRef[3] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstEnemy_Cue.FirstEnemy_Cue'");
+	StartDialogueSoundRef[4] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstBonFire_Cue.FirstBonFire_Cue'");
+	StartDialogueSoundRef[5] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/SecondBonFire_Cue.SecondBonFire_Cue'");
+	StartDialogueSoundRef[6] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");
 
 	MainStoryDialogueSourceRef[0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_1.Main1_1'");
 	MainStoryDialogueSourceRef[0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_1_Cue.Main1_1_Cue'");

@@ -391,8 +391,8 @@ public:
 	int32 StartDialogueState[7];
 	int32 MainDialogueState[5];
 	int32 SubDialogueState[2][4];
-	TCHAR* FirstDialogueSourceRef[7];
-	TCHAR* FirstDialogueSoundRef[7];
+	TCHAR* StartDialogueSourceRef[7];
+	TCHAR* StartDialogueSoundRef[7];
 	TCHAR* MainStoryDialogueSourceRef[5][2];
 	TCHAR* SubStoryDialogueSourceRef[2][4][2];
 };

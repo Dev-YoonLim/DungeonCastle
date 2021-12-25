@@ -36,18 +36,18 @@ void AItem::Tick(float DeltaTime)
 void AItem::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
-	if (myRogue) {
+	/*if (myRogue) {
 		myRogue->MyRogueState->ItemCount++;
 		if (myRogue->MyRogueState->ItemCount == 3) {
-			myRogue->SetDialogueIndex(1);
+			myRogue->SetStartDialogueIndex(1);
 			myRogue->MyRogueState->StartDialogueState[1] = 1;
-			myRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, myRogue->MyRogueState->FirstDialogueSourceRef[myRogue->GetDialogueIndex()]));
+			myRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, myRogue->MyRogueState->StartDialogueSourceRef[myRogue->GetStartDialogueIndex()]));
 			myRogue->BeepCall();
 		}
 		UGameplayStatics::PlaySoundAtLocation(this, GetItemSound, GetActorLocation());
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TakeItem, GetActorTransform());
 		Destroy();
-	}
+	}*/
 }
 
 void AItem::NotifyActorEndOverlap(AActor* OtherActor) {

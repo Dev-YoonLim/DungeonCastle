@@ -196,8 +196,16 @@ public:
 
 	bool GetDialogueSequence() { return DialogueSequence; }
 
-	int32 GetDialogueIndex() { return DialogueIndex; }
-	void SetDialogueIndex(int32 SetDialogueIndex) { DialogueIndex = SetDialogueIndex; }
+	int32 GetStartDialogueIndex() { return StartDialogueIndex; }
+	void SetStartDialogueIndex(int32 SetDialogueIndex) { StartDialogueIndex = SetDialogueIndex; }
+	
+	int32 GetMainDialogueIndex() { return MainDialogueIndex; }
+	void SetMainDialogueIndex(int32 SetDialogueIndex) { MainDialogueIndex = SetDialogueIndex; }
+	
+	int32 GetSubDialogueIndex() { return SubDialogueIndex; }
+	void SetSubDialogueIndex(int32 SetDialogueIndex) { SubDialogueIndex = SetDialogueIndex; }
+
+	
 	void SetHeadShacke(bool Shake);
 	void SetRollingTrdCamera(bool Check);
 	bool GetRollingTrdCamera() { return RollingTrdCamera; }
@@ -214,7 +222,9 @@ private:
 	int32 WeaponNumber;//간이용 웨펀넘버
 	int32 AttackFormSlot; //간이용 애님넘버
 	int32 RogueHp;
-	int32 DialogueIndex;
+	int32 StartDialogueIndex;
+	int32 MainDialogueIndex;
+	int32 SubDialogueKinds;
 	int32 SubDialogueIndex;
 	int RollStepQue;
 	float TempRollRotatorValue;
