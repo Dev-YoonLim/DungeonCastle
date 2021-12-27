@@ -16,6 +16,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	WidgetCount = 0;
 	GameStartCheck = 0;
 	NewGameStart = true;
+	GameSettingOn = false;
 	//FOVValue = 1.f;
 	SaveSlotName = TEXT("SaveSlot");
 	//StartSetting();
@@ -198,8 +199,10 @@ void ACastle_in_DungeonGameModeBase::RevivalTextAlphaPlus() {
 void ACastle_in_DungeonGameModeBase::RevivalTextAlphaMinus() {
 	if (RevivalTextAlphaMax == true && RevivalTextAlphaValue <= 0.00f) {
 		GetWorldTimerManager().ClearTimer(RevivalAlphaMinusTimeHandle);
-		if(GameSettingOn == true)
-			GetWidgetNumber(1);
+		Widget_MouseCursorChangedDelegate.ExecuteIfBound(0);
+		//GameSettingOn = true;
+		//if(GameSettingOn == true)
+			//GetWidgetNumber(1);
 	}
 	else {
 		RevivalTextAlphaValue -= 0.01f;
@@ -586,7 +589,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(8);
 		RemoveView(9);
 		RemoveView(11);
-		RemoveView(-1);
+		//RemoveView(-1);
 		RemoveView(-2);
 		RemoveView(-3);
 		if (DialogueWidgetClass != nullptr) {
@@ -614,14 +617,13 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(8);
 		RemoveView(9);
 		RemoveView(11);
-		RemoveView(99);
+		//RemoveView(99);
 		RemoveView(-2);
 		RemoveView(-3);
 		if (RevivalWidgetClass != nullptr) {
 			RevivalWidgetState = true;
 			RevivalWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
 			if (RevivalWidget != nullptr && WidgetPageNumber == -1) {
-				
 				RevivalWidget->AddToViewport();
 				
 			}

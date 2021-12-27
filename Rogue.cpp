@@ -66,7 +66,7 @@ void ARogue::Tick(float DeltaTime)
 		MyRogueState->StartDialogueState[(MyRogueState->DialogueTutorialCount) + 3] = 1;
 		MyRogueState->DialogueTutorialCount++;
 		if (BeepOn == false) {
-			DialogueKinds = 0;
+			//DialogueKinds = 0;
 			BeepCall();
 		}
 	}
@@ -188,7 +188,7 @@ void ARogue::DialogueVideoPlay() {
 		DialogueSound->SetSound(DialogueSoundBase);
 		MyRogueState->StartDialogueState[StartDialogueIndex] = 2;
 	}
-	else if (DialogueKinds == 1) {
+	else if (DialogueKinds == 1 && MyRogueState->MainDialogueState[MainDialogueIndex] == 0) {
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 			MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 		USoundBase* DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
@@ -196,7 +196,7 @@ void ARogue::DialogueVideoPlay() {
 		DialogueSound->SetSound(DialogueSoundBase);
 		MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
 	}
-	else if (DialogueKinds == 2) {
+	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0) {
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 			MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 		USoundBase* DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
@@ -1250,12 +1250,14 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->StartDialogueSourceRef[StartDialogueIndex]));
 				}
-				else if (DialogueKinds == 1) {
+				else if(MyRogueState->GetDungeonClearAllCount() >= 1){
+					DialogueKinds = 1;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 				}
 			}
 			else {
+				DialogueKinds = 2;
 				DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 					MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 			}

@@ -704,6 +704,7 @@ void UMyRogueWidget::RevivalMenuInit() {
 	Revival = Cast<UTextBlock>(GetWidgetFromName(TEXT("RevivalText")));
 	RevivalOutLine = Cast<UBorder>(GetWidgetFromName(TEXT("Outline")));
 	if (Revival != nullptr) {
+		MyGameMode->Widget_MouseCursorChangedDelegate.ExecuteIfBound(2);
 		if(MyGameMode->StageIndex == 0)
 			Revival->SetText(FText::FromString(TEXT("Castle")));
 		else if (MyGameMode->StageIndex == 1)

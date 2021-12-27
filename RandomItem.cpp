@@ -15,7 +15,8 @@ void ARandomItem::NotifyActorBeginOverlap(AActor* OtherActor){
 	if (myRogue) {
 		myRogue->MyRogueState->ItemCount++;
 		if (myRogue->MyRogueState->ItemCount == 3) {
-			myRogue->MyRogueState->StartDialogueState[1] = 1;
+			myRogue->SetStartDialogueIndex(1);
+			//myRogue->MyRogueState->StartDialogueState[1] = 1;
 			myRogue->DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, myRogue->MyRogueState->StartDialogueSourceRef[1]));
 			myRogue->BeepCall();
 		}
