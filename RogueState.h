@@ -59,6 +59,9 @@ public:
 	float getSelectWeapon() { return WeaponNumber; }
 	void SetSelectWeapon(int32 SelectWeaponNumber);
 
+	bool GetSaveState() { return SaveState; }
+	void SetSaveState(bool SaveStates) { SaveState = SaveStates; }
+
 	int32 SaveCount;
 	
 public:
@@ -328,6 +331,7 @@ private:
 	FString AbilityTotalName[100];
 	FString AbilityOverlapString[100];
 	int32 AbilityQue[100];
+	bool SaveState;
 	bool NewGame;
 	bool DungeonIn;
 	bool HadWeaponCheck[10];

@@ -9,8 +9,8 @@ ACandle::ACandle()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	CandleSetRefInit();
-	CandleLightInit();
 	CandleMeshInit();
+	CandleLightInit();
 }
 
 void ACandle::PostLoad() {
@@ -79,32 +79,38 @@ void ACandle::CandleMeshInit() {
 	if (CandleMeshAsset.Succeeded()) {
 		CandleMesh->SetStaticMesh(CandleMeshAsset.Object);
 	}
-	CandleMesh->AttachToComponent(LightParticle, FAttachmentTransformRules::KeepRelativeTransform);
-	CandleMesh->SetRelativeScale3D(FVector(1.2f, 1.2f, 1.2f));
+	CandleMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	CandleMesh->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.7f));
 	if (CandleSetIndex == 0 || CandleSetIndex == 3 || CandleSetIndex == 4) {
-		CandleMesh->AddRelativeLocation(FVector(-35.f, 0, 0));
+		CandleMesh->AddRelativeLocation(FVector(-35.f, 0, 0.f));
 	}
 	else {
-		CandleMesh->AddRelativeLocation(FVector(35.f, 0, 0));
+		CandleMesh->AddRelativeLocation(FVector(35.f, 0, 0.f));
 	}
 }
 
 void ACandle::CandleLightInit() {
-	LightParticle = CreateDefaultSubobject<UParticleSystemComponent>("LightParticle");
+	Light = CreateDefaultSubobject<UPointLightComponent>("Light");
+	Light->AttachToComponent(CandleMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	Light->SetLightColor(FLinearColor(1.f, 0.3f, 0.f));
+	Light->SetIntensity(75.f);
+	Light->SetAttenuationRadius(200.f);
+	Light->AddRelativeLocation(FVector(0.f, 0.f, 50.f));
+	/*LightParticle = CreateDefaultSubobject<UParticleSystemComponent>("LightParticle");
 	auto LightParticleAsset = ConstructorHelpers::FObjectFinder<UParticleSystem>
 		(TEXT("ParticleSystem'/Game/Candle/UpLight_5.UpLight_5'"));
 	if (LightParticleAsset.Succeeded()) {
 		LightParticle->SetTemplate(LightParticleAsset.Object);
 	}
 	LightParticle->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	LightParticle->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.7f));
+	LightParticle->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.7f));*/
 }
 
 // Called when the game starts or when spawned
 void ACandle::BeginPlay()
 {
 	Super::BeginPlay();
-	CandleSetIndex = FMath::RandRange(0, 5);
+	/*CandleSetIndex = FMath::RandRange(0, 5);
 	switch (CandleSetIndex) {
 	case 0:
 		CandleSetRef = TEXT("StaticMesh'/Game/Candle/Candle_0.Candle_0'");
@@ -133,7 +139,7 @@ void ACandle::BeginPlay()
 	else {
 		CandleMesh->AddRelativeLocation(FVector(35.f, 0, 0));
 	}
-	
+	*/
 }
 
 // Called every frame

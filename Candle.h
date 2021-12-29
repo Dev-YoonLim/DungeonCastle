@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Components/PointLightComponent.h"
 #include "Candle.generated.h"
 
 UCLASS()
@@ -36,6 +37,9 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 		UParticleSystemComponent* LightParticle;
+
+	UPROPERTY(EditAnywhere)
+		UPointLightComponent* Light;
 
 public:
 	UPROPERTY(EditAnywhere)

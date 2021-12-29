@@ -98,7 +98,7 @@ void AMyRogueController::OnReSumeWidget() {
 	if (MyGameMode->GameSettingOn == true) {
 		if (MyGameMode->GetPageNumber() == 1)
 			MyGameMode->GetWidgetNumber(2);
-		else
+		else if(MyGameMode->GetPageNumber() != 99)
 			MyGameMode->WidgetPop();
 	}
 }

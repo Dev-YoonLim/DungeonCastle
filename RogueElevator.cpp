@@ -208,6 +208,10 @@ void ARogueElevator::Switchinit() {
 	Switch->AttachToComponent(SwitchBlock, FAttachmentTransformRules::KeepRelativeTransform);
 	SwitchUpfloor->AttachToComponent(SwitchBlockUpfloor, FAttachmentTransformRules::KeepRelativeTransform);
 	SwitchDownfloor->AttachToComponent(SwitchBlockDownfloor, FAttachmentTransformRules::KeepRelativeTransform);
+
+	Switch->SetCollisionProfileName(TEXT("SwitchZoneCollision"));
+	SwitchUpfloor->SetCollisionProfileName(TEXT("SwitchZoneCollision"));
+	SwitchDownfloor->SetCollisionProfileName(TEXT("SwitchZoneCollision"));
 }
 
 void ARogueElevator::ElevatorStateinit() {

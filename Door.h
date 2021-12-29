@@ -50,6 +50,11 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* DoorStateOne;
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* DoorStateTwo;
+
+	UPROPERTY(EditAnywhere)
 		USceneComponent* Root;
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* DoorOne;

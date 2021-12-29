@@ -17,6 +17,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	GameStartCheck = 0;
 	NewGameStart = true;
 	GameSettingOn = false;
+	
 	//FOVValue = 1.f;
 	SaveSlotName = TEXT("SaveSlot");
 	//StartSetting();

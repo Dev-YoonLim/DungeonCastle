@@ -760,7 +760,7 @@ void UMyRogueWidget::SetFOVVolume(float Value) {
 void UMyRogueWidget::GetExitGame() {
 	MyGameMode->StageIndex = 0;
 	MyGameMode->StageSubIndex = 0;
-	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+	//MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 	UKismetSystemLibrary::QuitGame(GetWorld(), GetWorld()->GetFirstPlayerController(), EQuitPreference::Quit, true);
 }
 

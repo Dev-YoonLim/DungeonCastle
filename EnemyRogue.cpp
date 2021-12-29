@@ -861,8 +861,11 @@ void AEnemyRogue::SetHp(float Damege) {
 	float DamegeRange = FMath::FRandRange(0.8, 1.2);
 	if (EnemyDead == false) {
 		Hp -= (Damege * ElectriFicationValue) * DamegeRange;
-		if (GetHp() <= 0)
+		if (GetHp() <= 0) {
 			EnemyDead = true;
+			GetCapsuleComponent()->SetCollisionProfileName(TEXT("Death"));
+			GetMesh()->SetCollisionProfileName(TEXT("Death"));
+		}
 		if (AIControllers->SenseRogue == false) {
 			RootComponent->AddRelativeRotation(FRotator(0, 180, 0));
 		}

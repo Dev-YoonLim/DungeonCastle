@@ -35,6 +35,9 @@ void ADoor::DoorInit() {
 	DoorWork = CreateDefaultSubobject<UEntranceMove>("DoorWork");
 	Vibration = CreateDefaultSubobject<UVibration>("Vibration");
 
+	//DoorStateOne = CreateDefaultSubobject<UStaticMeshComponent>("DoorStateOne");
+	//DoorStateTwo = CreateDefaultSubobject<UStaticMeshComponent>("DoorStateTwo");
+
 	auto DoorAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
 		(TEXT("StaticMesh'/Game/Door/DoorOne.DoorOne'"));
 	auto DoorOpenSoundAsset = ConstructorHelpers::FObjectFinder<USoundCue>

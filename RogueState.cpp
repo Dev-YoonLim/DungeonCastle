@@ -18,6 +18,7 @@ ARogueState::ARogueState() {
 	AbilityHadCheckInit();
 	ElementalHadCheckInit();
 	DialogueRefInit();
+	SaveState = false;
 }
 
 void ARogueState::AbilityInit() {
@@ -1264,7 +1265,8 @@ void ARogueState::AbilityRandTake(int32 AbilityIndex) {
 			EquipAbilityCount++;
 		}
 		EquipAbilityOverlap = false;
-		SaveGameData();
+		if(SaveState == true)
+			SaveGameData();
 	}
 }
 
