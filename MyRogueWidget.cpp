@@ -117,16 +117,27 @@ void UMyRogueWidget::TitleInRevivalMenuInit() {
 }
 
 void UMyRogueWidget::MainMenuInit() {
+	FString TaskValueText;
 	RogueHPValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueHpBlock")));
 	RogueDataValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueDataBlock")));
 	RogueKarmaValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("RogueKarmaBlock")));
 	PressKeyText = Cast<UTextBlock>(GetWidgetFromName(TEXT("PressKeyTextBlock")));
+	TaskBoxs = Cast<UTextBlock>(GetWidgetFromName(TEXT("TaskBox")));
+	TaskValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("TaskValue")));
 	if (RogueHPValue != nullptr && RogueDataValue != nullptr && RogueKarmaValue != nullptr) {
 		PageMain = true;
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("Equip %d"), MyRogue->MyRogueState->TotalEquipCount));
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DialogueTu %d"), MyRogue->MyRogueState->DialogueTutorialCount));
-		/*if (MyRogue->MyRogueState->DialogueState[0] == 1) {
+		if (MyRogue->GetDialogueKinds() == 0) {
+			TaskValueText = FString::Printf(TEXT("Explore the Castle."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+		}
+		/*
+		RogueHpString = FString::Printf(TEXT("%d"), RogueHp);
+		if(PageMain == true)
+			RogueHPValue->SetText(FText::FromString(RogueHpString));
+		if (MyRogue->MyRogueState->DialogueState[0] == 1) {
 			FText PressTextValue = FText::FromString(FString::Printf(TEXT("Press 'F' Key")));
 			PressKeyText->SetText(PressTextValue);
 		}

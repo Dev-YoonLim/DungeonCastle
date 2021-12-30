@@ -99,6 +99,20 @@ public:
 	UPROPERTY()
 		int32 SubDialogueState[8];
 
+	
+	UPROPERTY()
+		int32 StartDialogueIndex;
+
+	UPROPERTY()
+		int32 MainDialogueIndex;
+
+	UPROPERTY()
+		int32 SubDialogueKinds;
+
+	UPROPERTY()
+		int32 SubDialogueIndex;
+
+	
 	UPROPERTY()
 		int32 ItemCount;
 

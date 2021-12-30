@@ -196,7 +196,10 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 			SubDialogueState[i][j] = LoadGame->SubDialogueState[(i*4)+j];
 		}
 	}
-
+	myRogue->SetStartDialogueIndex(LoadGame->StartDialogueIndex);
+	myRogue->SetMainDialogueIndex(LoadGame->MainDialogueIndex);
+	myRogue->SetSubDialogueIndex(LoadGame->SubDialogueIndex);
+	myRogue->SetSubDialogueKinds(LoadGame->SubDialogueKinds);
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
 	myRogue->ViewArm->bUsePawnControlRotation = LoadGame->HeadTracking;
 	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
@@ -277,9 +280,13 @@ void ARogueState::SaveGameData() {
 					index = j;
 				else
 					index = 4 * i + j;
-				PlayerData->SubDialogueState[index] = SubDialogueState[i][j];
+				PlayerData->SubDialogueState[index] = SubDialogueState[i][j]; //2차배열이 안돼서 이렇게 짰다. 근데 사실 다른방법도 있긴 한데...ㅜㅜ
 			}
 		}
+		PlayerData->StartDialogueIndex = myRogue->GetStartDialogueIndex();
+		PlayerData->MainDialogueIndex = myRogue->GetMainDialogueIndex();
+		PlayerData->SubDialogueIndex = myRogue->GetSubDialogueIndex();
+		PlayerData->SubDialogueKinds = myRogue->GetSubDialogueKinds();
 		//PlayerData->LastLocation = myRogue->GetActorLocation();
 
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));

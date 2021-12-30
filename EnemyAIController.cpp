@@ -123,11 +123,11 @@ void AEnemyAIController::FindSenseRogueTarget(AActor* myRogue, FAIStimulus Stimu
 				SenseRogue = false;
 		}
 	}
-	else {
+	/*else {
 		if (SenseRogue == true) {
 			SenseRogue = false;
 		}
-	}
+	}*/
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Blue, TEXT("NotFindRogue???"));
 		//SenseRogue = false;
 	/*else {

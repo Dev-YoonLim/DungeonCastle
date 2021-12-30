@@ -802,7 +802,7 @@ void AEnemyRogue::EnemyRogueSlow(int32 SlowStack, bool Freez) {
 void AEnemyRogue::EnemyRogueDie() {
 	if (EnemyDead == true){
 		MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-DeathData);
-		MyGameMode->RogueSetKarmaDelegate.ExecuteIfBound(-Karma);
+		MyGameMode->RogueSetKarmaDelegate.ExecuteIfBound(Karma);
 		GetCapsuleComponent()->SetCollisionProfileName("Death");
 		/*if (GiftAbilityPer >= FMath::FRandRange(0, 100)) {
 			GiftAbilityPer = 100.f;

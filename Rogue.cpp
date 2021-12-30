@@ -146,8 +146,8 @@ void ARogue::BeepCall() {
 		BeepSound->Play();
 		BeepOn = true;
 	}
-	else
-		DialogueVideoPlay();
+	//else
+		//DialogueVideoPlay();
 }
 
 void ARogue::FrontDialogueWindow() {
@@ -185,14 +185,22 @@ void ARogue::DialogueVideoPlay() {
 			MyRogueState->StartDialogueSoundRef[StartDialogueIndex]));
 		DialogueSound->SetSound(DialogueSoundBase);
 		MyRogueState->StartDialogueState[StartDialogueIndex] = 2;
+		if (DialoguePlayer->IsPlaying() == false) {
+			DialoguePlayer->OpenSource(DialogueSource);
+			DialogueSound->Play();
+		}
 	}
-	else if (DialogueKinds == 1 && MyRogueState->MainDialogueState[MainDialogueIndex] == 0) {
+	else if (DialogueKinds == 1 && MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex*300) {
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 			MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 		DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
 			MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][1]));
 		DialogueSound->SetSound(DialogueSoundBase);
 		MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
+		if (DialoguePlayer->IsPlaying() == false) {
+			DialoguePlayer->OpenSource(DialogueSource);
+			DialogueSound->Play();
+		}
 	}
 	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0) {
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
@@ -201,19 +209,18 @@ void ARogue::DialogueVideoPlay() {
 			MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][1]));
 		DialogueSound->SetSound(DialogueSoundBase);
 		MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 2;
-		SubDialogueIndex++;
+		if (DialoguePlayer->IsPlaying() == false) {
+			DialoguePlayer->OpenSource(DialogueSource);
+			DialogueSound->Play();
+		}
 	}
-	if (DialoguePlayer->IsPlaying() == false) {
-		DialoguePlayer->OpenSource(DialogueSource);
-		DialogueSound->Play();
-		if (SubDialogueIndex == 4) {
+		/*if (SubDialogueIndex == 4) {
 			SubDialogueKinds++;
 			SubDialogueIndex = 0;
 		}
 		if (MainDialogueIndex != 5) {
 			MainDialogueIndex++;
-		}
-	}
+		}*/
 }
 
 void ARogue::DialgoueVideoCancle() {
@@ -1181,8 +1188,18 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (OtherComp->GetCollisionProfileName() == TEXT("DungeonEnd")) {
 		if (DialogueKinds != 1) {
 			DialogueKinds = 1;
-			SubDialogueIndex++;
+			//SubDialogueIndex++;
+			//MainDialogueIndex++;
+		}
+		if(MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300){
 			MainDialogueIndex++;
+		}
+		if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
+			SubDialogueIndex++;
+		}
+		if (SubDialogueIndex == 4) {
+			SubDialogueKinds++;
+			SubDialogueIndex = 0;
 		}
 		MyRogueState->PlusDungeonClearCount(MyGameMode->StageIndex);
 		MyGameMode->StageIndex = 0;

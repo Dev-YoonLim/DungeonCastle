@@ -205,6 +205,11 @@ public:
 	int32 GetSubDialogueIndex() { return SubDialogueIndex; }
 	void SetSubDialogueIndex(int32 SetDialogueIndex) { SubDialogueIndex = SetDialogueIndex; }
 
+	int32 GetSubDialogueKinds() { return SubDialogueKinds; }
+	void SetSubDialogueKinds(int32 SetDialogueKinds) { SubDialogueKinds = SetDialogueKinds; }
+
+	int32 GetDialogueKinds() { return DialogueKinds; }
+	void SetDialogueKinds(int32 DialogueKind) { DialogueKinds = DialogueKind; }
 	
 	void SetHeadShacke(bool Shake);
 	void SetRollingTrdCamera(bool Check);
