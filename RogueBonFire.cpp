@@ -78,7 +78,7 @@ void ARogueBonFire::MeshInit() {
 	BonFireCapsule->AttachToComponent(BonFireSword, FAttachmentTransformRules::KeepRelativeTransform);
 	BonFireCapsule->AddRelativeLocation(FVector(0, 0, 0));
 	BonFireCapsule->SetCapsuleHalfHeight(80);
-	BonFireCapsule->SetCapsuleRadius(130);
+	BonFireCapsule->SetCapsuleRadius(180);
 	BonFireCapsule->SetCollisionProfileName("EventZoneCollision");
 	BonFireFlame->AddRelativeLocation(FVector(0, 0, -20));
 	BonFireFlame->SetRelativeScale3D(FVector(0.6, 0.6, 0));

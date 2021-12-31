@@ -535,6 +535,7 @@ public:
 	void PageInit();
 	void ElementalPhaseCheck();
 	void DelegateInit();
+	void TaskSetting();
 
 public:
 	int32 RogueHp;

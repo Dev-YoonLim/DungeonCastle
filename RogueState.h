@@ -392,6 +392,7 @@ private:
 
 
 public:
+	int32 TaskLevel;
 	int32 StartDialogueState[7];
 	int32 MainDialogueState[5];
 	int32 SubDialogueState[2][4];

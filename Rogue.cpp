@@ -65,6 +65,7 @@ void ARogue::Tick(float DeltaTime)
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogueState->StartDialogueSourceRef[GetStartDialogueIndex()]));
 		MyRogueState->StartDialogueState[(MyRogueState->DialogueTutorialCount) + 3] = 1;
 		MyRogueState->DialogueTutorialCount++;
+		MyRogueState->TaskLevel = 0;
 		if (BeepOn == false) {
 			//DialogueKinds = 0;
 			BeepCall();
@@ -202,7 +203,7 @@ void ARogue::DialogueVideoPlay() {
 			DialogueSound->Play();
 		}
 	}
-	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0) {
+	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
 		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 			MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 		DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
@@ -1220,6 +1221,8 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 						MyRogueState->StartDialogueSourceRef[StartDialogueIndex]));
 					DialogueSequence = true;
 					MyRogueState->StartDialogueState[StartDialogueIndex] = 1;
+					if (StartDialogueIndex == 1 || StartDialogueIndex == 2)
+						MyRogueState->TaskLevel = StartDialogueIndex;
 					//DialogueKinds = 0;
 					BeepCall();
 				}
@@ -1278,20 +1281,26 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 				if (MyRogueState->GetDungeonClearAllCount() == 0 && MyRogueState->StartDialogueState[0] == 0) {
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->StartDialogueSourceRef[StartDialogueIndex]));
+					MyRogueState->TaskLevel = 0;
 					BeepCall();
 				}
-				else if (MyRogueState->GetDungeonClearAllCount() >= 1) {
+				else if (MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300) {
 					DialogueKinds = 1;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
+					MyRogueState->TaskLevel = 9;
 					BeepCall();
 				}
 			}
 			else {
-				DialogueKinds = 2;
-				DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
-					MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
-				BeepCall();
+				if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
+					DialogueKinds = 2;
+					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+						MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
+					MyRogueState->TaskLevel = MyGameMode->StageIndex + 5;
+					//MyGameMode->MainUIUpdate();
+					BeepCall();
+				}
 			}
 		}
 	}

@@ -129,10 +129,49 @@ void UMyRogueWidget::MainMenuInit() {
 		MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("Equip %d"), MyRogue->MyRogueState->TotalEquipCount));
 		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DialogueTu %d"), MyRogue->MyRogueState->DialogueTutorialCount));
-		if (MyRogue->GetDialogueKinds() == 0) {
+		switch (MyRogue->MyRogueState->TaskLevel) {
+		case 0:
 			TaskValueText = FString::Printf(TEXT("Explore the Castle."));
 			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 1:
+			TaskValueText = FString::Printf(TEXT("Add Abilities From the Crucible"));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 2:
+			TaskValueText = FString::Printf(TEXT("Carefully Explore the Castle"));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 3:
+			TaskValueText = FString::Printf(TEXT("Find the Dungeon Maze."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 4:
+			TaskValueText = FString::Printf(TEXT("Find the Dungeon Hall."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 5:
+			TaskValueText = FString::Printf(TEXT("Find the Dungeon Underpass."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 6:
+			TaskValueText = FString::Printf(TEXT("Clear the Maze."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 7:
+			TaskValueText = FString::Printf(TEXT("Clear the Hall."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 8:
+			TaskValueText = FString::Printf(TEXT("Clear the Underpass."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
+		case 9:
+			TaskValueText = FString::Printf(TEXT("Find Another Dungeon."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
 		}
+
 		/*
 		RogueHpString = FString::Printf(TEXT("%d"), RogueHp);
 		if(PageMain == true)
@@ -2272,4 +2311,8 @@ void UMyRogueWidget::ElementalPhaseCheck() {
 			SelectElementString[1][i] = RogueElementString[i];
 		}
 	}
+}
+
+void UMyRogueWidget::TaskSetting() {
+	
 }
