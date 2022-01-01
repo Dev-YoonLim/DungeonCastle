@@ -27,7 +27,8 @@ public:
 	virtual void NotifyActorBeginOverlap(AActor* myRogue) override;
 
 public:
-	UBoxComponent* TaskUpdateBox;
+	UPROPERTY(EditAnywhere)
+		UBoxComponent* TaskUpdateBox;
 	UPROPERTY(EditAnywhere)
 		int32 TaskUpdateNumber;
 };

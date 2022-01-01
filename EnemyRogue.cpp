@@ -360,6 +360,7 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 
 void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksDamege, float SpecialDamege, int32* TorchEffectStack,
 	bool StabAttackOn, bool* DefaultEffect, bool* SpecialEffect, int32 TorchElementNumber) {
+	TorchHitAnimationPlay();
 	ChangeKnockBackValue = 5.f;
 	KnockBackValue = ChangeKnockBackValue;
 	TakeTorchStabDamege = StabDamege;
@@ -370,7 +371,6 @@ void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksD
 	TakeTorchElementNumbers = TorchElementNumber;
 	TakeStabAttackOn = StabAttackOn;
 	TakeDefaultEffect = DefaultEffect[TorchElementNumber];
-	TorchHitAnimationPlay();
 	UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 	if (TakeStabAttackOn == true) {
@@ -1036,7 +1036,7 @@ void AEnemyRogue::WeaponHitAnimationPlay() {
 }
 
 void AEnemyRogue::TorchHitAnimationPlay() {
-	TorchAttackRandHitIndex = FMath::FRandRange(0, 4);
+	TorchAttackRandHitIndex = FMath::RandRange(0, 4);
 	switch (TorchAttackRandHitIndex) {
 	case 0:
 		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyTorchDownHit1, 1.f * SlowValue);

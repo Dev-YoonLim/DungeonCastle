@@ -58,14 +58,14 @@ void AEnemyRogueWeapon::EnemyRogueWeaponChange(int32 SelectWeaponNumber) {
 			= TEXT("StaticMesh'/Game/Weapons/Mace.Mace'");
 		EnemyWeaponDamage = 2.f;
 		EnemyWeaponSpeed = 1.1f;
-		EnemyWeaponRange = 40.f / EnemyWeaponSpeed;
+		EnemyWeaponRange = 20.f / EnemyWeaponSpeed;
 		break;
 	case 1:
 		EnemyRogueWeaponRef
 			= TEXT("StaticMesh'/Game/Weapons/Mace.Mace'");
 		EnemyWeaponDamage = 2.f;
 		EnemyWeaponSpeed = 1.1f;
-		EnemyWeaponRange = 40.f / EnemyWeaponSpeed;
+		EnemyWeaponRange = 30.f / EnemyWeaponSpeed;
 		break;
 	case 2:
 		EnemyRogueWeaponRef
@@ -90,7 +90,7 @@ void AEnemyRogueWeapon::EnemyRogueWeaponChange(int32 SelectWeaponNumber) {
 		break;
 	case 5:
 		EnemyRogueWeaponRef
-			= TEXT("StaticMesh'/Game/Weapons/Axe.Axe'");
+			= TEXT("StaticMesh'/Game/Weapons/NewShortSword.NewShortSword'");
 		EnemyWeaponDamage = 2.f;
 		EnemyWeaponSpeed = 1.2;
 		EnemyWeaponRange = 30.f / EnemyWeaponSpeed;

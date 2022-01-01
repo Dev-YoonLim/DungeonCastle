@@ -23,6 +23,7 @@ ARogueState::ARogueState() {
 
 void ARogueState::AbilityInit() {
 	DialogueRefInit();
+	WeaponNumber = 4;
 	TotalEquipCount = 0;
 	EquipAbilityCount = 0;
 	DialogueTutorialCount = 1;
@@ -1137,7 +1138,7 @@ void ARogueState::DeleteAbility() {
 	TotalAttackFormDataList1.Empty();
 	TotalAttackFormDataList2.Empty();
 	EquipAbilityCount = 0;
-	WeaponNumber = 0;
+	WeaponNumber = 1;
 	WeaponElementNumber = 0;
 	TorchElementNumber = 0;
 	LastWeaponDamegeSetting();

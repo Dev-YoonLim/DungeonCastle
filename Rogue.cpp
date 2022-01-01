@@ -537,7 +537,7 @@ bool ARogue::CanSideCheck() {
 
 void ARogue::RogueViewWork() {
 	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false) {
-		ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -25, 5), FVector(0, 0, 0)));
+		ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -35, 5), FVector(0, 0, 0)));
 		//ViewArm->SetRelativeRotation(FRotator(90, 0, (-88 + ViewRotator)));
 	}
 	RogueView->SetRelativeTransform(FTransform(FRotator(ViewUp, 0, 0), FVector(0, 0, 0), FVector(0, 0, 0)));
@@ -787,7 +787,10 @@ void ARogue::Dash(float Dashamount) {
 void ARogue::Roll() {
 	if (CanInput == true && Falling == false) {
 		if (NotAttackState() == true && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false
-			&& myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false && NotTakeHitCheck() == true && TakeHitOn == false && MyRogueState->GetRogueData() > 9) {
+			&& myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false
+			&& myAnimInst->Montage_IsPlaying(myAnimInst->Dodge_Right) == false
+			&& myAnimInst->Montage_IsPlaying(myAnimInst->Dodge_Left) == false
+			&& NotTakeHitCheck() == true && TakeHitOn == false && MyRogueState->GetRogueData() > 9) {
 			RollStepQue = 1;
 			if (myAnimInst != nullptr) {
 				RightRotator = GetControlRotation();
@@ -1221,8 +1224,8 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 						MyRogueState->StartDialogueSourceRef[StartDialogueIndex]));
 					DialogueSequence = true;
 					MyRogueState->StartDialogueState[StartDialogueIndex] = 1;
-					if (StartDialogueIndex == 1 || StartDialogueIndex == 2)
-						MyRogueState->TaskLevel = StartDialogueIndex;
+					if (StartDialogueIndex == 2 || StartDialogueIndex == 3)
+						MyRogueState->TaskLevel = StartDialogueIndex-1;
 					//DialogueKinds = 0;
 					BeepCall();
 				}

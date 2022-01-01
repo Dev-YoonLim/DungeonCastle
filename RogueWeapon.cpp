@@ -72,7 +72,7 @@ void ARogueWeapon::WorldGameModeInit() {
 
 void ARogueWeapon::WeaponInit() {
 	setHitCrash(false);
-	WeaponReference = TEXT("StaticMesh'/Game/Weapons/Dagger.Dagger'");
+	WeaponReference = TEXT("StaticMesh'/Game/Weapons/Mace.Mace'");
 	Weapon = CreateDefaultSubobject<UStaticMeshComponent>("Weapon");
 	auto WeaponAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(WeaponReference);
 	

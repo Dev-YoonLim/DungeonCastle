@@ -1067,6 +1067,8 @@ void UMyRogueWidget::Return_HaveAbilityList(bool *RogueAbilityLists, float* Rogu
 void UMyRogueWidget::Return_HaveAttackFormList(bool ReturnAttackFormList[4][10], float AttackFormOverlap[4][10]) {
 	ChangedAttackFromList->ClearChildren();
 	ButtonStyleInit();
+	UseNanumMyeonjo = Cast<UFont>(StaticLoadObject(UFont::StaticClass(), NULL,
+		TEXT("Font'/Game/Fonts/NanumMyeongjo-Regular_Font.NanumMyeongjo-Regular_Font'")));
 	for (int j = 0; j <= AttackFormMaxIndex; j++) {
 		HaveAttackFormList[AttackForm][j] = ReturnAttackFormList[AttackForm][j];
 		HaveAttackFormOverlap[AttackForm][j] = AttackFormOverlap[AttackForm][j];

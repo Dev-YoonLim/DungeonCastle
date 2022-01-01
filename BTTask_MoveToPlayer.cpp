@@ -20,15 +20,18 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 	if (Goal) {
 		if (EnemyController->SenseRogue == true) {
 			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("CheckSense"));
-			if (EnemyController->CheckDie() == true) {
-				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveToDie"));
+			if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true) {
+				EnemyController->StopMovement();
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveTostop"));
 				return EBTNodeResult::Failed;
 			}
-			EnemyController->MoveToActor(Goal, EnemyRogue->EnemyRogueWeaponRange);
-			EnemyController->DoWalk();
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("GoalSuccess"));
-			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("MoveTo"));
-			return EBTNodeResult::Succeeded;
+			else {
+				EnemyController->MoveToActor(Goal, EnemyRogue->EnemyRogueWeaponRange);
+				EnemyController->DoWalk();
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("GoalSuccess"));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("MoveTo"));
+				return EBTNodeResult::Succeeded;
+			}
 		}
 		//else
 			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("NotSense"));
