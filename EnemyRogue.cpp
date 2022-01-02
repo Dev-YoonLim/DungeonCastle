@@ -326,12 +326,12 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 	if (WeaponKnockBack == true)
 		ChangeKnockBackValue = 5.f;
 	KnockBackValue = ChangeKnockBackValue;
+	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
+	SetHp(TakeWeaponDamege);
 	if (EnemyDead == false) {
 		UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
 		WeaponHitAnimationPlay();
 	}
-	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
-	SetHp(TakeWeaponDamege);
 	if (TakeWeaponEffect == true) {
 		switch (TakeWeaponElementNumbers) {
 		case 0:
@@ -801,7 +801,7 @@ void AEnemyRogue::EnemyRogueSlow(int32 SlowStack, bool Freez) {
 
 void AEnemyRogue::EnemyRogueDie() {
 	if (EnemyDead == true){
-		MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-DeathData);
+		MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-(DeathData/2));
 		MyGameMode->RogueSetKarmaDelegate.ExecuteIfBound(Karma);
 		GetCapsuleComponent()->SetCollisionProfileName("Death");
 		/*if (GiftAbilityPer >= FMath::FRandRange(0, 100)) {

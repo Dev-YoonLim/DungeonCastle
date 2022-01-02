@@ -119,7 +119,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponDamege = 3.f;
 		WeaponSpeed = 1.2f;
 		ElementSynergy = 1.5f;
-		WeaponAttackCostData = 4;
+		WeaponAttackCostData = 5;
 		ElementEffectSize = FVector(0.05, 0.05, 0.04);
 		WeaponSynergy(0.5f, 0.3f, 1.5f);
 	}
@@ -129,7 +129,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponDamege = 6.f;
 		WeaponSpeed = 1.1f;
 		ElementSynergy = 1.3f;
-		WeaponAttackCostData = 7;
+		WeaponAttackCostData = 3;
 		ElementEffectSize = FVector(0.06, 0.06, 0.05);
 		
 		WeaponSynergy(0.4f, 1.3f, 0.5f);
@@ -140,7 +140,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 0.9;
 		WeaponSpeed = 0.8f;
 		ElementSynergy = 0.6f;
-		WeaponAttackCostData = 10;
+		WeaponAttackCostData = 2;
 		ElementEffectSize = FVector(0.07, 0.07, 0.06);
 		
 		WeaponSynergy(1.5f, 1.1f, 0.8f);
@@ -151,7 +151,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 1.3;
 		WeaponSpeed = 0.75f;
 		ElementSynergy = 1.2f;
-		WeaponAttackCostData = 11;
+		WeaponAttackCostData = 2;
 		ElementEffectSize = FVector(0.08, 0.08, 0.06);
 		
 		WeaponSynergy(0.2f, 2.2f, 0.f);
@@ -162,7 +162,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 0.9f;
 		WeaponSpeed = 0.85f;
 		ElementSynergy = 1.f;
-		WeaponAttackCostData = 9;
+		WeaponAttackCostData = 2;
 		ElementEffectSize = FVector(0.06, 0.06, 0.075);
 		
 		WeaponSynergy(1.7f, 0.8f, 1.0f);
@@ -173,7 +173,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponDamege = 5.f;
 		WeaponSpeed = 1.3f;
 		ElementSynergy = 1.2f;
-		WeaponAttackCostData = 4;
+		WeaponAttackCostData = 3;
 		ElementEffectSize = FVector(0.05, 0.05, 0.04);
 		
 		WeaponSynergy(0.7f, 0.2f, 1.7f);
@@ -184,7 +184,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponDamege = 6.f;
 		WeaponSpeed = 1.2f;
 		ElementSynergy = 0.6f;
-		WeaponAttackCostData = 6;
+		WeaponAttackCostData = 4;
 		ElementEffectSize = FVector(0.06, 0.06, 0.05);
 
 		WeaponSynergy(1.3f, 0.8f, 0.8f);
@@ -195,7 +195,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 1.f;
 		WeaponSpeed = 0.75f;
 		ElementSynergy = 0.7f;
-		WeaponAttackCostData = 13;
+		WeaponAttackCostData = 1;
 		ElementEffectSize = FVector(0.05, 0.05, 0.14);
 
 		WeaponSynergy(1.7f, 1.2f, 0.8f);
@@ -206,7 +206,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 1.1f;
 		WeaponSpeed = 0.75f;
 		ElementSynergy = 1.2f;
-		WeaponAttackCostData = 13;
+		WeaponAttackCostData = 1;
 		ElementEffectSize = FVector(0.05, 0.05, 0.13);
 
 		WeaponSynergy(1.4f, 1.2f, 0.8f);
@@ -217,7 +217,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 0.8f;
 		WeaponSpeed = 0.85f;
 		ElementSynergy = 1.f;
-		WeaponAttackCostData = 9;
+		WeaponAttackCostData = 4;
 		ElementEffectSize = FVector(0.12, 0.12, 0.15);
 
 		WeaponSynergy(1.3f, 0.7f, 1.0f);
@@ -228,7 +228,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		HitEffectScale = 0.6f;
 		WeaponSpeed = 1.3f;
 		ElementSynergy = 2.3f;
-		WeaponAttackCostData = 3;
+		WeaponAttackCostData = 5;
 		ElementEffectSize = FVector(0.04, 0.04, 0.03);
 		
 		WeaponSynergy(0.2f, 0.f, 1.5f);
@@ -563,7 +563,7 @@ void ARogueWeapon::SetDotDamege(int32 DotDamegeElement, float OriginDamege, floa
 }
 
 void ARogueWeapon::CostData() {
-	MyGameMode->RogueSetDataDelegate.ExecuteIfBound(WeaponAttackCostData);
+	MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-WeaponAttackCostData);
 }
 
 /*void ARogueWeapon::WeaponLevelUp() {

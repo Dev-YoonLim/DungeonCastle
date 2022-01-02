@@ -59,18 +59,7 @@ void ARogue::Tick(float DeltaTime)
 	IdleState();
 	if (BeepOn == true)
 		Axel = 0.f;
-	if (MyRogueState->DialogueTutorialCount < 4 &&
-		MyRogueState->TotalEquipCount == MyRogueState->DialogueTutorialCount) {
-		SetStartDialogueIndex((MyRogueState->DialogueTutorialCount) + 3);
-		DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogueState->StartDialogueSourceRef[GetStartDialogueIndex()]));
-		MyRogueState->StartDialogueState[(MyRogueState->DialogueTutorialCount) + 3] = 1;
-		MyRogueState->DialogueTutorialCount++;
-		MyRogueState->TaskLevel = 0;
-		if (BeepOn == false) {
-			//DialogueKinds = 0;
-			BeepCall();
-		}
-	}
+	
 	/*if (MyRogue->MyRogueState->DialogueTutorialCount < 4 &&
 		MyRogue->MyRogueState->TotalEquipCount == MyRogue->MyRogueState->DialogueTutorialCount) {
 		MyRogue->SetDialogueIndex((MyRogue->MyRogueState->DialogueTutorialCount) + 3);
@@ -1196,7 +1185,9 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			//MainDialogueIndex++;
 		}
 		if(MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300){
-			MainDialogueIndex++;
+			if (MyRogueState->GetDungeonClearAllCount() >= 1) {
+				MainDialogueIndex++;
+			}
 		}
 		if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
 			SubDialogueIndex++;
@@ -1304,6 +1295,19 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 					//MyGameMode->MainUIUpdate();
 					BeepCall();
 				}
+			}
+		}
+	}
+	else if (OtherComp->GetCollisionProfileName() == TEXT("BonFire")) {
+		if (MyRogueState->DialogueTutorialCount < 4 &&
+			MyRogueState->TotalEquipCount == MyRogueState->DialogueTutorialCount && DialogueKinds == 0) {
+			SetStartDialogueIndex((MyRogueState->DialogueTutorialCount) + 3);
+			DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL, MyRogueState->StartDialogueSourceRef[GetStartDialogueIndex()]));
+			MyRogueState->StartDialogueState[(MyRogueState->DialogueTutorialCount) + 3] = 1;
+			MyRogueState->DialogueTutorialCount++;
+			MyRogueState->TaskLevel = 0;
+			if (BeepOn == false) {
+				BeepCall();
 			}
 		}
 	}

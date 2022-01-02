@@ -990,7 +990,7 @@ void ARogueState::DeleteAttackSuccessToSpecialperPlus() {
 
 void ARogueState::AttackTryToLowDataDecrease() {
 	AttackTryToLowDataDecreaseCount++;
-	UseDataValuePercent *= 0.7;
+	UseDataValuePercent *= 1.1;
 }
 
 void ARogueState::DeleteAttackTryToLowDataDecrease() {
@@ -1213,7 +1213,7 @@ void ARogueState::AbilityRandTake(int32 AbilityIndex) {
 			break;
 		case 14:
 			AttackTryToLowDataDecrease();
-			AbilityName[EquipAbilityCount] = TEXT("Thrifty Spirit");
+			AbilityName[EquipAbilityCount] = TEXT("Increase AttackIncome");
 			break;
 		case 15:
 			TorchSpecialPerIncrease();
