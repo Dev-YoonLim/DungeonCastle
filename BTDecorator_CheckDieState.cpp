@@ -11,8 +11,10 @@ bool UBTDecorator_CheckDieState::CalculateRawConditionValue (
 	UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const {
 	auto EnemyAIController =
 		Cast<AEnemyAIController>(OwnerComp.GetAIOwner());
-	if (EnemyAIController->CheckDie() == true)
+	if (EnemyAIController->CheckDie() == true) {
+		EnemyAIController->StopMovement();
 		return false;
+	}
 	else
 		return true;
 }

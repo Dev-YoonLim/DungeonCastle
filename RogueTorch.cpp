@@ -179,7 +179,7 @@ void ARogueTorch::TorchChangeElement(int32 ElementIndex, float SelectElementLeve
 		BurnAttacksDamege = 3.f ;
 		BurnAttacksCriPer = 10.f;
 		ElementSpecialDamegeDamege = 30.f;
-		TorchAttackCostData = 2;
+		TorchAttackCostData = 5;
 		break;
 	case 1:
 		FireEffectReference = TEXT("ParticleSystem'/Game/FireStick/Fire/P_ky_fireBall.P_ky_fireBall'");
@@ -207,7 +207,7 @@ void ARogueTorch::TorchChangeElement(int32 ElementIndex, float SelectElementLeve
 		BurnAttacksDamege = 5.f;
 		BurnAttacksCriPer = 20.f;
 		ElementSpecialDamegeDamege = 50.f;
-		TorchAttackCostData = 5;
+		TorchAttackCostData = 3;
 		break;
 	case 3:
 		FireEffectReference = TEXT("ParticleSystem'/Game/FireStick/Poison/TorchPoisonball.TorchPoisonball'");
@@ -221,7 +221,7 @@ void ARogueTorch::TorchChangeElement(int32 ElementIndex, float SelectElementLeve
 		BurnAttacksDamege = 1.5f;
 		BurnAttacksCriPer = 10.f;
 		ElementSpecialDamegeDamege = 20.f;
-		TorchAttackCostData = 2;
+		TorchAttackCostData = 3;
 		break;
 	case 4:
 		FireEffectReference = TEXT("ParticleSystem'/Game/FireStick/Electro/TorchElectroBall.TorchElectroBall'");
@@ -235,7 +235,7 @@ void ARogueTorch::TorchChangeElement(int32 ElementIndex, float SelectElementLeve
 		BurnAttacksDamege = 5.f;
 		BurnAttacksCriPer = 10.f;
 		ElementSpecialDamegeDamege = 45.f;
-		TorchAttackCostData = 7;
+		TorchAttackCostData = 3;
 		break;
 	}
 	MyGameMode->TorchStatusSynergyDelegate.ExecuteIfBound(StabDamege, BurnAttacksDamege, ElementSpecialDamegeDamege,
@@ -466,7 +466,7 @@ void ARogueTorch::TorchRightLeftCapsuleInit() {
 }
 
 void ARogueTorch::ConstData() {
-	MyGameMode->RogueSetDataDelegate.ExecuteIfBound(TorchAttackCostData);
+	MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-TorchAttackCostData);
 }
 
 /*void ARogueTorch::TorchLevelUp() {

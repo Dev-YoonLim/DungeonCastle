@@ -1076,6 +1076,7 @@ bool AEnemyRogue::DoAttack() {
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("EnemyAttack"));
 			//EnemyRogueWeaponSpeed
 		//EnemyAnimInst->Montage_SetPlayRate(EnemyAnimInst->FinalEnemyAttackForm, EnemyRogueWeaponSpeed);
+		GetMesh()->SetCollisionProfileName(TEXT("EnemyAttack"));
 		EnemyAnimInst->Montage_Play(EnemyAnimInst->FinalEnemyAttackForm, EnemyRogueWeaponSpeed*1.2f*SlowValue);
 		return true;
 	}

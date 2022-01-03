@@ -174,10 +174,10 @@ void ARogue::DialogueVideoPlay() {
 		DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
 			MyRogueState->StartDialogueSoundRef[StartDialogueIndex]));
 		DialogueSound->SetSound(DialogueSoundBase);
-		MyRogueState->StartDialogueState[StartDialogueIndex] = 2;
 		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
+			MyRogueState->StartDialogueState[StartDialogueIndex] = 2;
 		}
 	}
 	else if (DialogueKinds == 1 && MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex*300) {
@@ -186,10 +186,10 @@ void ARogue::DialogueVideoPlay() {
 		DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
 			MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][1]));
 		DialogueSound->SetSound(DialogueSoundBase);
-		MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
 		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
+			MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
 		}
 	}
 	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
@@ -198,10 +198,10 @@ void ARogue::DialogueVideoPlay() {
 		DialogueSoundBase = Cast<USoundBase>(StaticLoadObject(USoundBase::StaticClass(), NULL,
 			MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][1]));
 		DialogueSound->SetSound(DialogueSoundBase);
-		MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 2;
 		if (DialoguePlayer->IsPlaying() == false) {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
+			MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 2;
 		}
 	}
 		/*if (SubDialogueIndex == 4) {
@@ -526,7 +526,7 @@ bool ARogue::CanSideCheck() {
 
 void ARogue::RogueViewWork() {
 	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_Montage) == false && myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == false) {
-		ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -35, 5), FVector(0, 0, 0)));
+		ViewArm->SetRelativeTransform(FTransform(FRotator(90, 0, (-88 + ViewRotator)), FVector(-5, -15, 10), FVector(0, 0, 0)));
 		//ViewArm->SetRelativeRotation(FRotator(90, 0, (-88 + ViewRotator)));
 	}
 	RogueView->SetRelativeTransform(FTransform(FRotator(ViewUp, 0, 0), FVector(0, 0, 0), FVector(0, 0, 0)));
@@ -1264,6 +1264,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 			MyRogueState->Call_RogueStartAttackFormNumber();
 			MyRogueState->Call_RogueStartWeaponNumber();
 			MyRogueState->Call_RogueStartTorchElementalNumber();
+			MyRogueState->LastSpeedSetting();
 			MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(0);
 			//SetMultiplySpeed((MyRogueState->MoveSpeedIncreaseCountValue)*0.1f);
 			//MyGameMode->RogueSpeedIncreaseDelegate.ExecuteIfBound(0.1 * MoveSpeedIncreaseCountValue);
@@ -1276,18 +1277,22 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->StartDialogueSourceRef[StartDialogueIndex]));
 					MyRogueState->TaskLevel = 0;
+					GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("StartDialogue")));
 					BeepCall();
 				}
-				else if (MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300) {
+				else if (MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300 
+					&& MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0] == 0) {
 					DialogueKinds = 1;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 					MyRogueState->TaskLevel = 9;
+					GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("MainDialogue")));
 					BeepCall();
 				}
 			}
 			else {
-				if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
+				if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500
+					&& MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0] == 0) {
 					DialogueKinds = 2;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));

@@ -22,14 +22,14 @@ EBTNodeResult::Type UBTTask_MoveToPlayer::ExecuteTask(UBehaviorTreeComponent& Ow
 			//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("CheckSense"));
 			if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true) {
 				EnemyController->StopMovement();
-				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveTostop"));
+				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("MoveTostoppppppppppppppppppppppppppppppppppppppppppppp"));
 				return EBTNodeResult::Failed;
 			}
 			else {
 				EnemyController->MoveToActor(Goal, EnemyRogue->EnemyRogueWeaponRange);
 				EnemyController->DoWalk();
 				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Purple, TEXT("GoalSuccess"));
-				GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("MoveTo"));
+				//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, TEXT("MoveTo"));
 				return EBTNodeResult::Succeeded;
 			}
 		}

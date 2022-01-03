@@ -38,8 +38,8 @@ void URogueAnimInstance::GetWorldGameModeBase() {
 
 void URogueAnimInstance::AttackAnimationDelegateInit() {
 	MyGameMode->AttackAnimationChangeDelegate_.BindUObject(this, &URogueAnimInstance::AttackFormToChangeAnimReferens);
-	//MyGameMode->WeaponSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationWeaponSpeedSetting);
-	//MyGameMode->TorchSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationTorchSpeedSetting);
+	MyGameMode->WeaponSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationWeaponSpeedSetting);
+	MyGameMode->TorchSpeedSynergyDelegate.BindUObject(this, &URogueAnimInstance::AnimationTorchSpeedSetting);
 	//MyGameMode->Call_TakeAttackFormRefDelegate.BindUObject(this, &URogueAnimInstance::AttackFormToChangeAnimReferens);
 }
 

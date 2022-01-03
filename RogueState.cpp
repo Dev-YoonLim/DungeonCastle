@@ -23,7 +23,7 @@ ARogueState::ARogueState() {
 
 void ARogueState::AbilityInit() {
 	DialogueRefInit();
-	WeaponNumber = 4;
+	WeaponNumber = 1;
 	TotalEquipCount = 0;
 	EquipAbilityCount = 0;
 	DialogueTutorialCount = 1;

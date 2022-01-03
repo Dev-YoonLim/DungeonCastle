@@ -13,6 +13,7 @@ bool UBTDecorator_CheckHitState::CalculateRawConditionValue (
 		Cast<AEnemyAIController>(OwnerComp.GetAIOwner());
 
 	if (EnemyAIController->CheckHit() == true) {
+		EnemyAIController->StopMovement();
 		return false;
 	}
 	else

@@ -744,7 +744,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 		MyGameMode->Widget_CallAbilityListDelegate.ExecuteIfBound();
 		for (int i = 0; i <= AbilityLastIndex; i++) {
 			GetRogueAbilityList(i, AbilityNames[i]);
-			AbilityCost *= 1.01;
+			AbilityCost *= 1.1;
 		}
 		PageMain = false;
 	}
@@ -889,9 +889,9 @@ void UMyRogueWidget::GetChangedAttackFormMenu() {
 void UMyRogueWidget::GetAddAbilityMenu() {
 	MyGameMode->Widget_RogueUIValueInitDelegate.ExecuteIfBound();
 	if (RogueData >= 100)
-		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(100.f);
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(50.f);
 	else if (RogueData < 100)
-		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(RogueData);
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(0);
 	MyGameMode->GetWidgetNumber(10);
 	
 }
@@ -1885,8 +1885,8 @@ void UMyRogueWidget::GetSpecialList() {
 	Call_HaveAttackFormList();
 }
 void UMyRogueWidget::GetSelectRogueAbilityOne() {
-	if (RogueData > AbilityCost * 100.f) {
-		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+	if (RogueData > AbilityCost * 50.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 50.f);
 		AbilityCost = 1.f;
 		
 		if (SelectAbilityIndex[0] <= 23) {
@@ -1916,8 +1916,8 @@ void UMyRogueWidget::GetSelectRogueAbilityOne() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityTwo() {
-	if (RogueData > AbilityCost * 100.f) {
-		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+	if (RogueData > AbilityCost * 50.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 50.f);
 		AbilityCost = 1.f;
 		if (SelectAbilityIndex[1] <= 23) {
 			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[1]);
@@ -1946,8 +1946,8 @@ void UMyRogueWidget::GetSelectRogueAbilityTwo() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityThree() {
-	if (RogueData > AbilityCost * 100.f) {
-		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+	if (RogueData > AbilityCost * 50.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 50.f);
 		AbilityCost = 1.f;
 		if (SelectAbilityIndex[2] <= 23) {
 			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(SelectAbilityIndex[2]);
@@ -1976,8 +1976,8 @@ void UMyRogueWidget::GetSelectRogueAbilityThree() {
 }
 
 void UMyRogueWidget::GetSelectRogueAbilityFour() {
-	if (RogueData > AbilityCost * 100.f) {
-		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 100.f);
+	if (RogueData > AbilityCost * 50.f) {
+		MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(AbilityCost * 50.f);
 		AbilityCost = 1.f;
 		if (SelectAbilityIndex[3] <= 23) {
 			
