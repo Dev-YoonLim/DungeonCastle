@@ -27,12 +27,12 @@ void ARandomItem::NotifyActorBeginOverlap(AActor* OtherActor){
 		}*/
 		UGameplayStatics::PlaySoundAtLocation(this, GetItemSound, GetActorLocation());
 		if (ItemIndex <= 70) {
-			MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-100.f * FMath::FRandRange(0.5f, 1.5f));
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("HpUp"));
+			MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-50.f * FMath::FRandRange(0.8f, 1.2f));
+			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
 		}
 		else if (ItemIndex <= 90) {
 			MyGameMode->RogueTakeAbilityDelegate.ExecuteIfBound(23);
-			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
+			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("Ability"));
 		}
 		else if (ItemIndex <= 92) {
 			int32 WeaponNumber = FMath::FRandRange(0, 9);

@@ -3,6 +3,7 @@
 
 #include "RogueState.h"
 #include "Rogue.h"
+#include "EnemyRogue.h"
 
 ARogueState::ARogueState() {
 	TorchElementInit();
@@ -22,8 +23,19 @@ ARogueState::ARogueState() {
 }
 
 void ARogueState::AbilityInit() {
+	int StartingWeapon = FMath::RandRange(0, 2);
+	switch (StartingWeapon){
+	case 0:
+		WeaponNumber = 1;
+		break;
+	case 1:
+		WeaponNumber = 6;
+		break;
+	case 2:
+		WeaponNumber = 5;
+		break;
+	}
 	DialogueRefInit();
-	WeaponNumber = 1;
 	TotalEquipCount = 0;
 	EquipAbilityCount = 0;
 	DialogueTutorialCount = 1;
@@ -127,6 +139,9 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	//if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
 	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("Load")));
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	TSubclassOf<AEnemyRogue> EnemyRogueClass;
+	//AEnemyRogue* enemyRogue = Cast<AEnemyRogue>(UGameplayStatics::GetAllActorsOfClass(GetWorld(), EnemyRogueClass, EnemyRogueClass));
+
 	for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
 		int Index = LoadGame->TotalEquipAbilityDataList[i];
 		AbilityRandTake(Index);
@@ -355,7 +370,7 @@ void ARogueState::AttackFormChange(int32 TakeAttackForm, int32 TakeAttackFormInd
 void ARogueState::AttackFormInit() {
 	if(MyGameMode->NewGameStart == true && TotalAttackFormCount == 0){
 		for (int i = 0; i < 3; i++) {
-			AttackForm[i] = FMath::RandRange(0, 2);
+			AttackForm[i] = FMath::RandRange(0, 1);
 			switch (AttackForm[i]) {
 			case 0:
 				AttackFormIndex[i] = FMath::RandRange(0, 6);

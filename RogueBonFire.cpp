@@ -45,6 +45,8 @@ void ARogueBonFire::NotifyActorBeginOverlap(AActor* OtherActor) {
 	if (myRogue && myRogue->GetDialogueSequence() == false) {
 		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
 		myRogue->myAnimInst->Idle();
+		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(-(myRogue->MyRogueState->GetCurrentKarma()/(myRogue->MyRogueState->GetDungeonClearAllCount()+1)));
+		myRogue->MyRogueState->SetCurrentKarma((myRogue->MyRogueState->GetCurrentKarma() / (myRogue->MyRogueState->GetDungeonClearAllCount() + 1)));
 	}
 }
 

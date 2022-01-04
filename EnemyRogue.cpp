@@ -31,6 +31,23 @@ void AEnemyRogue::BeginPlay()
 	EnemyRogueTakeDamegeDelegateInit();
 	WorldRogueInit();
 	EnemyRogueWeaponInfo();
+	SaveSlotName = TEXT("SaveSlot");
+	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	if (LoadGame == nullptr) {
+		LoadGame = GetMutableDefault<URogueSaveGame>();
+	}
+	else {
+		LoadGameData(LoadGame);
+	}
+}
+
+
+void AEnemyRogue::LoadGameData(URogueSaveGame* LoadData) {
+	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
+	Hp = (LoadGame->DungeonClearAllCount * 50) + Hp;
+	//for(int i = 0; i < 3; i ++)
+		//StoryProgress[i] = LoadGame->StoryProgress[i];
+	//myRogue->SetActorLocation(LoadGame->LastLocation);
 }
 
 void AEnemyRogue::PostInitializeComponents() {

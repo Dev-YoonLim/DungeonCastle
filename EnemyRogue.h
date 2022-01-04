@@ -225,6 +225,8 @@ public:
 	bool DoIdle(int32 IdleIndex);
 	bool DoRoll(int32 RollDirection);
 
+	void LoadGameData(URogueSaveGame* LoadData);
+
 
 public:
 	UPROPERTY(EditAnywhere)
@@ -241,7 +243,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Behavior)
 		class UBehaviorTree* EnemyBehaviorTree;
 
-
+	FString SaveSlotName;
 	UAnimInstance* SetEnemyRogueAnimInstance;
 	URogueAnimInstance* EnemyAnimInst;
 

@@ -1281,7 +1281,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 					BeepCall();
 				}
 				else if (MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300 
-					&& MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0] == 0) {
+					&& MyRogueState->MainDialogueState[MainDialogueIndex] == 0) {
 					DialogueKinds = 1;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
@@ -1291,13 +1291,13 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 				}
 			}
 			else {
+				//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("SubDialogue : %d"), MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
+				MyRogueState->TaskLevel = MyGameMode->StageIndex + 5;
 				if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500
-					&& MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0] == 0) {
+					&& MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0) {
 					DialogueKinds = 2;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
-					MyRogueState->TaskLevel = MyGameMode->StageIndex + 5;
-					//MyGameMode->MainUIUpdate();
 					BeepCall();
 				}
 			}
