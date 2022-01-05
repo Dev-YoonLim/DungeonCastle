@@ -132,7 +132,7 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	else {
 		LoadGameData(LoadGame);
 	}
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap")) {
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap") || UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
 		StageIndex = 0;
 	}
 	if(GameStartCheck == 0)

@@ -404,6 +404,9 @@ bool ARogue::IdleState() {
 	if (right == false && forward == false && back == false 
 		&& left == false && attack == false && roll == false && NotTakeHitCheck() == true && TakeHitOn == false && NotRogueDie() == true) {
 		ViewRotator = 0.f;
+		if (RogueHeadShake == false && ViewArm->bUsePawnControlRotation == false) {
+			ViewArm->bUsePawnControlRotation = true;
+		}
 		myAnimInst->Idle();
 		return true;
 	}
@@ -500,8 +503,7 @@ bool ARogue::NotTorchAttackState() {
 }
 
 void ARogue::WeaponChange() {
-	
-	//MyGameMode->Call_WeaponChangeDelegate.ExecuteIfBound(GetWeaponNumber());
+	MyGameMode->Call_WeaponChangeDelegate.ExecuteIfBound(GetWeaponNumber());
 	//myAnimInst->AttackFormToChangeAnimReferens(GetAttackForm());
 	/*if(GetWeaponNumber() == 4)
 		RogueWeapons->SetRelativeRotation(FRotator(270, 180, 0));
@@ -629,6 +631,9 @@ void ARogue::Attack() {
 	if (CanInput == true && NotTakeHitCheck() == true && TakeHitOn == false) {
 		AttackFowardVectors = GetControlRotation().Vector();
 		MyGameMode->RogueAttackVectorToEnemyRogueDelegate.Broadcast(AttackFowardVectors);
+		if (RogueHeadShake == false) {
+			ViewArm->bUsePawnControlRotation = false;
+		}
 		if (AttackQue == 0 && attack == false) {
 			CombatStart = true;
 		}
@@ -1345,6 +1350,9 @@ void ARogue::RogueDie() {
 }
 
 void ARogue::TakeHitState(int32 Index) {
+	if (RogueHeadShake == false) {
+		ViewArm->bUsePawnControlRotation = false;
+	}
 	switch (Index) {
 	case 0:
 		myAnimInst->Montage_Play(myAnimInst->RogueUpHit1);
@@ -1369,6 +1377,9 @@ void ARogue::TakeHitState(int32 Index) {
 }
 
 void ARogue::RogueDieState(int32 Index) {
+	if (RogueHeadShake == false) {
+		ViewArm->bUsePawnControlRotation = false;
+	}
 	switch (Index) {
 	case 0:
 		myAnimInst->Montage_Play(myAnimInst->EnemyDownDeath1[0]);

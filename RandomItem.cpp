@@ -27,7 +27,7 @@ void ARandomItem::NotifyActorBeginOverlap(AActor* OtherActor){
 		}*/
 		UGameplayStatics::PlaySoundAtLocation(this, GetItemSound, GetActorLocation());
 		if (ItemIndex <= 70) {
-			MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-50.f * FMath::FRandRange(0.8f, 1.2f));
+			MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(-50.f * FMath::FRandRange(0.5f, 1.f));
 			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, TEXT("DataUp"));
 		}
 		else if (ItemIndex <= 90) {

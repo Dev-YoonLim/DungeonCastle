@@ -131,39 +131,39 @@ void URogueAnimInstance::AttackAnimationInit() { //여기에 각종 애니메이션 넣어야
 	AttackDirection[1][3][0] = 1;
 	DoubleAttackForm[1][3] = false;
 
-	AttackFormList[1][4] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/FastGroundBreakMontage.FastGroundBreakMontage'");
+	/*AttackFormList[1][4] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/FastGroundBreakMontage.FastGroundBreakMontage'");
 	SlashFormSynergy[1][4] = 0.1f;
 	BreakFormSynergy[1][4] = 0.8f;
 	StabFormSynergy[1][4] = 0.1f;
 	AttackDirection[1][4][0] = 0;
+	DoubleAttackForm[1][4] = false;*/
+
+	AttackFormList[1][4] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/GroundBreakMontage.GroundBreakMontage'");
+	SlashFormSynergy[1][4] = 0.2f;
+	BreakFormSynergy[1][4] = 0.9f;
+	StabFormSynergy[1][4] = 0.2f;
+	AttackDirection[1][4][0] = 0;
 	DoubleAttackForm[1][4] = false;
 
-	AttackFormList[1][5] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/GroundBreakMontage.GroundBreakMontage'");
-	SlashFormSynergy[1][5] = 0.2f;
-	BreakFormSynergy[1][5] = 0.9f;
+	AttackFormList[1][5] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/LeftMiddleBreakMontage.LeftMiddleBreakMontage'");
+	SlashFormSynergy[1][5] = 0.4f;
+	BreakFormSynergy[1][5] = 0.5f;
 	StabFormSynergy[1][5] = 0.2f;
-	AttackDirection[1][5][0] = 0;
+	AttackDirection[1][5][0] = 2;
 	DoubleAttackForm[1][5] = false;
 
-	AttackFormList[1][6] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/LeftMiddleBreakMontage.LeftMiddleBreakMontage'");
+	AttackFormList[1][6] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/DefaultAndLeftBreakMontage.DefaultAndLeftBreakMontage'");
 	SlashFormSynergy[1][6] = 0.4f;
-	BreakFormSynergy[1][6] = 0.5f;
+	BreakFormSynergy[1][6] = 0.6f;
 	StabFormSynergy[1][6] = 0.2f;
-	AttackDirection[1][6][0] = 2;
-	DoubleAttackForm[1][6] = false;
-
-	AttackFormList[1][7] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/DefaultAndLeftBreakMontage.DefaultAndLeftBreakMontage'");
-	SlashFormSynergy[1][7] = 0.4f;
-	BreakFormSynergy[1][7] = 0.6f;
-	StabFormSynergy[1][7] = 0.2f;
-	AttackDirection[1][7][0] = 0;
-	AttackDirection[1][7][1] = 2;
+	AttackDirection[1][6][0] = 0;
+	AttackDirection[1][6][1] = 2;
 	DoubleAttackForm[1][0] = true;
 
-	AttackFormList[1][8] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/RightLeftBreakMontage.RightLeftBreakMontage'");
-	SlashFormSynergy[1][8] = 0.4f;
-	BreakFormSynergy[1][8] = 0.6f;
-	StabFormSynergy[1][8] = 0.3f;
+	AttackFormList[1][7] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Break/RightLeftBreakMontage.RightLeftBreakMontage'");
+	SlashFormSynergy[1][7] = 0.4f;
+	BreakFormSynergy[1][7] = 0.6f;
+	StabFormSynergy[1][7] = 0.3f;
 	AttackDirection[1][7][0] = 2;
 	AttackDirection[1][7][1] = 1;
 	DoubleAttackForm[1][0] = true;
@@ -812,9 +812,9 @@ void URogueAnimInstance::EnemyRogueAttackRefInit() {
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_3.Smash1_3'"));
 	EnemyAttackFormRef[8] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_4.Smash1_4'"));
+	//EnemyAttackFormRef[9] =
+		//(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_5.Smash1_5'"));
 	EnemyAttackFormRef[9] =
-		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_5.Smash1_5'"));
-	EnemyAttackFormRef[10] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/Smash/Smash1_6.Smash1_6'"));
 
 	/*EnemyAttackFormRef[2][0] =
@@ -830,11 +830,11 @@ void URogueAnimInstance::EnemyRogueAttackRefInit() {
 
 	/*EnemyAttackFormRef[2][0] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/SpecialArts/SpecialArts.SpecialArts'"));*/
-	EnemyAttackFormRef[11] =
+	EnemyAttackFormRef[10] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/SpecialArts/SpecialArts_2.SpecialArts_2'"));
-	EnemyAttackFormRef[12] =
+	EnemyAttackFormRef[11] =
 		(TEXT("AnimMontage'/Game/EnemyRogue/Animation/Attack/SpecialArts/SpecialArts_3.SpecialArts_3'"));
-	for (int i = 0; i < 13; i++) {
+	for (int i = 0; i < 12; i++) {
 		auto EnemyAttackAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 			(EnemyAttackFormRef[i]);
 		if (EnemyAttackAsset.Succeeded()) {
@@ -844,7 +844,7 @@ void URogueAnimInstance::EnemyRogueAttackRefInit() {
 }
 
 void URogueAnimInstance::EnemyRogueAttackFormIndex() {
-	int32 AttackFormIndex = FMath::FRandRange(0, 13);
+	int32 AttackFormIndex = FMath::RandRange(0, 11);
 	FinalEnemyAttackForm = EnemyAttackForm[AttackFormIndex];
 	/*//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Blue, FString::Printf(TEXT("EnemyAttackFormIndex")));
 	for (int i = 0; i < 3; i++) {

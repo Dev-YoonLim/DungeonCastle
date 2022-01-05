@@ -376,7 +376,7 @@ void ARogueState::AttackFormInit() {
 				AttackFormIndex[i] = FMath::RandRange(0, 6);
 				break;
 			case 1:
-				AttackFormIndex[i] = FMath::RandRange(0, 8);
+				AttackFormIndex[i] = FMath::RandRange(0, 7);
 				break;
 			case 2:
 				AttackFormIndex[i] = FMath::RandRange(0, 8);
