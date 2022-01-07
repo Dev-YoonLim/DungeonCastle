@@ -1397,9 +1397,20 @@ void ARogueState::SetDialogueIndex(int32 NewIndex) {
 //최종 세팅 라인--------------------------------------------------------------------------------------------------
 
 void ARogueState::LastWeaponDamegeSetting() {
+	float AttackThreeFormSynergy = 1.f;
 	GetWeaponTotalDamege();
+	if (AttackForm[0] == AttackForm[1] && AttackForm[1] == AttackForm[2]) {
+		if (AttackFormIndex[0] == AttackFormIndex[1] && AttackFormIndex[1] == AttackFormIndex[2]) {
+			AttackThreeFormSynergy = 0.8f;
+		}
+		else
+			AttackThreeFormSynergy = 1.f;
+	}
+	else {
+		AttackThreeFormSynergy = 1.1;
+	}
 	for (int i = 0; i < 3; i++) {
-		WeaponTotalDamege[i] = (WeaponPhysicsDamege[i]*
+		WeaponTotalDamege[i] = (WeaponPhysicsDamege[i] * AttackThreeFormSynergy *
 			(1+HadAttackFormOverlap[AttackForm[i]][AttackFormIndex[i]]/10) 
 			*(1+ HadWeaponOverlap[WeaponNumber]/10) + WeaponElementDamege*(1+ HadElementalOverlap[WeaponElementNumber]/10));
 

@@ -196,7 +196,8 @@ void AEnemyRogue::EnemyRogueStateInit() {
 	EnemyDownFinish = false;
 	AIControllerClass = AEnemyAIController::StaticClass();
 	GetCharacterMovement()->MaxWalkSpeed = 95.f;
-
+	HitCountLimite = 5;
+	HitSuperArmorCount = 2;
 
 
 	/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
@@ -215,6 +216,8 @@ void AEnemyRogue::EnemyRogueStateInit() {
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
 			GetCharacterMovement()->MaxWalkSpeed = 145.f;
+			HitCountLimite = 5;
+			HitSuperArmorCount = 2;
 		}
 	}
 	else if (EnemyForm <= 8) {
@@ -227,6 +230,8 @@ void AEnemyRogue::EnemyRogueStateInit() {
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
 			GetCharacterMovement()->MaxWalkSpeed = 165.f;
+			HitCountLimite = 4;
+			HitSuperArmorCount = 3;
 		}
 	}
 	else if (EnemyForm <= 9) {
@@ -239,6 +244,8 @@ void AEnemyRogue::EnemyRogueStateInit() {
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
 			GetCharacterMovement()->MaxWalkSpeed = 75.f;
+			HitCountLimite =2;
+			HitSuperArmorCount = 5;
 		}
 	}
 	MoveSpeedValue = GetCharacterMovement()->MaxWalkSpeed;
@@ -1005,50 +1012,57 @@ void AEnemyRogue::WeaponHitAnimationPlay() {
 	//TakeCheckDoubleAttack
 	//TakeCheckAttackDirection[0]
 	//TakeCheckAttackDirection[1]
-	WeaponAttackRandHitIndex = FMath::FRandRange(0, 4);
-	if (TakeCheckAttackDirection[HitDirectionIndex] == 0) {
-		if (WeaponAttackRandHitIndex <= 2) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownHit1, 1.f * SlowValue);
-			
+	if (HitCount < HitCountLimite && HitSuperArmorCount == 0) {
+		HitCount++;
+		WeaponAttackRandHitIndex = FMath::FRandRange(0, 4);
+		if (TakeCheckAttackDirection[HitDirectionIndex] == 0) {
+			if (WeaponAttackRandHitIndex <= 2) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownHit1, 1.f * SlowValue);
+			}
+			else if (WeaponAttackRandHitIndex == 3) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndDownHit1, 1.f * SlowValue);
+			}
+			else if (WeaponAttackRandHitIndex == 4) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideHit1, 1.f * SlowValue);
+			}
 		}
-		else if (WeaponAttackRandHitIndex == 3) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndDownHit1, 1.f * SlowValue);
-			
+		else if (TakeCheckAttackDirection[HitDirectionIndex] == 1) {
+			if (WeaponAttackRandHitIndex <= 1)
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpHit1, 1.f * SlowValue);
+			else if (WeaponAttackRandHitIndex <= 3) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpHit2, 1.f * SlowValue);
+			}
+			else if (WeaponAttackRandHitIndex == 4) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndUpHit1, 1.f * SlowValue);
+			}
 		}
-		else if (WeaponAttackRandHitIndex == 4) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideHit1, 1.f * SlowValue);
-			
+		else if (TakeCheckAttackDirection[HitDirectionIndex] == 2) {
+			if (WeaponAttackRandHitIndex <= 2)
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideHit1, 1.f * SlowValue);
+			else if (WeaponAttackRandHitIndex == 3) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndDownHit1, 1.f * SlowValue);
+			}
+			else if (WeaponAttackRandHitIndex == 4) {
+				EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndUpHit1, 1.f * SlowValue);
+			}
 		}
-	}
-	else if (TakeCheckAttackDirection[HitDirectionIndex] == 1) {
-		if (WeaponAttackRandHitIndex <= 1)
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpHit1, 1.f * SlowValue);
-		else if (WeaponAttackRandHitIndex <= 3) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpHit2, 1.f * SlowValue);
+		LastAttackDirection = TakeCheckAttackDirection[HitDirectionIndex];
+		if (TakeCheckDoubleAttack == true) {
+			if (HitDirectionIndex == 1)
+				HitDirectionIndex = 0;
+			else if (HitDirectionIndex == 0)
+				HitDirectionIndex++;
 		}
-		else if (WeaponAttackRandHitIndex == 4) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndUpHit1, 1.f * SlowValue);
-		}
-	}
-	else if (TakeCheckAttackDirection[HitDirectionIndex] == 2) {
-		if (WeaponAttackRandHitIndex <= 2)
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideHit1, 1.f * SlowValue);
-		else if (WeaponAttackRandHitIndex == 3) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndDownHit1, 1.f * SlowValue);
-		}
-		else if (WeaponAttackRandHitIndex == 4) {
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemySideAndUpHit1, 1.f * SlowValue);
-		}
-	}
-	LastAttackDirection = TakeCheckAttackDirection[HitDirectionIndex];
-	if (TakeCheckDoubleAttack == true) {
-		if (HitDirectionIndex == 1)
+		else {
 			HitDirectionIndex = 0;
-		else if (HitDirectionIndex == 0)
-			HitDirectionIndex++;
+		}
+	}
+	else if(HitCount == HitCountLimite) {
+		HitCount = 0;
+		HitSuperArmorCount = HitSuperArmorCountLimit-1;
 	}
 	else {
-		HitDirectionIndex = 0;
+		HitSuperArmorCount--;
 	}
 }
 

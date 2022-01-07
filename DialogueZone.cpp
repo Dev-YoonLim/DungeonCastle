@@ -7,7 +7,7 @@ ADialogueZone::ADialogueZone()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	EventBox->SetCollisionProfileName(TEXT("EventZoneCollision"));
+	EventBox->SetCollisionProfileName(TEXT("DialogueEvent"));
 	DeathZoneNumber = -1;
 }
 

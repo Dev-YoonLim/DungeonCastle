@@ -550,18 +550,18 @@ void ARogue::RogueMovementValue() {
 	if (myAnimInst->Montage_IsPlaying(myAnimInst->Roll_BackMontage) == true) {
 		if (back == true) {
 			if (Axel == 0.f) {
-				AddMovementInput(GetActorForwardVector(), LastInput.Y * -1-0.3f);
+				AddMovementInput(GetActorForwardVector(), -0.3f);
 				if (right == true)
-					AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.3f);
+					AddMovementInput(GetActorRightVector(), 0.3f);
 				else if (left == true)
-					AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.3f);
+					AddMovementInput(GetActorRightVector(), -0.3f);
 			}
 			else {
-				AddMovementInput(GetActorForwardVector(), LastInput.Y * -1-0.2f);
+				AddMovementInput(GetActorForwardVector(), -0.4f);
 				if (right == true)
-					AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.2f);
+					AddMovementInput(GetActorRightVector(), 0.4f);
 				else if (left == true)
-					AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.2f);
+					AddMovementInput(GetActorRightVector(), 0.4f);
 			}
 		}
 	}
@@ -571,19 +571,19 @@ void ARogue::RogueMovementValue() {
 		else if (left == true)
 			//LastInput.Y -= LastInput.X;*/
 		if (Axel == 0.f) {
-			AddMovementInput(GetActorForwardVector(), LastInput.Y * 1+0.3f);
+			AddMovementInput(GetActorForwardVector(), 0.3f);
 			if (right == true)
-				AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.3f);
+				AddMovementInput(GetActorRightVector(), 0.3f);
 			else if (left == true)
-				AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.3f);
+				AddMovementInput(GetActorRightVector(), -0.3f);
 			//AddMovementInput(GetActorRightVector(), LastInput.X * 3);
 		}
 		else {
-			AddMovementInput(GetActorForwardVector(), LastInput.Y * 1+0.2f);
+			AddMovementInput(GetActorForwardVector(), 0.4f);
 			if (right == true)
-				AddMovementInput(GetActorRightVector(), LastInput.X * 1 + 0.2f);
+				AddMovementInput(GetActorRightVector(), 0.4f);
 			else if (left == true)
-				AddMovementInput(GetActorRightVector(), LastInput.X * 1 - 0.2f);
+				AddMovementInput(GetActorRightVector(),-0.4f);
 			//AddMovementInput(GetActorRightVector(), LastInput.X * 1.2);
 		}
 	}
@@ -1227,25 +1227,28 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 				}
 			}
 		}
-		/*else if (DialogueKinds == 1) {
-			MainDialogueIndex = DialogueZone->DialogueZoneNumber;
-			if (MyRogueState->MainDialogueState[MainDialogueIndex] == 0) {
-				DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+		else if (DialogueZone->DialogueKindsNumber == 1 && DialogueKinds == 1) {
+			//MainDialogueIndex = DialogueZone->DialogueZoneNumber;
+			if (MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300) {
+				MyRogueState->SetCurrentKarma(100);
+				if(MainDialogueIndex <= 3 && MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetDungeonClearAllCount() < 3)
+					MainDialogueIndex++;
+				/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 					MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 				DialogueSequence = true;
-				MyRogueState->MainDialogueState[MainDialogueIndex] = 1;
-				//DialogueKinds = 1;
+				MyRogueState->MainDialogueState[MainDialogueIndex] = 1;*/
 				BeepCall();
 			}
 		}
-		else if (DialogueKinds == 2) {
-			SubDialogueIndex = DialogueZone->DialogueZoneNumber;
-			if (MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0) {
-				DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+		else if (DialogueZone->DialogueKindsNumber == 2 && DialogueKinds == 2) {
+			//SubDialogueIndex = DialogueZone->DialogueZoneNumber;
+			if (MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 700) {
+				SubDialogueIndex++;
+				/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 					MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 				DialogueSequence = true;
-				MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 1;
-				//DialogueKinds = 1;
+				MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 1;*/
+				//DialogueKinds = 2;
 				BeepCall();
 			}
 		}

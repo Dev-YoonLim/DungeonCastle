@@ -29,4 +29,7 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 		int32 DialogueZoneNumber;
+	
+	UPROPERTY(EditAnywhere)
+		int32 DialogueKindsNumber;
 };

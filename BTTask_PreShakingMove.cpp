@@ -36,6 +36,8 @@ EBTNodeResult::Type UBTTask_PreShakingMove::ExecuteTask(UBehaviorTreeComponent& 
 void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
+	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 	EnemyController = Cast<AEnemyAIController>(OwnerComp.GetAIOwner());
 	EnemyRogue = Cast<AEnemyRogue>(OwnerComp.GetAIOwner()->GetPawn());
 	auto Blackboard = OwnerComp.GetBlackboardComponent();
@@ -59,6 +61,4 @@ void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 			(EnemyRogue->GetActorForwardVector().GetSafeNormal())); 
 		EnemyRogue->DoWalk(0);
 	}
-	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
-		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 }

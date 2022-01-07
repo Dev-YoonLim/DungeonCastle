@@ -130,6 +130,8 @@ public:
 	UAnimMontage* DeathForm;
 	
 	int32 GiftAbilityIndex;
+	int32 HitCount;
+	int32 HitSuperArmorCount;
 
 public:
 	void GetWorldGameMode();
@@ -229,6 +231,11 @@ public:
 
 
 public:
+	UPROPERTY(EditAnywhere)
+		int32 HitCountLimite;
+	UPROPERTY(EditAnywhere)
+		int32 HitSuperArmorCountLimit;
+
 	UPROPERTY(EditAnywhere)
 		ARogue* myRogue;
 	UPROPERTY(EditAnywhere)

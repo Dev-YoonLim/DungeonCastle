@@ -677,7 +677,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/94.94'")));
 			}
 			else if (RandAbilityIndex == 27) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 8);
+				AbilityRandIndex[i] = FMath::FRandRange(0, 7);
 				RogueSelectAbilityString[i] = RogueAttackFormListString[1][AbilityRandIndex[i]];
 				RogueSelectClassesString[i] = TEXT("Smash AttackForm");
 				AbilityClassIcon[i] = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL,
@@ -2064,10 +2064,10 @@ void UMyRogueWidget::AttackFormString() {
 	RogueAttackFormListString[1][2] = TEXT("Side Smash");
 	RogueAttackFormListString[1][3] = TEXT("Side Breaker");
 	RogueAttackFormListString[1][4] = TEXT("ShortPick");
-	RogueAttackFormListString[1][5] = TEXT("Ground Breaker");
-	RogueAttackFormListString[1][6] = TEXT("ReverseSide Smash");
-	RogueAttackFormListString[1][7] = TEXT("HeadDancer");
-	RogueAttackFormListString[1][8] = TEXT("Cranker");
+	//RogueAttackFormListString[1][5] = TEXT("Ground Breaker");
+	RogueAttackFormListString[1][5] = TEXT("ReverseSide Smash");
+	RogueAttackFormListString[1][6] = TEXT("HeadDancer");
+	RogueAttackFormListString[1][7] = TEXT("Cranker");
 
 	RogueAttackFormListString[2][0] = TEXT("Stab");
 	RogueAttackFormListString[2][1] = TEXT("Quick Stab");
