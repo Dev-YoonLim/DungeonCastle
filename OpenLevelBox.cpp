@@ -38,6 +38,7 @@ void AOpenLevelBox::OverlapBegins(UPrimitiveComponent* OverlappedComponent, AAct
 void AOpenLevelBox::NotifyActorBeginOverlap(AActor* OtherActor) {
 	ARogue* myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
+		myRogue->myAnimInst->Idle();
 		MoveLevel();
 	}
 }

@@ -170,6 +170,10 @@ void UMyRogueWidget::MainMenuInit() {
 			TaskValueText = FString::Printf(TEXT("Find Another Dungeon."));
 			TaskValues->SetText(FText::FromString(TaskValueText));
 			break;
+		case 10:
+			TaskValueText = FString::Printf(TEXT("Keep Exploring.."));
+			TaskValues->SetText(FText::FromString(TaskValueText));
+			break;
 		}
 
 		/*

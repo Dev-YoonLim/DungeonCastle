@@ -671,7 +671,7 @@ void ARogue::Forward(float amount) {
 				}
 			}
 		}
-		else {
+		else if (amount == 0 && roll == false) {
 			forward = false;
 		}
 	}
@@ -696,7 +696,7 @@ void ARogue::Back(float amount) {
 				}
 			}
 		}
-		else {
+		else if (amount == 0 && roll == false) {
 			back = false;
 		}
 	}
@@ -720,7 +720,7 @@ void ARogue::Right(float amount) {
 				}
 			}
 		}
-		else {
+		else if (amount == 0 && roll == false) {
 			right = false;
 		}
 	}
@@ -745,7 +745,7 @@ void ARogue::Left(float amount) {
 				}
 			}
 		}
-		else {
+		else if (amount == 0 && roll == false) {
 			left = false;
 		}
 	}
@@ -1293,7 +1293,10 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 					DialogueKinds = 1;
 					DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
-					MyRogueState->TaskLevel = 9;
+					if (MyRogueState->GetDungeonClearAllCount() < 3)
+						MyRogueState->TaskLevel = 9;
+					else
+						MyRogueState->TaskLevel = 10;
 					GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("MainDialogue")));
 					BeepCall();
 				}
