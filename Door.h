@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Sound/SoundCue.h"
 #include "EntranceMove.h"
+#include "RogueSaveGame.h"
 #include "Vibration.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/BoxComponent.h"
@@ -39,6 +40,10 @@ private:
 public:
 	void DoorInit();
 	void OpenInit();
+	void DoorOpen();
+
+	UFUNCTION()
+		void LoadGameData(URogueSaveGame* LoadData);
 
 	UFUNCTION(BlueprintCallable)
 		void EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
@@ -49,6 +54,12 @@ public:
 			, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 public:
+	UPROPERTY(EditAnywhere)
+		ACastle_in_DungeonGameModeBase* MyGameMode;
+		
+
+	UPROPERTY(EditAnywhere)
+		int32 DoorNumbers;
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* DoorStateOne;
 	UPROPERTY(EditAnywhere)
@@ -70,4 +81,6 @@ public:
 		UVibration* Vibration;
 
 	USoundCue* OpenDoorSound;
+	FString SaveSlotName;
+	bool DoorLoad;
 };

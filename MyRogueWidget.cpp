@@ -2067,7 +2067,7 @@ void UMyRogueWidget::AttackFormString() {
 	RogueAttackFormListString[1][1] = TEXT("Breaker");
 	RogueAttackFormListString[1][2] = TEXT("Side Smash");
 	RogueAttackFormListString[1][3] = TEXT("Side Breaker");
-	RogueAttackFormListString[1][4] = TEXT("ShortPick");
+	RogueAttackFormListString[1][4] = TEXT("Ground Breaker");
 	//RogueAttackFormListString[1][5] = TEXT("Ground Breaker");
 	RogueAttackFormListString[1][5] = TEXT("ReverseSide Smash");
 	RogueAttackFormListString[1][6] = TEXT("HeadDancer");

@@ -17,7 +17,26 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	UWorld* TheWorld = GetWorld();
+	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
+	MyGameMode = Cast<ACastle_in_DungeonGameModeBase>(GameMode);
+	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	if (LoadGame == nullptr) {
+		LoadGame = GetMutableDefault<URogueSaveGame>();
+	}
+	else {
+		LoadGameData(LoadGame);
+	}
+}
+
+void ADoor::LoadGameData(URogueSaveGame* LoadData) {
+	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
+	if (LoadData->DoorOpenCheck[DoorNumbers] == 1)
+		DoorOpen();
+
+	//for(int i = 0; i < 3; i ++)
+		//StoryProgress[i] = LoadGame->StoryProgress[i];
+	//myRogue->SetActorLocation(LoadGame->LastLocation);
 }
 
 // Called every frame
@@ -57,18 +76,28 @@ void ADoor::DoorInit() {
 
 void ADoor::OpenInit() {
 	MaxValue = 2.5f;
+	SaveSlotName = TEXT("SaveSlot");
 }
 
 void ADoor::NotifyActorBeginOverlap(AActor* OtherActor) {
 	ARogue* Rogue = Cast<ARogue>(OtherActor);
 	if (Rogue) {
-		if (DoorWork->getOpen() == false) {
-			DoorWork->setMaxMoveValue(MaxValue);
-			DoorWork->setMoveType(SelectEntranceNumber);
-			if (OpeningState == false) {
+		Rogue->MyRogueState->DoorStateCheck[DoorNumbers] = 1;
+		if (Rogue->GameLoad == true)
+			DoorLoad = true;
+		DoorOpen();
+	}
+}
+
+void ADoor::DoorOpen() {
+	if (DoorWork->getOpen() == false) {
+		DoorWork->setMaxMoveValue(MaxValue);
+		DoorWork->setMoveType(SelectEntranceNumber);
+		if (OpeningState == false) {
+			if(DoorLoad == true)
 				UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
-				OpeningState = true;
-			}
+			OpeningState = true;
+			MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 		}
 	}
 }

@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "Castle_in_DungeonGameModeBase.h"
 #include "RogueSaveGame.h"
+#include "Door.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "RogueState.generated.h"
@@ -347,6 +348,7 @@ private:
 	float OverlapData[6];
 	float* TotalOverlapData[6];
 	
+	//TArray<ADoor> *ShortCutDoor;
 	TArray<int32> TotalEquipAbilityDataList;
 	TArray<int32> TotalWeaponDataList;
 	TArray<int32> TotalElementDataList;
@@ -370,6 +372,7 @@ public:
 	int32 ItemCount;
 	int32 DialogueTutorialCount;
 	float MoveSpeedIncreaseCountValue;
+	int32 DoorStateCheck[10];
 
 private:
 	bool HadTorchElement[5];

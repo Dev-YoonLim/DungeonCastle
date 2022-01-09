@@ -1227,12 +1227,13 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 				}
 			}
 		}
-		else if (DialogueZone->DialogueKindsNumber == 1 && DialogueKinds == 1) {
+		else if (DialogueZone->DialogueKindsNumber == 1) {
+			DialogueKinds = DialogueZone->DialogueKindsNumber;
+			MainDialogueIndex++;
 			//MainDialogueIndex = DialogueZone->DialogueZoneNumber;
-			if (MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300) {
-				MyRogueState->SetCurrentKarma(100);
-				if(MainDialogueIndex <= 3 && MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetDungeonClearAllCount() < 3)
-					MainDialogueIndex++;
+			if (MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 500) {
+				//MyRogueState->SetCurrentKarma(100);
+				if(MainDialogueIndex <= 3 && MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetDungeonClearAllCount() <= 3)
 				/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 					MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 				DialogueSequence = true;
@@ -1240,10 +1241,15 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 				BeepCall();
 			}
 		}
-		else if (DialogueZone->DialogueKindsNumber == 2 && DialogueKinds == 2) {
+		else if (DialogueZone->DialogueKindsNumber == 2) {
+			DialogueKinds = DialogueZone->DialogueKindsNumber;
+			SubDialogueIndex++;
+			if (SubDialogueIndex == 3) {
+				SubDialogueKinds++;
+				SubDialogueIndex = 0;
+			}
 			//SubDialogueIndex = DialogueZone->DialogueZoneNumber;
 			if (MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 700) {
-				SubDialogueIndex++;
 				/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 					MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 				DialogueSequence = true;
@@ -1277,6 +1283,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 			//SetMultiplySpeed((MyRogueState->MoveSpeedIncreaseCountValue)*0.1f);
 			//MyGameMode->RogueSpeedIncreaseDelegate.ExecuteIfBound(0.1 * MoveSpeedIncreaseCountValue);
 			SetFOV(MyGameMode->FOVValue);
+			GameLoad = true;
 			if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
 				//if (MyRogueState->StartDialogueState[0] == 0) {
 					//StartDialogueIndex = 0;

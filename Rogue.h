@@ -339,4 +339,5 @@ public:
 	UMediaTexture* DialogueTexture;
 	UMediaPlaylist* DialogueList;
 	bool BeepOn = false;
+	bool GameLoad = false;
 };

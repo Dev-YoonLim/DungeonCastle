@@ -20,6 +20,9 @@ ARogueState::ARogueState() {
 	ElementalHadCheckInit();
 	DialogueRefInit();
 	SaveState = false;
+	for (int i = 0; i < 10; i++) {
+		DoorStateCheck[i] = 0;
+	}
 }
 
 void ARogueState::AbilityInit() {
@@ -141,12 +144,14 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	TSubclassOf<AEnemyRogue> EnemyRogueClass;
 	//AEnemyRogue* enemyRogue = Cast<AEnemyRogue>(UGameplayStatics::GetAllActorsOfClass(GetWorld(), EnemyRogueClass, EnemyRogueClass));
-
+	for (int i = 0; i < 10; i++) {
+		DoorStateCheck[i] = LoadGame->DoorOpenCheck[i];
+	}
 	for (int i = 0; i < LoadGame->TotalEquipAbilityCount; i++) {
 		int Index = LoadGame->TotalEquipAbilityDataList[i];
 		AbilityRandTake(Index);
 	}
-	for (int i = 0; i < LoadGame->TotalTakeWeaponCount; i++) {
+	for (int i = 1; i < LoadGame->TotalTakeWeaponCount; i++) {
 		int Index = LoadGame->TotalTakeWeaponDataList[i];
 		WeaponHadCheck(Index);
 	}
@@ -236,6 +241,7 @@ void ARogueState::SaveGameData() {
 	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
 	
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	//ShortCutDoor = Cast<TArray<ADoor>>(UGameplayStatics::GetActorOfClass(GetWorld(), ADoor::StaticClass()));
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
 	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 	PlayerData->FOVValue = MyGameMode->FOVValue;
@@ -275,6 +281,9 @@ void ARogueState::SaveGameData() {
 		PlayerData->RollingTrdCamera = myRogue->GetRollingTrdCamera();
 		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
 		PlayerData->DungeonClearAllCount = DungeonClearAllCount;
+		for (int i = 0; i < 10; i++) {
+			PlayerData->DoorOpenCheck[i] = DoorStateCheck[i];
+		}
 		for (int i = 0; i < 3; i++) {
 			PlayerData->DungeonClearCount[i] = DungeonClearCount[i];
 		}
@@ -319,6 +328,7 @@ void ARogueState::Call_RogueStartWeaponNumber() {
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("StartWeapon")));
 	MyGameMode->Return_WeaponChangeDelegate.ExecuteIfBound(WeaponNumber);
 	MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(WeaponElementNumber, ElementLevelValue);
+	MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(WeaponNumber);
 	
 	SaveGameData();
 	//MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(StartWeaponElementNumber, ElementLevelValue);
@@ -772,11 +782,11 @@ void ARogueState::SetEquipmentStrings() {
 	AttackFormName[1][1] = TEXT("Breaker");
 	AttackFormName[1][2] = TEXT("Side Smash");
 	AttackFormName[1][3] = TEXT("Side Breaker");
-	AttackFormName[1][4] = TEXT("ShortPick");
-	AttackFormName[1][5] = TEXT("Ground Breaker");
-	AttackFormName[1][6] = TEXT("ReverseSide Smash");
-	AttackFormName[1][7] = TEXT("HeadDancer");
-	AttackFormName[1][8] = TEXT("Cranker");
+	//AttackFormName[1][4] = TEXT("ShortPick");
+	AttackFormName[1][4] = TEXT("Ground Breaker");
+	AttackFormName[1][5] = TEXT("ReverseSide Smash");
+	AttackFormName[1][6] = TEXT("HeadDancer");
+	AttackFormName[1][7] = TEXT("Cranker");
 
 	AttackFormName[2][0] = TEXT("Stab");
 	AttackFormName[2][1] = TEXT("Quick Stab");
