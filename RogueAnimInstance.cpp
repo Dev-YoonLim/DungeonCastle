@@ -50,6 +50,8 @@ void URogueAnimInstance::AnimationInit() {
 }
 
 void URogueAnimInstance::AttackAnimationInit() { //여기에 각종 애니메이션 넣어야 함.
+
+	//Montage_JumpToSection
 	AttackFormList[0][0] = TEXT("AnimMontage'/Game/Character/Animation/Attack/ThreeForm/Slash/DefaultSlashMontage.DefaultSlashMontage'");
 	SlashFormSynergy[0][0] = 0.5f;
 	BreakFormSynergy[0][0] = 0.3f;

@@ -650,7 +650,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 						TEXT("Texture2D'/Game/FlatSkillsIcons100/89.89'")));
 			}
 			else if (RandAbilityIndex == 24) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 9);
+				AbilityRandIndex[i] = FMath::RandRange(0, 9);
 				RogueSelectAbilityString[i] = RogueHaveWeaponListString[AbilityRandIndex[i]];
 				if(AbilityRandIndex[i] == 2 || AbilityRandIndex[i] == 4 || AbilityRandIndex[i] == 6 || AbilityRandIndex[i] == 7 || AbilityRandIndex[i] == 8)
 					RogueSelectClassesString[i] = TEXT("Slash Weapons");
@@ -662,7 +662,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/46.46'")));
 			}
 			else if (RandAbilityIndex == 25) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 9);
+				AbilityRandIndex[i] = FMath::RandRange(0, 9);
 				RogueSelectAbilityString[i] = RogueHaveWeaponListString[AbilityRandIndex[i]];
 				if (AbilityRandIndex[i] == 2 || AbilityRandIndex[i] == 4 || AbilityRandIndex[i] == 6 || AbilityRandIndex[i] == 7 || AbilityRandIndex[i] == 8)
 					RogueSelectClassesString[i] = TEXT("Slash Weapons");
@@ -674,28 +674,28 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/46.46'")));
 			}
 			else if (RandAbilityIndex == 26) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 6);
+				AbilityRandIndex[i] = FMath::RandRange(0, 6);
 				RogueSelectAbilityString[i] = RogueAttackFormListString[0][AbilityRandIndex[i]];
 				RogueSelectClassesString[i] = TEXT("Slash AttackForm");
 				AbilityClassIcon[i] = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL,
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/94.94'")));
 			}
 			else if (RandAbilityIndex == 27) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 7);
+				AbilityRandIndex[i] = FMath::RandRange(0, 7);
 				RogueSelectAbilityString[i] = RogueAttackFormListString[1][AbilityRandIndex[i]];
 				RogueSelectClassesString[i] = TEXT("Smash AttackForm");
 				AbilityClassIcon[i] = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL,
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/94.94'")));
 			}
 			else if (RandAbilityIndex == 28) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 9);
+				AbilityRandIndex[i] = FMath::RandRange(0, 9);
 				RogueSelectAbilityString[i] = RogueAttackFormListString[2][AbilityRandIndex[i]];
 				RogueSelectClassesString[i] = TEXT("Stab AttackForm");
 				AbilityClassIcon[i] = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL,
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/94.94'")));
 			}
 			else if (RandAbilityIndex == 29) {
-				AbilityRandIndex[i] = FMath::FRandRange(0, 3);
+				AbilityRandIndex[i] = FMath::RandRange(0, 3);
 				RogueSelectAbilityString[i] = RogueAttackFormListString[3][AbilityRandIndex[i]];
 				RogueSelectClassesString[i] = TEXT("SpecialArts");
 				AbilityClassIcon[i] = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL,
@@ -703,7 +703,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 			}
 			else if (RandAbilityIndex == 30 || RandAbilityIndex == 31 || RandAbilityIndex == 32) {
 				ElementalPhaseCheck();
-				AbilityRandIndex[i] = FMath::FRandRange(0, 9);
+				AbilityRandIndex[i] = FMath::RandRange(0, 9);
 				if (AbilityRandIndex[i] <= 4) {
 					RogueSelectAbilityString[i] = SelectElementString[0][AbilityRandIndex[i]];
 					RogueSelectClassesString[i] = TEXT("Weapon Elemental");

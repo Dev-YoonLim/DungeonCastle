@@ -47,6 +47,7 @@ public:
 		FCapsuleShape*/
 
 public:
+	float HealingCount;
 	ARogue* myRogue;
 	ACastle_in_DungeonGameModeBase* MyGameMode;
 

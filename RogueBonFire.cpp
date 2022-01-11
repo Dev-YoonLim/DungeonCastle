@@ -9,6 +9,7 @@ ARogueBonFire::ARogueBonFire()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	MeshInit();
+	HealingCount = 1.f;
 }
 
 // Called when the game starts or when spawned
@@ -43,10 +44,10 @@ void ARogueBonFire::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue && myRogue->GetDialogueSequence() == false) {
-		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(-(myRogue->MyRogueState->GetCurrentKarma() / 5));
-		//myRogue->MyRogueState->SetCurrentKarma(100);
+		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(-200*HealingCount);
 		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
 		myRogue->myAnimInst->Idle();
+		HealingCount -= 0.5f;
 	}
 }
 
@@ -54,7 +55,7 @@ void ARogueBonFire::NotifyActorEndOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
-		
+		BonFireFlame->SetRelativeScale3D(FVector(0.6 * HealingCount, 0.6 * HealingCount, 0));
 	}
 }
 
@@ -83,7 +84,7 @@ void ARogueBonFire::MeshInit() {
 	BonFireCapsule->SetCapsuleRadius(180);
 	BonFireCapsule->SetCollisionProfileName("BonFire");
 	BonFireFlame->AddRelativeLocation(FVector(0, 0, -20));
-	BonFireFlame->SetRelativeScale3D(FVector(0.6, 0.6, 0));
+	BonFireFlame->SetRelativeScale3D(FVector(0.6*HealingCount, 0.6* HealingCount, 0));
 	BonFireSword->SetRelativeScale3D(FVector(0.7f, 0.7f, 0.7f));
 	BonFireSword->AddRelativeLocation(FVector(0.f, 0.f, 10.f));
 	BonFireSword->SetCollisionProfileName("BlockAll");

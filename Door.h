@@ -56,8 +56,9 @@ public:
 public:
 	UPROPERTY(EditAnywhere)
 		ACastle_in_DungeonGameModeBase* MyGameMode;
-		
-
+	
+	UPROPERTY(EditAnywhere)
+		int32 DungeonKinds;
 	UPROPERTY(EditAnywhere)
 		int32 DoorNumbers;
 	UPROPERTY(EditAnywhere)

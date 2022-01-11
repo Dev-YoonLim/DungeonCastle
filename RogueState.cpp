@@ -26,18 +26,6 @@ ARogueState::ARogueState() {
 }
 
 void ARogueState::AbilityInit() {
-	int StartingWeapon = FMath::RandRange(0, 2);
-	switch (StartingWeapon){
-	case 0:
-		WeaponNumber = 1;
-		break;
-	case 1:
-		WeaponNumber = 6;
-		break;
-	case 2:
-		WeaponNumber = 5;
-		break;
-	}
 	DialogueRefInit();
 	TotalEquipCount = 0;
 	EquipAbilityCount = 0;
@@ -132,6 +120,7 @@ void ARogueState::RogueDataInit() {
 		LoadGame = GetMutableDefault<URogueSaveGame>();
 	}
 	else {
+		MyGameMode->NewGameStart = false;
 		LoadGameData(LoadGame);
 	}
 	SaveGameData();
@@ -151,7 +140,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		int Index = LoadGame->TotalEquipAbilityDataList[i];
 		AbilityRandTake(Index);
 	}
-	for (int i = 1; i < LoadGame->TotalTakeWeaponCount; i++) {
+	for (int i = 0; i < LoadGame->TotalTakeWeaponCount; i++) {
 		int Index = LoadGame->TotalTakeWeaponDataList[i];
 		WeaponHadCheck(Index);
 	}
@@ -326,11 +315,25 @@ void ARogueState::Call_RogueStartWeaponNumber() {
 	//WeaponNumber = StartWeaponNumber;
 	//WeaponElementNumber = StartWeaponElementNumber;
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("StartWeapon")));
-	MyGameMode->Return_WeaponChangeDelegate.ExecuteIfBound(WeaponNumber);
-	MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(WeaponElementNumber, ElementLevelValue);
-	MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(WeaponNumber);
-	
-	SaveGameData();
+	if (MyGameMode->NewGameStart == true) {
+		int StartingWeapon = FMath::RandRange(0, 2);
+		switch (StartingWeapon) {
+		case 0:
+			WeaponNumber = 1;
+			break;
+		case 1:
+			WeaponNumber = 6;
+			break;
+		case 2:
+			WeaponNumber = 5;
+			break;
+		}
+		MyGameMode->Return_WeaponChangeDelegate.ExecuteIfBound(WeaponNumber);
+		MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(WeaponElementNumber, ElementLevelValue);
+		MyGameMode->Call_RogueHavingWeaponCheckDelegate.ExecuteIfBound(WeaponNumber);
+
+		SaveGameData();
+	}
 	//MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(StartWeaponElementNumber, ElementLevelValue);
 	/*WeaponNumber = FMath::FRandRange(0, 9);
 	while(WeaponNumber == 0 || WeaponNumber ==9 || WeaponNumber == 7)
@@ -355,7 +358,7 @@ void ARogueState::Call_RogueStartAttackFormNumber() {
 		AttackFormHadCheck(AttackForm[0], AttackFormIndex[0]);
 		AttackFormHadCheck(AttackForm[1], AttackFormIndex[1]);
 		AttackFormHadCheck(AttackForm[2], AttackFormIndex[2]);
-		MyGameMode->NewGameStart = false;
+		//MyGameMode->NewGameStart = false;
 
 	}
 	SaveGameData();
@@ -380,7 +383,16 @@ void ARogueState::AttackFormChange(int32 TakeAttackForm, int32 TakeAttackFormInd
 void ARogueState::AttackFormInit() {
 	if(MyGameMode->NewGameStart == true && TotalAttackFormCount == 0){
 		for (int i = 0; i < 3; i++) {
-			AttackForm[i] = FMath::RandRange(0, 1);
+			if (WeaponNumber == 1) {
+				AttackForm[i] = 1;
+			}
+			else if (WeaponNumber == 5) {
+				AttackForm[i] = 0;
+			}
+			else {
+				AttackForm[i] = 0;
+			}
+			/*AttackForm[i] = FMath::RandRange(0, 1);
 			switch (AttackForm[i]) {
 			case 0:
 				AttackFormIndex[i] = FMath::RandRange(0, 6);
@@ -392,6 +404,7 @@ void ARogueState::AttackFormInit() {
 				AttackFormIndex[i] = FMath::RandRange(0, 8);
 				break;
 			}
+		}*/
 		}
 	}
 	

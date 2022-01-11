@@ -9,6 +9,7 @@ ADialogueZone::ADialogueZone()
 	PrimaryActorTick.bCanEverTick = true;
 	EventBox->SetCollisionProfileName(TEXT("DialogueEvent"));
 	DeathZoneNumber = -1;
+	DialogueCount = 1;
 }
 
 // Called when the game starts or when spawned

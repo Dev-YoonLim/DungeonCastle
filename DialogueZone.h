@@ -32,4 +32,6 @@ public:
 	
 	UPROPERTY(EditAnywhere)
 		int32 DialogueKindsNumber;
+
+	int32 DialogueCount;
 };

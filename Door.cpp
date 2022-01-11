@@ -31,7 +31,7 @@ void ADoor::BeginPlay()
 
 void ADoor::LoadGameData(URogueSaveGame* LoadData) {
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
-	if (LoadData->DoorOpenCheck[DoorNumbers] == 1)
+	if (LoadData->DoorOpenCheck[DoorNumbers] == 1 && DungeonKinds == 0)
 		DoorOpen();
 
 	//for(int i = 0; i < 3; i ++)
