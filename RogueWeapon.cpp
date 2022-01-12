@@ -117,7 +117,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Dagger.Dagger'");
 		HitEffectScale = 0.7f;
 		WeaponDamege = 3.f;
-		WeaponSpeed = 1.2f;
+		WeaponSpeed = 1.1f;
 		ElementSynergy = 1.5f;
 		WeaponAttackCostData = 5;
 		ElementEffectSize = FVector(0.05, 0.05, 0.04);
@@ -127,7 +127,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Mace.Mace'");
 		HitEffectScale = 1.f;
 		WeaponDamege = 6.f;
-		WeaponSpeed = 1.1f;
+		WeaponSpeed = 1.f;
 		ElementSynergy = 1.3f;
 		WeaponAttackCostData = 3;
 		ElementEffectSize = FVector(0.06, 0.06, 0.05);
@@ -171,7 +171,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponReference = TEXT("StaticMesh'/Game/Weapons/NewShortSword.NewShortSword'");
 		HitEffectScale = 0.7f;
 		WeaponDamege = 5.f;
-		WeaponSpeed = 1.3f;
+		WeaponSpeed = 1.1f;
 		ElementSynergy = 1.2f;
 		WeaponAttackCostData = 3;
 		ElementEffectSize = FVector(0.05, 0.05, 0.04);
@@ -182,7 +182,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Axe.Axe'");
 		HitEffectScale = 0.8f;
 		WeaponDamege = 6.f;
-		WeaponSpeed = 1.2f;
+		WeaponSpeed = 1.15f;
 		ElementSynergy = 0.6f;
 		WeaponAttackCostData = 4;
 		ElementEffectSize = FVector(0.06, 0.06, 0.05);

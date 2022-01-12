@@ -119,6 +119,8 @@ public:
 	bool TakeTorchSpecial;
 	
 	bool AttackCanHit;
+	bool TakeHitState;
+	int32 HitKinds;
 
 	float EffectScale;
 	float GiftAbilityPer;

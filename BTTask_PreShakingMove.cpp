@@ -26,14 +26,33 @@ EBTNodeResult::Type UBTTask_PreShakingMove::ExecuteTask(UBehaviorTreeComponent& 
 	Blackboard->SetValueAsInt(AEnemyAIController::NextForm, NextFormIndex);
 	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
 		return EBTNodeResult::Failed;
-	if(NextFormIndex <= 2)
+	if (NextFormIndex <= 2) {
 		Blackboard->SetValueAsInt(AEnemyAIController::RollDirection, NextFormDirIndex);
-	return EBTNodeResult::InProgress;
+		return EBTNodeResult::InProgress;
+	}
+	else {
+		if (ShakingForm == 0) {
+			EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() +
+				(EnemyRogue->GetActorRightVector().GetSafeNormal()) / 2);
+			EnemyRogue->DoWalk(1);
+		}
 
+		else if (ShakingForm == 1) {
+			EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() -
+				(EnemyRogue->GetActorRightVector().GetSafeNormal()) / 2);
+			EnemyRogue->DoWalk(2);
+		}
 
+		else if (ShakingForm == 2) {
+			EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() -
+				(EnemyRogue->GetActorForwardVector().GetSafeNormal()));
+			EnemyRogue->DoWalk(0);
+		}
+		return EBTNodeResult::InProgress;
+	}
 }
 
-void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+/*void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
 {
 	Super::TickTask(OwnerComp, NodeMemory, DeltaSeconds);
 	if (EnemyController->CheckDie() == true || EnemyController->CheckHit() == true)
@@ -44,21 +63,7 @@ void UBTTask_PreShakingMove::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetNavigationSystem(GetWorld());
 	myRogue =
 		Cast<ARogue>(Blackboard->GetValue<UBlackboardKeyType_Object>(EnemyController->RogueKeyID));
-	if (ShakingForm == 0) {
-		EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() +
-			(EnemyRogue->GetActorRightVector().GetSafeNormal()) / 2);
-		EnemyRogue->DoWalk(1);
-	}
+	if(EnemyController->CheckHit() == true)
+		FinishLatentTask(OwnerComp, EBTNodeResult::Failed);
 	
-	else if (ShakingForm == 1) {
-		EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() -
-			(EnemyRogue->GetActorRightVector().GetSafeNormal()) / 2);
-		EnemyRogue->DoWalk(2);
-	}
-	
-	else if (ShakingForm == 2){
-		EnemyRogue->SetActorLocation(EnemyRogue->GetActorLocation() - 
-			(EnemyRogue->GetActorForwardVector().GetSafeNormal())); 
-		EnemyRogue->DoWalk(0);
-	}
-}
+}*/

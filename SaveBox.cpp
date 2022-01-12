@@ -30,6 +30,7 @@ void ASaveBox::NotifyActorBeginOverlap(AActor* myRogue) {
 	ARogue* Rogue = Cast<ARogue>(myRogue);
 	if (myRogue) {
 		Rogue->MyRogueState->SetSaveState(true);
+		Rogue->MyGameMode->NewGameStart = false;
 	}
 }
 

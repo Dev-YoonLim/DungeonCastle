@@ -190,6 +190,7 @@ void ARogue::DialogueVideoPlay() {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
 			MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
+			MainDialogueIndex++;
 		}
 	}
 	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
@@ -202,6 +203,11 @@ void ARogue::DialogueVideoPlay() {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
 			MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 2;
+			SubDialogueIndex++;
+			if (SubDialogueIndex == 4) {
+				SubDialogueKinds++;
+				SubDialogueIndex = 0;
+			}
 		}
 	}
 		/*if (SubDialogueIndex == 4) {
@@ -1191,7 +1197,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		}
 		if(MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300){
 			if (MyRogueState->GetDungeonClearAllCount() >= 1) {
-				MainDialogueIndex++;
+				//MainDialogueIndex++;
 			}
 		}
 		/*if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
@@ -1230,11 +1236,11 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		}
 		else if (DialogueZone->DialogueKindsNumber == 1) {
 			DialogueKinds = DialogueZone->DialogueKindsNumber;
-			MainDialogueIndex++;
 			//MainDialogueIndex = DialogueZone->DialogueZoneNumber;
 			if (MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 500 && DialogueZone->DialogueCount == 1) {
 				//MyRogueState->SetCurrentKarma(100);
 				if (MainDialogueIndex <= 3 && MyRogueState->GetDungeonClearAllCount() >= 1 && MyRogueState->GetDungeonClearAllCount() <= 3) {
+					//MainDialogueIndex++;
 					/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 						MyRogueState->MainStoryDialogueSourceRef[MainDialogueIndex][0]));
 					DialogueSequence = true;
@@ -1246,18 +1252,18 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		}
 		else if (DialogueZone->DialogueKindsNumber == 2) {
 			DialogueKinds = DialogueZone->DialogueKindsNumber;
-			SubDialogueIndex++;
-			if (SubDialogueIndex == 4) {
-				SubDialogueKinds++;
-				SubDialogueIndex = 0;
-			}
 			//SubDialogueIndex = DialogueZone->DialogueZoneNumber;
 			if (MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 700 && DialogueZone->DialogueCount == 1) {
 				/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
 					MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 				DialogueSequence = true;
-				MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 1;*/
+				MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 1;
 				//DialogueKinds = 2;
+				SubDialogueIndex++;
+				if (SubDialogueIndex == 4) {
+					SubDialogueKinds++;
+					SubDialogueIndex = 0;
+				}*/
 				DialogueZone->DialogueCount--;
 				BeepCall();
 			}
@@ -1288,6 +1294,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 			//MyGameMode->RogueSpeedIncreaseDelegate.ExecuteIfBound(0.1 * MoveSpeedIncreaseCountValue);
 			SetFOV(MyGameMode->FOVValue);
 			GameLoad = true;
+			
 			if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
 				//if (MyRogueState->StartDialogueState[0] == 0) {
 					//StartDialogueIndex = 0;
@@ -1315,7 +1322,6 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 			else {
 				//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("SubDialogue : %d"), MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 				MyRogueState->TaskLevel = MyGameMode->StageIndex + 5;
-				SubDialogueIndex++;
 				if (SubDialogueIndex == 4) {
 					SubDialogueKinds++;
 					SubDialogueIndex = 0;
