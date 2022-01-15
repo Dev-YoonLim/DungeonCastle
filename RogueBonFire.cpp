@@ -6,10 +6,10 @@
 // Sets default values
 ARogueBonFire::ARogueBonFire()
 {
+
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	MeshInit();
-	HealingCount = 1.f;
 }
 
 // Called when the game starts or when spawned
@@ -44,10 +44,10 @@ void ARogueBonFire::NotifyActorBeginOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue && myRogue->GetDialogueSequence() == false) {
-		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(-200*HealingCount);
+		if(myRogue->GetRogueHp() < myRogue->MyRogueState->GetRogueFullHp())
+			MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(-200*HealingCount);
 		MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(7);
 		myRogue->myAnimInst->Idle();
-		HealingCount -= 0.5f;
 	}
 }
 
@@ -55,11 +55,15 @@ void ARogueBonFire::NotifyActorEndOverlap(AActor* OtherActor) {
 	Super::NotifyActorBeginOverlap(OtherActor);
 	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue) {
-		BonFireFlame->SetRelativeScale3D(FVector(0.6 * HealingCount, 0.6 * HealingCount, 0));
+		if (HealingCount > 0.3f) {
+			HealingCount -= 0.4f;
+			BonFireFlame->SetRelativeScale3D(FVector(0.6 * HealingCount, 0.6 * HealingCount, 0));
+		}
 	}
 }
 
 void ARogueBonFire::MeshInit() {
+	HealingCount = 1.f;
 	BonFireSword = CreateDefaultSubobject<UStaticMeshComponent>("BonFireSword");
 	auto BonFireSwordAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
 		(TEXT("StaticMesh'/Game/DataBornFire/Fire_Crucible_Frame_1.Fire_Crucible_Frame_1'"));

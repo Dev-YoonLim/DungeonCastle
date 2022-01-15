@@ -423,14 +423,6 @@ void UMyRogueWidget::ChangedAttackMotionInit() {
 			TEXT("MediaTexture'/Game/AttackImage/AttackForm2_Texture.AttackForm2_Texture'")));
 		AttackFormTexture[2]= Cast<UMediaTexture>(StaticLoadObject(UMediaTexture::StaticClass(), NULL,
 			TEXT("MediaTexture'/Game/AttackImage/AttackForm3_Texture.AttackForm3_Texture'")));
-		for (int i = 0; i < 3; i++) {
-			SelectedAttackFormNumber[i] = RogueEquipmentAttackForm[i];
-			SelectedAttackFormIndex[i] = RogueEquipmentAttackFormIndex[i];
-			AttackSource[i] = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
-					RogueEquipmentAttackFormString[i]));
-			AttackFormTexture[i]->SetMediaPlayer(AttackFormPlayer[i]);
-			AttackFormPlayer[i]->OpenSource(AttackSource[i]);
-		}
 		SelectAttackFormButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::SelectAttackFormButtonFuntion);
 		ChangedAttackFormBackButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
 		SlashListButtons->OnClicked.AddDynamic(this, &UMyRogueWidget::GetSlashList);
@@ -440,6 +432,14 @@ void UMyRogueWidget::ChangedAttackMotionInit() {
 		SelectedAttackFormSlotButtons1->OnClicked.AddDynamic(this, &UMyRogueWidget::SelectedAttackFormSlotOne);
 		SelectedAttackFormSlotButtons2->OnClicked.AddDynamic(this, &UMyRogueWidget::SelectedAttackFormSlotTwo);
 		SelectedAttackFormSlotButtons3->OnClicked.AddDynamic(this, &UMyRogueWidget::SelectedAttackFormSlotThree);
+		for (int i = 0; i < 3; i++) {
+			SelectedAttackFormNumber[i] = RogueEquipmentAttackForm[i];
+			SelectedAttackFormIndex[i] = RogueEquipmentAttackFormIndex[i];
+			/*AttackSource[i] = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
+				RogueEquipmentAttackFormString[i]));
+			AttackFormTexture[i]->SetMediaPlayer(AttackFormPlayer[i]);
+			AttackFormPlayer[i]->OpenSource(AttackSource[i]);*/
+		}
 	}
 }
 
@@ -1133,18 +1133,15 @@ void UMyRogueWidget::Return_HaveAttackFormList(bool ReturnAttackFormList[4][10],
 				ViewAttackFormListButton[AttackFormIndex]->OnClicked.AddDynamic(this, &UMyRogueWidget::AttackSlotInSideBreaker);
 				break;
 			case 14:
-				ViewAttackFormListButton[AttackFormIndex]->OnClicked.AddDynamic(this, &UMyRogueWidget::AttackSlotInShortPick);
-				break;
-			case 15:
 				ViewAttackFormListButton[AttackFormIndex]->OnClicked.AddDynamic(this, &UMyRogueWidget::AttackSlotInGroundBreaker);
 				break;
-			case 16:
+			case 15:
 				ViewAttackFormListButton[AttackFormIndex]->OnClicked.AddDynamic(this, &UMyRogueWidget::AttackSlotInReverseSideSmash);
 				break;
-			case 17:
+			case 16:
 				ViewAttackFormListButton[AttackFormIndex]->OnClicked.AddDynamic(this, &UMyRogueWidget::AttackSlotInHeadDancer);
 				break;
-			case 18:
+			case 17:
 				ViewAttackFormListButton[AttackFormIndex]->OnClicked.AddDynamic(this, &UMyRogueWidget::AttackSlotInCranker);
 				break;
 			case 20:
@@ -1297,35 +1294,37 @@ void UMyRogueWidget::AttackSlotInSideBreaker() {
 	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);
 }
 void UMyRogueWidget::AttackSlotInShortPick() {
+	/*PlaySound(SelectSound);
+	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 1;
+	SelectedAttackFormIndex[SelectedAttackFormSlotNumber] = 4;
+	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);*/
+}
+void UMyRogueWidget::AttackSlotInGroundBreaker() {
 	PlaySound(SelectSound);
 	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 1;
 	SelectedAttackFormIndex[SelectedAttackFormSlotNumber] = 4;
 	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);
 }
-void UMyRogueWidget::AttackSlotInGroundBreaker() {
+void UMyRogueWidget::AttackSlotInReverseSideSmash() {
 	PlaySound(SelectSound);
 	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 1;
 	SelectedAttackFormIndex[SelectedAttackFormSlotNumber] = 5;
 	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);
 }
-void UMyRogueWidget::AttackSlotInReverseSideSmash() {
+void UMyRogueWidget::AttackSlotInHeadDancer() {
 	PlaySound(SelectSound);
 	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 1;
 	SelectedAttackFormIndex[SelectedAttackFormSlotNumber] = 6;
 	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);
 }
-void UMyRogueWidget::AttackSlotInHeadDancer() {
+void UMyRogueWidget::AttackSlotInCranker() {
 	PlaySound(SelectSound);
 	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 1;
 	SelectedAttackFormIndex[SelectedAttackFormSlotNumber] = 7;
 	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);
 }
-void UMyRogueWidget::AttackSlotInCranker() {
-	PlaySound(SelectSound);
-	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 1;
-	SelectedAttackFormIndex[SelectedAttackFormSlotNumber] = 8;
-	SetAttackForm(SelectedAttackFormNumber[SelectedAttackFormSlotNumber], SelectedAttackFormIndex[SelectedAttackFormSlotNumber]);
-}
+
+
 void UMyRogueWidget::AttackSlotInStab() {
 	PlaySound(SelectSound);
 	SelectedAttackFormNumber[SelectedAttackFormSlotNumber] = 2;
@@ -1520,10 +1519,11 @@ void UMyRogueWidget::SelectedAttackFormSlotOne() {
 		SelectedSlotState->RemoveFromParent();
 	SelectedSlotState = NewObject<UCircularThrobber>();
 	SelectedSlotState->NumberOfPieces = 25;
-	SelectedSlotState->Radius = 20;
+	SelectedSlotState->Radius = 25;
 	SelectedSlotState->Period = 0.5f;
 	SelectedSlotState->Image.SetImageSize(FVector2D(10.f, 10.f));
 	SelectedAttackFormSlotOverlay1->AddChild(SelectedSlotState);
+	//SelectedAttackFormSlotOverlay1->GetChildAt(SelectedAttackFormSlotOverlay1->GetChildIndex(SelectedSlotState)).Aliment
 }
 
 void UMyRogueWidget::SelectedAttackFormSlotTwo() {
@@ -1536,7 +1536,7 @@ void UMyRogueWidget::SelectedAttackFormSlotTwo() {
 		SelectedSlotState->RemoveFromParent();
 	SelectedSlotState = NewObject<UCircularThrobber>();
 	SelectedSlotState->NumberOfPieces = 25;
-	SelectedSlotState->Radius = 20;
+	SelectedSlotState->Radius = 25;
 	SelectedSlotState->Period = 0.5f;
 	SelectedSlotState->Image.SetImageSize(FVector2D(10.f, 10.f));
 	SelectedAttackFormSlotOverlay2->AddChild(SelectedSlotState);
@@ -1552,7 +1552,7 @@ void UMyRogueWidget::SelectedAttackFormSlotThree() {
 		SelectedSlotState->RemoveFromParent();
 	SelectedSlotState = NewObject<UCircularThrobber>();
 	SelectedSlotState->NumberOfPieces = 25;
-	SelectedSlotState->Radius = 20;
+	SelectedSlotState->Radius = 25;
 	SelectedSlotState->Period = 0.5f;
 	SelectedSlotState->Image.SetImageSize(FVector2D(10.f, 10.f));
 	SelectedAttackFormSlotOverlay3->AddChild(SelectedSlotState);
@@ -1873,7 +1873,7 @@ void UMyRogueWidget::GetSlashList() {
 
 void UMyRogueWidget::GetSmashList() {
 	AttackForm = 1;
-	AttackFormMaxIndex = 8;
+	AttackFormMaxIndex = 7;
 	Call_HaveAttackFormList();
 }
 
@@ -2068,7 +2068,6 @@ void UMyRogueWidget::AttackFormString() {
 	RogueAttackFormListString[1][2] = TEXT("Side Smash");
 	RogueAttackFormListString[1][3] = TEXT("Side Breaker");
 	RogueAttackFormListString[1][4] = TEXT("Ground Breaker");
-	//RogueAttackFormListString[1][5] = TEXT("Ground Breaker");
 	RogueAttackFormListString[1][5] = TEXT("ReverseSide Smash");
 	RogueAttackFormListString[1][6] = TEXT("HeadDancer");
 	RogueAttackFormListString[1][7] = TEXT("Cranker");
@@ -2100,11 +2099,10 @@ void UMyRogueWidget::AttackFormString() {
 	RogueAttackFormVideoString[1][1] = TEXT("FileMediaSource'/Game/AttackImage/Smash/DefaultBreaker.DefaultBreaker'");
 	RogueAttackFormVideoString[1][2] = TEXT("FileMediaSource'/Game/AttackImage/Smash/SideSmash.SideSmash'");
 	RogueAttackFormVideoString[1][3] = TEXT("FileMediaSource'/Game/AttackImage/Smash/PowerSideSmash.PowerSideSmash'");
-	RogueAttackFormVideoString[1][4] = TEXT("FileMediaSource'/Game/AttackImage/Smash/ShortPick.ShortPick'");
-	RogueAttackFormVideoString[1][5] = TEXT("FileMediaSource'/Game/AttackImage/Smash/GroundBreak.GroundBreak'");
-	RogueAttackFormVideoString[1][6] = TEXT("FileMediaSource'/Game/AttackImage/Smash/ReverseSideSmash.ReverseSideSmash'");
-	RogueAttackFormVideoString[1][7] = TEXT("FileMediaSource'/Game/AttackImage/Smash/HeadDancer.HeadDancer'");
-	RogueAttackFormVideoString[1][8] = TEXT("FileMediaSource'/Game/AttackImage/Smash/Cranker.Cranker'");
+	RogueAttackFormVideoString[1][4] = TEXT("FileMediaSource'/Game/AttackImage/Smash/GroundBreak.GroundBreak'");
+	RogueAttackFormVideoString[1][5] = TEXT("FileMediaSource'/Game/AttackImage/Smash/ReverseSideSmash.ReverseSideSmash'");
+	RogueAttackFormVideoString[1][6] = TEXT("FileMediaSource'/Game/AttackImage/Smash/HeadDancer.HeadDancer'");
+	RogueAttackFormVideoString[1][7] = TEXT("FileMediaSource'/Game/AttackImage/Smash/Cranker.Cranker'");
 
 	RogueAttackFormVideoString[2][0] = TEXT("FileMediaSource'/Game/AttackImage/Stab/DefaultStab.DefaultStab'");
 	RogueAttackFormVideoString[2][1] = TEXT("FileMediaSource'/Game/AttackImage/Stab/QuickStab.QuickStab'");
