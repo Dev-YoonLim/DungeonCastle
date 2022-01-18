@@ -389,8 +389,8 @@ private:
 	bool Mad;
 	bool Stablity;
 
-	int DungeonClearCount[3];
-	int DungeonClearAllCount;
+	int32 DungeonClearCount[3];
+	int32 DungeonClearAllCount;
 
 
 

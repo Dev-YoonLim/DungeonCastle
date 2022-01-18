@@ -41,6 +41,7 @@ public:
 	void DoorInit();
 	void OpenInit();
 	void DoorOpen();
+	void SoundStop();
 
 	UFUNCTION()
 		void LoadGameData(URogueSaveGame* LoadData);
@@ -81,6 +82,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		UVibration* Vibration;
 
+	UAudioComponent* MoveSoundComponent;
 	USoundCue* OpenDoorSound;
 	FString SaveSlotName;
 	bool DoorLoad;

@@ -1162,7 +1162,7 @@ void ARogueState::DeleteAbility() {
 	DeleteHpIncrease();
 	DataInit();
 	FullMaxHp = 300;
-	KarmaInit();
+	//KarmaInit();
 	TotalEquipCount = 0;
 	TotalAbilityCount = 0;
 	TotalWeaponCount = 0;

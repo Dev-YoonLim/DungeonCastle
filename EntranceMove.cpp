@@ -2,6 +2,7 @@
 
 
 #include "EntranceMove.h"
+#include "Door.h"
 
 // Sets default values for this component's properties
 UEntranceMove::UEntranceMove()
@@ -9,7 +10,7 @@ UEntranceMove::UEntranceMove()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-	Parent = GetOwner();
+	Parents = GetOwner();
 	MoveType = 0.f;
 	MoveLenValue = 0.f;
 	MaxMoveValue = 0.f;
@@ -38,20 +39,25 @@ void UEntranceMove::TickComponent(float DeltaTime, ELevelTick TickType, FActorCo
 	// ...
 	if (getOpen() == false) {
 		if (getMoveType() == 1.f) {
-			Parent->AddActorLocalRotation(FRotator(0, getMoveLenValue(), 0));
+			Parents->AddActorLocalRotation(FRotator(0, getMoveLenValue(), 0));
 			setMoveLenValue(getMoveLenValue() + 0.001f);
 			
 		}
 		else if (getMoveType() == 2.f) {
 
-			Parent->AddActorLocalTransform(FTransform(FRotator(0, 0, 0), 
-				FVector(FMath::FRandRange(-0.6, 0.6), FMath::FRandRange(-0.6, 0.6), getMoveLenValue()), Parent->GetActorScale3D()));
+			Parents->AddActorLocalTransform(FTransform(FRotator(0, 0, 0), 
+				FVector(FMath::FRandRange(-0.6, 0.6), FMath::FRandRange(-0.6, 0.6), getMoveLenValue()), Parents->GetActorScale3D()));
 			
 			setMoveLenValue(getMoveLenValue() + 0.007f);
 		}
 		if (getMoveLenValue() > getMaxMoveValue()) {
 			setMoveType(0.f);
+			/*ADoor* Doors = Cast<ADoor>(Parents);
+			Doors->MoveSoundComponent->Stop();
+			//Parents->MoveSoundComponent->Stop();*/
 			setOpen(true);
+			ADoor* Doors = Cast<ADoor>(GetOwner());
+			Doors->SoundStop();
 		}
 	}
 }

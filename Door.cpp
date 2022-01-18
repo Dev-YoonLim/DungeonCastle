@@ -17,6 +17,7 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
+	MoveSoundComponent->Stop();
 	UWorld* TheWorld = GetWorld();
 	AGameModeBase* GameMode = UGameplayStatics::GetGameMode(TheWorld);
 	MyGameMode = Cast<ACastle_in_DungeonGameModeBase>(GameMode);
@@ -43,6 +44,10 @@ void ADoor::LoadGameData(URogueSaveGame* LoadData) {
 void ADoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	/*if (DoorWork->getOpen() == true) {
+		MoveSoundComponent->Stop();
+	}*/
+
 
 }
 
@@ -53,19 +58,26 @@ void ADoor::DoorInit() {
 	DoorSwitchTwo = CreateDefaultSubobject<UBoxComponent>("DoorSwitchTwo");
 	DoorWork = CreateDefaultSubobject<UEntranceMove>("DoorWork");
 	Vibration = CreateDefaultSubobject<UVibration>("Vibration");
-
+	MoveSoundComponent = CreateDefaultSubobject<UAudioComponent>("MoveSound");
 	//DoorStateOne = CreateDefaultSubobject<UStaticMeshComponent>("DoorStateOne");
 	//DoorStateTwo = CreateDefaultSubobject<UStaticMeshComponent>("DoorStateTwo");
-
+	MoveSoundComponent->AttachToComponent(DoorOne, FAttachmentTransformRules::KeepRelativeTransform);
 	auto DoorAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>
 		(TEXT("StaticMesh'/Game/Door/DoorOne.DoorOne'"));
 	auto DoorOpenSoundAsset = ConstructorHelpers::FObjectFinder<USoundCue>
 		(TEXT("SoundCue'/Game/Sound/SoundQue/Open/OpenDoor_Cue.OpenDoor_Cue'"));
+	auto MoveSoundCompAsset = ConstructorHelpers::FObjectFinder<USoundBase>
+		(TEXT("SoundWave'/Game/Sound/SoundSource/NewMuchine_Move.NewMuchine_Move'"));
+	auto StartSoundAsset = ConstructorHelpers::FObjectFinder<USoundCue>
+		(TEXT("SoundCue'/Game/Sound/SoundQue/Elevator/Muchine_Cue.Muchine_Cue'"));
 	if (DoorAsset.Succeeded()) {
 		DoorOne->SetStaticMesh(DoorAsset.Object);
 	}
-	if (DoorOpenSoundAsset.Succeeded()) {
-		OpenDoorSound = DoorOpenSoundAsset.Object;
+	if (StartSoundAsset.Succeeded()) {
+		OpenDoorSound = StartSoundAsset.Object;
+	}
+	if (MoveSoundCompAsset.Succeeded()) {
+		MoveSoundComponent->SetSound(MoveSoundCompAsset.Object);
 	}
 
 	RootComponent = Root;
@@ -95,11 +107,17 @@ void ADoor::DoorOpen() {
 		DoorWork->setMoveType(SelectEntranceNumber);
 		if (OpeningState == false) {
 			if(DoorLoad == true)
-				UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
+				MoveSoundComponent->Play();
+				//UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
 			OpeningState = true;
 			MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 		}
 	}
+}
+
+void ADoor::SoundStop() {
+	MoveSoundComponent->Stop();
+	UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
 }
 
 void ADoor::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor

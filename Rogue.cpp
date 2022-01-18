@@ -1190,6 +1190,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			DeathZoneDirectDie();
 	}
 	if (OtherComp->GetCollisionProfileName() == TEXT("DungeonEnd")) {
+		MyRogueState->SetSaveState(true);
 		if (DialogueKinds != 1) {
 			DialogueKinds = 1;
 			//SubDialogueIndex++;
@@ -1197,16 +1198,16 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		}
 		if(MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300){
 			if (MyRogueState->GetDungeonClearAllCount() >= 1) {
-				//MainDialogueIndex++;
+				MainDialogueIndex++;
 			}
 		}
-		/*if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
+		if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
 			SubDialogueIndex++;
 		}
 		if (SubDialogueIndex == 4) {
 			SubDialogueKinds++;
 			SubDialogueIndex = 0;
-		}*/
+		}
 		MyRogueState->PlusDungeonClearCount(MyGameMode->StageIndex);
 		MyGameMode->StageIndex = 0;
 		MyGameMode->StageSubIndex = 0;
@@ -1218,6 +1219,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (OtherComp->GetCollisionProfileName() == TEXT("DialogueEvent")) {
 		//MyRogueState->DialogueRefInit();
 		ADialogueZone* DialogueZone = Cast<ADialogueZone>(OtherActor);
+		DialogueKinds = DialogueZone->DialogueKindsNumber;
 		if (DialogueKinds == 0) {
 			StartDialogueIndex = DialogueZone->DialogueZoneNumber;
 			if (StartDialogueIndex < 7) {
@@ -1234,8 +1236,8 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 				}
 			}
 		}
-		else if (DialogueZone->DialogueKindsNumber == 1) {
-			DialogueKinds = DialogueZone->DialogueKindsNumber;
+		else if (DialogueKinds == 1) {
+			//DialogueKinds = DialogueZone->DialogueKindsNumber;
 			//MainDialogueIndex = DialogueZone->DialogueZoneNumber;
 			if (MyRogueState->MainDialogueState[MainDialogueIndex] == 0 && MyRogueState->GetCurrentKarma() > MainDialogueIndex * 500 && DialogueZone->DialogueCount == 1) {
 				//MyRogueState->SetCurrentKarma(100);
@@ -1250,8 +1252,8 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 				}
 			}
 		}
-		else if (DialogueZone->DialogueKindsNumber == 2) {
-			DialogueKinds = DialogueZone->DialogueKindsNumber;
+		else if (DialogueKinds == 2) {
+			//DialogueKinds = DialogueZone->DialogueKindsNumber;
 			//SubDialogueIndex = DialogueZone->DialogueZoneNumber;
 			if (MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 700 && DialogueZone->DialogueCount == 1) {
 				/*DialogueSource = Cast<UMediaSource>(StaticLoadObject(UMediaSource::StaticClass(), NULL,
@@ -1296,6 +1298,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 			GameLoad = true;
 			
 			if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
+				GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("GetDungeonClears : %d"), MyRogueState->GetDungeonClearAllCount()));
 				//if (MyRogueState->StartDialogueState[0] == 0) {
 					//StartDialogueIndex = 0;
 				//}
@@ -1372,6 +1375,7 @@ void ARogue::DeathZoneDirectDie() {
 
 void ARogue::RogueDie() {
 	MyGameMode->NewGameStart = true;
+	MyRogueState->SetSaveState(true);
 	MyRogueState->DeleteAbility();
 	MyGameMode->GetWidgetNumber(-2);
 	GetWorldTimerManager().ClearTimer(RogueDieTimeHandle);
