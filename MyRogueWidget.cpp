@@ -695,7 +695,7 @@ void UMyRogueWidget::AddAbilityMenuInit() {
 					TEXT("Texture2D'/Game/FlatSkillsIcons100/94.94'")));
 			}
 			else if (RandAbilityIndex == 29) {
-				AbilityRandIndex[i] = FMath::RandRange(0, 3);
+				AbilityRandIndex[i] = FMath::RandRange(0, 2);
 				RogueSelectAbilityString[i] = RogueAttackFormListString[3][AbilityRandIndex[i]];
 				RogueSelectClassesString[i] = TEXT("SpecialArts");
 				AbilityClassIcon[i] = Cast<UTexture2D>(StaticLoadObject(UTexture2D::StaticClass(), NULL,

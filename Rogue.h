@@ -234,6 +234,7 @@ private:
 	int RollStepQue;
 	float TempRollRotatorValue;
 	float SuperArmorPer;
+	float TempSuperArmorPer;
 	int32 DialogueKinds;
 
 	

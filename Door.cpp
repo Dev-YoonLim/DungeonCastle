@@ -117,7 +117,8 @@ void ADoor::DoorOpen() {
 
 void ADoor::SoundStop() {
 	MoveSoundComponent->Stop();
-	UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
+	if (DoorLoad == true)
+		UGameplayStatics::PlaySoundAtLocation(this, OpenDoorSound, GetActorLocation());
 }
 
 void ADoor::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor

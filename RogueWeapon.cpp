@@ -374,9 +374,9 @@ void ARogueWeapon::GetWeaponDoubleCheckAndAttackDirection(bool First, bool Snd, 
 }
 
 void ARogueWeapon::WeaponAttackEffectPlay(AActor* OtherActor, UPrimitiveComponent* OtherComp) {
-	if (myRogue->NotAttackState() == false && myRogue->getCanHit() == true) {
+	AEnemyRogue* EnemyRogue = Cast<AEnemyRogue>(OtherActor);
+	if (myRogue->NotAttackState() == false && myRogue->getCanHit() == true && EnemyRogue->TakeDamageCount < EnemyRogue->TakeDamageLimit){
 		WeaponAttackCheck = false;
-		AEnemyRogue* EnemyRogue = Cast<AEnemyRogue>(OtherActor);
 		if (WeaponKnockBack == true) {
 			EnemyRogue->TakeAttackVector(TackAttackVectorValue);
 			EnemyRogue->TakeWeaponKnockBackCheck(WeaponKnockBack);
@@ -416,6 +416,7 @@ void ARogueWeapon::WeaponAttackEffectPlay(AActor* OtherActor, UPrimitiveComponen
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
 			ElementStack[SelectWeaponElementNumber], StateEffect,
 			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1], WeaponSpeed);
+		EnemyRogue->TakeDamageCount++;
 		/*MyGameMode->EnemyRogueTakeWeaponDamegeDelegate.ExecuteIfBound(WeaponAttackDefaultPhysicsElementDameges[AttackQue], 
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
 			ElementStack[SelectWeaponElementNumber], StateEffect, 

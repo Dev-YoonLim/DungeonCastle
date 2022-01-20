@@ -199,7 +199,8 @@ void AEnemyRogue::EnemyRogueStateInit() {
 	HitCount = 0;
 	HitCountLimite = 5;
 	HitSuperArmorCount = 0;
-
+	TakeDamageLimit = 1;
+	TakeDamageCount = 0;
 
 	/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
 		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
@@ -337,10 +338,6 @@ void AEnemyRogue::EnemyRogueStateSetting() {
 void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float EffectTotalDamege, float DotDamege,
 	int32 WeaponElementNumber, int32 WeaponAttackStack, bool* WeaponEffect,
 	bool DoubleAttackChecks, int32 AttackDirectionOne, int32 AttackDirectionTwo, float WeaponSpeed) {
-	if (EnemyDead == false) {
-		UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
-		WeaponHitAnimationPlay();
-	}
 	HitKinds = 0;
 	TakeCheckDoubleAttack = DoubleAttackChecks;
 	TakeCheckAttackDirection[0] = AttackDirectionOne;
@@ -361,6 +358,10 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 	KnockBackValue = ChangeKnockBackValue;
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 	SetHp(TakeWeaponDamege);
+	if (EnemyDead == false) {
+		UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
+		WeaponHitAnimationPlay();
+	}
 	if (TakeWeaponEffect == true) {
 		switch (TakeWeaponElementNumbers) {
 		case 0:
@@ -389,10 +390,6 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 
 void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksDamege, float SpecialDamege, int32* TorchEffectStack,
 	bool StabAttackOn, bool* DefaultEffect, bool* SpecialEffect, int32 TorchElementNumber) {
-	if (EnemyDead == false) {
-		UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
-		TorchHitAnimationPlay();
-	}
 	HitKinds = 1;
 	ChangeKnockBackValue = 5.f;
 	KnockBackValue = ChangeKnockBackValue;
@@ -408,6 +405,10 @@ void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksD
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 	if (TakeStabAttackOn == true) {
 		SetHp(TakeTorchStabDamege);
+		if (EnemyDead == false) {
+			UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
+			TorchHitAnimationPlay();
+		}
 	}
 	if (TakeDefaultEffect == true) {
 		switch (TakeTorchElementNumbers) {

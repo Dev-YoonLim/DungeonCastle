@@ -85,6 +85,9 @@ private:
 	int32 LastAttackDirection;
 
 public:
+	UPROPERTY(EditAnywhere)
+		int32 TakeDamageLimit;
+	int32 TakeDamageCount;
 	int32 BurnExplosionStack;
 	int32 ColdSlowStack;
 	int32 PoisonStack;

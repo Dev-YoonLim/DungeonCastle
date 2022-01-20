@@ -402,10 +402,13 @@ void ARogue::RogueWeaponNumberInit(int32 WeaponNumbers) {
 }
 
 bool ARogue::IdleState() {
-	if (GetCharacterMovement()->IsFalling() == true)
+	if (GetCharacterMovement()->IsFalling() == true) {
+		myAnimInst->Idle();
 		Falling = true;
-	else
+	}
+	else{
 		Falling = false;
+	}
 	//&& NotTakeHitCheck() == true && NotRogueDie() == true && TakeHitOn == false
 	if (right == false && forward == false && back == false 
 		&& left == false && attack == false && roll == false && NotTakeHitCheck() == true && TakeHitOn == false && NotRogueDie() == true) {
@@ -812,7 +815,8 @@ void ARogue::Roll() {
 						myAnimInst->BackStep();
 					}
 				}
-
+				TempSuperArmorPer = SuperArmorPer;
+				SuperArmorPer = 99.f;
 
 				/*if (forward == true) {
 					RollStepQue = 1;
@@ -881,6 +885,8 @@ void ARogue::RollEnd() {
 			ViewArm->bUsePawnControlRotation = true;
 		ViewArm->TargetArmLength = 0.f;
 	}
+	SuperArmorPer = TempSuperArmorPer;
+	TempSuperArmorPer = 0.f;
 }
 
 void ARogue::Turn(float amount) {
@@ -1193,21 +1199,19 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 		MyRogueState->SetSaveState(true);
 		if (DialogueKinds != 1) {
 			DialogueKinds = 1;
-			//SubDialogueIndex++;
-			//MainDialogueIndex++;
 		}
 		if(MyRogueState->GetCurrentKarma() > MainDialogueIndex * 300){
 			if (MyRogueState->GetDungeonClearAllCount() >= 1) {
 				MainDialogueIndex++;
 			}
 		}
-		if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
+		/*if (MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
 			SubDialogueIndex++;
 		}
 		if (SubDialogueIndex == 4) {
 			SubDialogueKinds++;
 			SubDialogueIndex = 0;
-		}
+		}*/
 		MyRogueState->PlusDungeonClearCount(MyGameMode->StageIndex);
 		MyGameMode->StageIndex = 0;
 		MyGameMode->StageSubIndex = 0;

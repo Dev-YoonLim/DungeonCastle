@@ -12,7 +12,8 @@ void URogueTakeHitNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAn
 	Super::NotifyBegin(MeshComp, Animation, DurationTime);
 	AEnemyRogue* EnemyRogue = Cast<AEnemyRogue>(MeshComp->GetOwner());
 	if (EnemyRogue) {
-		EnemyRogue->SetEnemyDownFinish(false);
+		if(EnemyRogue->GetHp() <= 0)
+			EnemyRogue->SetEnemyDownFinish(false);
 	}
 }
 
@@ -20,7 +21,10 @@ void URogueTakeHitNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnim
 	Super::NotifyEnd(MeshComp, Animation);
 	AEnemyRogue* EnemyRogue = Cast<AEnemyRogue>(MeshComp->GetOwner());
 	if (EnemyRogue) {
-		EnemyRogue->SetEnemyDownFinish(true);
+		if (EnemyRogue->GetHp() <= 0)
+			EnemyRogue->SetEnemyDownFinish(true);
+		else
+			EnemyRogue->TakeDamageCount = 0;
 	}
 }
 
