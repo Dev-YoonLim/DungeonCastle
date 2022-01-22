@@ -1160,8 +1160,15 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	
 	if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueWeaponCollision") && EnemyRogueWeapon->GetTakeHit() == true) {
 		TakeHitOn = true;
+		if (FMath::FRandRange(0, 100) < SuperArmorPer) {
+			MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(EnemyRogueWeapon->EnemyWeaponDamage * FMath::RandRange(20, 26));
+			SuperArmor = true;
+		}
+		else {
+			MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(EnemyRogueWeapon->EnemyWeaponDamage * FMath::RandRange(25,32));
+			SuperArmor = false;
+		}
 		GEngine->AddOnScreenDebugMessage(-1, 50, FColor::Yellow, FString::Printf(TEXT("RogueHit")));
-		MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(EnemyRogueWeapon->EnemyWeaponDamage*30);
 		
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HaveRogueWeapon->HitEffect, 
 			GetActorLocation() + GetActorForwardVector().GetSafeNormal() * FMath::FRandRange(90, 110) +
@@ -1169,11 +1176,6 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			FRotator(0, 0, 0), FVector(FMath::FRandRange(1, 1.5), FMath::FRandRange(1, 1.5), FMath::FRandRange(1, 1.5)));
 		
 		UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
-		if (FMath::FRandRange(0, 100) < SuperArmorPer) {
-			SuperArmor = true;
-		}
-		else
-			SuperArmor = false;
 		if(MyRogueState->AttackSuccessToSpecialPerPlusCount != 0)
 			HaveRogueWeapon->SetTotalElementPer(HaveRogueWeapon->GetDefaultElementPer());
 		if (MyRogueState->NoHitToHighAttackSynergyCount != 0)
@@ -1184,7 +1186,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
 			GetWorldTimerManager().SetTimer(RogueDieTimeHandle, this, &ARogue::RogueDie, 2, false, 4);
 		}
-		else if(SuperArmor == false){
+		else {
 			TakeHitState(HitForm);
 		}
 	}
@@ -1389,25 +1391,27 @@ void ARogue::TakeHitState(int32 Index) {
 	if (RogueHeadShake == false) {
 		ViewArm->bUsePawnControlRotation = false;
 	}
-	switch (Index) {
-	case 0:
-		myAnimInst->Montage_Play(myAnimInst->RogueUpHit1);
-		break;
-	case 1:
-		myAnimInst->Montage_Play(myAnimInst->RogueUpHit2);
-		break;
-	case 2:
-		myAnimInst->Montage_Play(myAnimInst->RogueDownHit1);
-		break;
-	case 3:
-		myAnimInst->Montage_Play(myAnimInst->RogueSideAndUpHit1);
-		break;
-	case 4:
-		myAnimInst->Montage_Play(myAnimInst->RogueSideAndDownHit1);
-		break;
-	case 5:
-		myAnimInst->Montage_Play(myAnimInst->RogueSideHit1);
-		break;
+	if (SuperArmor == false) {
+		switch (Index) {
+		case 0:
+			myAnimInst->Montage_Play(myAnimInst->RogueUpHit1);
+			break;
+		case 1:
+			myAnimInst->Montage_Play(myAnimInst->RogueUpHit2);
+			break;
+		case 2:
+			myAnimInst->Montage_Play(myAnimInst->RogueDownHit1);
+			break;
+		case 3:
+			myAnimInst->Montage_Play(myAnimInst->RogueSideAndUpHit1);
+			break;
+		case 4:
+			myAnimInst->Montage_Play(myAnimInst->RogueSideAndDownHit1);
+			break;
+		case 5:
+			myAnimInst->Montage_Play(myAnimInst->RogueSideHit1);
+			break;
+		}
 	}
 	TakeHitOn = false;
 }

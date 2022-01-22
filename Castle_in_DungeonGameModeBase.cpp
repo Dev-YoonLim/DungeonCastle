@@ -124,7 +124,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	//ChangedWidget(TitleMenuWidgetClass);
 	Super::BeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("GameModeOn")));
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("GameModeOn")));
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
 	if (LoadGame == nullptr) {
 		LoadGame = GetMutableDefault<URogueSaveGame>();

@@ -16,7 +16,7 @@ AEnemyRogueWeapon::AEnemyRogueWeapon()
 void AEnemyRogueWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyWeaponOn")));
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyWeaponOn")));
 	//EnemyRogueWeaponInit();
 	//EnemyRogueWeaponChange();
 	//EnemyRgoueWeaponTransform();

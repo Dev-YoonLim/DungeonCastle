@@ -287,7 +287,7 @@ void AEnemyRogue::EnemyRogueStateInit() {
 }
 
 void AEnemyRogue::EnemyRogueStateSetting() {
-	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyRogueStateOn")));
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyRogueStateOn")));
 	//EnemyForm = FMath::FRandRange(0, 9);
 	if (EnemyForm <= 6) {
 		UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
