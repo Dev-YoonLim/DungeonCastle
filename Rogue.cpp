@@ -268,6 +268,7 @@ void ARogue::RogueStateInit() {
 	AttackFormFinsh = false;
 	SuperArmorPer = 0.f;
 	AttackStoping = false;
+	RogueHeadShake = false;
 	RogueHp = 300;
 	Speed = 0.1f;
 	//AttackForm = 0;
@@ -413,8 +414,11 @@ bool ARogue::IdleState() {
 	if (right == false && forward == false && back == false 
 		&& left == false && attack == false && roll == false && NotTakeHitCheck() == true && TakeHitOn == false && NotRogueDie() == true) {
 		ViewRotator = 0.f;
-		if (RogueHeadShake == false && ViewArm->bUsePawnControlRotation == false) {
+		if (RogueHeadShake == false) {
 			ViewArm->bUsePawnControlRotation = true;
+		}
+		else {
+			ViewArm->bUsePawnControlRotation = false;
 		}
 		myAnimInst->Idle();
 		return true;

@@ -3,6 +3,7 @@
 
 #include "RogueWeapon.h"
 #include "EnemyRogue.h"
+#include "DataTableBase.h"
 
 // Sets default values
 ARogueWeapon::ARogueWeapon()
@@ -10,6 +11,7 @@ ARogueWeapon::ARogueWeapon()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	WeaponInit();
+	DataTableInit();
 	WeaponAttackEffectInit();
 	GetWeaponTotalDamegeValue(0, 0, 0, 0);
 	Weapon->OnComponentBeginOverlap.AddDynamic(this, &ARogueWeapon::EnterBeginOverlap);
@@ -55,6 +57,13 @@ void ARogueWeapon::WeaponDelegate() {
 	MyGameMode->WeaponHitKnockBackDelegate.BindUObject(this, &ARogueWeapon::TakeKnockBackCheck);
 	MyGameMode->RogueAttackVectorToEnemyRogueDelegate.AddUObject(this, &ARogueWeapon::TakeAttackVector);
 	MyGameMode->Call_RogueUseWeaponReferenceDelegate.BindUObject(this, &ARogueWeapon::Receive_CallRogueUseWeapon);
+}
+
+void ARogueWeapon::DataTableInit() {
+	auto DataAsset = ConstructorHelpers::FObjectFinder<UDataTable>(TEXT("DataTable'/Game/DataTable/RogueWeaponData.RogueWeaponData'"));
+	if (DataAsset.Succeeded()) {
+		WeaponDataTable = DataAsset.Object;
+	}
 }
 
 void ARogueWeapon::WorldRogueInit() {
@@ -111,144 +120,153 @@ void ARogueWeapon::WeaponAttackEffectInit() {
 }
 
 void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
-	
 	SelectWeaponNumber = WeaponNumber;
-	if (WeaponNumber == 0) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Dagger.Dagger'");
-		HitEffectScale = 0.7f;
-		WeaponDamege = 3.f;
-		WeaponSpeed = 1.1f;
-		ElementSynergy = 1.5f;
-		WeaponAttackCostData = 5;
-		ElementEffectSize = FVector(0.05, 0.05, 0.04);
-		WeaponSynergy(0.5f, 0.3f, 1.5f);
-	}
-	else if (WeaponNumber == 1) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Mace.Mace'");
-		HitEffectScale = 1.f;
-		WeaponDamege = 6.f;
-		WeaponSpeed = 1.f;
-		ElementSynergy = 1.3f;
-		WeaponAttackCostData = 3;
-		ElementEffectSize = FVector(0.06, 0.06, 0.05);
-		
-		WeaponSynergy(0.4f, 1.3f, 0.5f);
-	}
-	else if (WeaponNumber == 2) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/G_Axe.G_Axe'");
-		WeaponDamege = 9.f;
-		HitEffectScale = 0.9;
-		WeaponSpeed = 0.8f;
-		ElementSynergy = 0.6f;
-		WeaponAttackCostData = 2;
-		ElementEffectSize = FVector(0.07, 0.07, 0.06);
-		
-		WeaponSynergy(1.5f, 1.1f, 0.8f);
-	}
-	else if (WeaponNumber == 3) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/G_Hammer.G_Hammer'");
-		WeaponDamege = 11.f;
-		HitEffectScale = 1.3;
-		WeaponSpeed = 0.75f;
-		ElementSynergy = 1.2f;
-		WeaponAttackCostData = 2;
-		ElementEffectSize = FVector(0.08, 0.08, 0.06);
-		
-		WeaponSynergy(0.2f, 2.2f, 0.f);
-	}
-	else if (WeaponNumber == 4) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/G_Sword.G_Sword'");
-		WeaponDamege = 8.f;
-		HitEffectScale = 0.9f;
-		WeaponSpeed = 0.85f;
-		ElementSynergy = 1.f;
-		WeaponAttackCostData = 2;
-		ElementEffectSize = FVector(0.06, 0.06, 0.075);
-		
-		WeaponSynergy(1.7f, 0.8f, 1.0f);
-	}
-	else if (WeaponNumber == 5) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/NewShortSword.NewShortSword'");
-		HitEffectScale = 0.7f;
-		WeaponDamege = 5.f;
-		WeaponSpeed = 1.1f;
-		ElementSynergy = 1.2f;
-		WeaponAttackCostData = 3;
-		ElementEffectSize = FVector(0.05, 0.05, 0.04);
-		
-		WeaponSynergy(0.7f, 0.2f, 1.7f);
-	}
-	else if (WeaponNumber == 6) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/Axe.Axe'");
-		HitEffectScale = 0.8f;
-		WeaponDamege = 6.f;
-		WeaponSpeed = 1.15f;
-		ElementSynergy = 0.6f;
-		WeaponAttackCostData = 4;
-		ElementEffectSize = FVector(0.06, 0.06, 0.05);
+	if (WeaponDataTable != nullptr) {
+		FRogueWeaponDataBase* WeaponDataTableRow = WeaponDataTable->FindRow<FRogueWeaponDataBase>(FName(*(FString::FormatAsNumber(SelectWeaponNumber))), FString(""));
+		if (WeaponNumber == 0) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/Dagger.Dagger'");
+			HitEffectScale = 0.7;
+			WeaponDamege = 3.f;
+			WeaponSpeed = 1.1f;
+			ElementSynergy = 1.5f;
+			WeaponAttackCostData = 5;
+			ElementEffectSize = FVector(0.05, 0.05, 0.04);
+			WeaponSynergy(0.5f, 0.3f, 1.5f);
+		}
+		else if (WeaponNumber == 1) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/Mace.Mace'");
+			HitEffectScale = 1.f;
+			WeaponDamege = 6.f;
+			WeaponSpeed = 1.f;
+			ElementSynergy = 1.3f;
+			WeaponAttackCostData = 3;
+			ElementEffectSize = FVector(0.06, 0.06, 0.05);
 
-		WeaponSynergy(1.3f, 0.8f, 0.8f);
+			WeaponSynergy(0.4f, 1.3f, 0.5f);
+		}
+		else if (WeaponNumber == 2) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/G_Axe.G_Axe'");
+			WeaponDamege = 9.f;
+			HitEffectScale = 0.9;
+			WeaponSpeed = 0.8f;
+			ElementSynergy = 0.6f;
+			WeaponAttackCostData = 2;
+			ElementEffectSize = FVector(0.07, 0.07, 0.06);
+
+			WeaponSynergy(1.5f, 1.1f, 0.8f);
+		}
+		else if (WeaponNumber == 3) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/G_Hammer.G_Hammer'");
+			WeaponDamege = 11.f;
+			HitEffectScale = 1.3;
+			WeaponSpeed = 0.75f;
+			ElementSynergy = 1.2f;
+			WeaponAttackCostData = 2;
+			ElementEffectSize = FVector(0.08, 0.08, 0.06);
+
+			WeaponSynergy(0.2f, 2.2f, 0.f);
+		}
+		else if (WeaponNumber == 4) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/G_Sword.G_Sword'");
+			WeaponDamege = 8.f;
+			HitEffectScale = 0.9f;
+			WeaponSpeed = 0.85f;
+			ElementSynergy = 1.f;
+			WeaponAttackCostData = 2;
+			ElementEffectSize = FVector(0.06, 0.06, 0.075);
+
+			WeaponSynergy(1.7f, 0.8f, 1.0f);
+		}
+		else if (WeaponNumber == 5) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/NewShortSword.NewShortSword'");
+			HitEffectScale = 0.7f;
+			WeaponDamege = 5.f;
+			WeaponSpeed = 1.1f;
+			ElementSynergy = 1.2f;
+			WeaponAttackCostData = 3;
+			ElementEffectSize = FVector(0.05, 0.05, 0.04);
+
+			WeaponSynergy(0.7f, 0.2f, 1.7f);
+		}
+		else if (WeaponNumber == 6) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/Axe.Axe'");
+			HitEffectScale = 0.8f;
+			WeaponDamege = 6.f;
+			WeaponSpeed = 1.15f;
+			ElementSynergy = 0.6f;
+			WeaponAttackCostData = 4;
+			ElementEffectSize = FVector(0.06, 0.06, 0.05);
+
+			WeaponSynergy(1.3f, 0.8f, 0.8f);
+		}
+		else if (WeaponNumber == 7) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Spear.SM_Spear'");
+			WeaponDamege = 10.f;
+			HitEffectScale = 1.f;
+			WeaponSpeed = 0.75f;
+			ElementSynergy = 0.7f;
+			WeaponAttackCostData = 1;
+			ElementEffectSize = FVector(0.05, 0.05, 0.14);
+
+			WeaponSynergy(1.7f, 1.2f, 0.8f);
+		}
+		else if (WeaponNumber == 8) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Sickle.SM_Sickle'");
+			WeaponDamege = 11.f;
+			HitEffectScale = 1.1f;
+			WeaponSpeed = 0.75f;
+			ElementSynergy = 1.2f;
+			WeaponAttackCostData = 1;
+			ElementEffectSize = FVector(0.05, 0.05, 0.13);
+
+			WeaponSynergy(1.4f, 1.2f, 0.8f);
+		}
+		else if (WeaponNumber == 10) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Shield.SM_Shield'");
+			WeaponDamege = 7.f;
+			HitEffectScale = 0.8f;
+			WeaponSpeed = 0.85f;
+			ElementSynergy = 1.f;
+			WeaponAttackCostData = 4;
+			ElementEffectSize = FVector(0.12, 0.12, 0.15);
+
+			WeaponSynergy(1.3f, 0.7f, 1.0f);
+		}
+		else if (WeaponNumber == 9) {
+			WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Throwing.SM_Throwing'");
+			WeaponDamege = 2.f;
+			HitEffectScale = 0.6f;
+			WeaponSpeed = 1.3f;
+			ElementSynergy = 2.3f;
+			WeaponAttackCostData = 5;
+			ElementEffectSize = FVector(0.04, 0.04, 0.03);
+
+			WeaponSynergy(0.2f, 0.f, 1.5f);
+		}
+		HitEffectScale = WeaponDataTableRow->HitEffectScale;
+		WeaponDamege = WeaponDataTableRow->WeaponDamage;
+		WeaponSpeed = WeaponDataTableRow->WeaponSpeed;
+		ElementSynergy = WeaponDataTableRow->ElementSynergy;
+		WeaponAttackCostData = WeaponDataTableRow->AttackCost;
+		ElementEffectSize = WeaponDataTableRow->ElementEffectSize;
+		WeaponSynergy(WeaponDataTableRow->FormSynergyX, WeaponDataTableRow->FormSynergyY, WeaponDataTableRow->FormSynergyZ);
+
+		MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, ElementPer);
+		MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
+		MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
+
+		UStaticMesh* NewWeapon = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, WeaponReference));
+		if (NewWeapon)
+			Weapon->SetStaticMesh(NewWeapon);
+		WeaponTransformSetting(WeaponNumber);
+
+
+		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
+		if (SelectWeaponNumber == 4)
+			WeaponElementEffect->SetRelativeRotation(FRotator(180, 0, 0));
+		else
+			WeaponElementEffect->SetRelativeRotation(FRotator(0, 0, 0));
 	}
-	else if (WeaponNumber == 7) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Spear.SM_Spear'");
-		WeaponDamege = 10.f;
-		HitEffectScale = 1.f;
-		WeaponSpeed = 0.75f;
-		ElementSynergy = 0.7f;
-		WeaponAttackCostData = 1;
-		ElementEffectSize = FVector(0.05, 0.05, 0.14);
-
-		WeaponSynergy(1.7f, 1.2f, 0.8f);
-	}
-	else if (WeaponNumber == 8) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Sickle.SM_Sickle'");
-		WeaponDamege = 11.f;
-		HitEffectScale = 1.1f;
-		WeaponSpeed = 0.75f;
-		ElementSynergy = 1.2f;
-		WeaponAttackCostData = 1;
-		ElementEffectSize = FVector(0.05, 0.05, 0.13);
-
-		WeaponSynergy(1.4f, 1.2f, 0.8f);
-	}
-	else if (WeaponNumber == 10) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Shield.SM_Shield'");
-		WeaponDamege = 7.f;
-		HitEffectScale = 0.8f;
-		WeaponSpeed = 0.85f;
-		ElementSynergy = 1.f;
-		WeaponAttackCostData = 4;
-		ElementEffectSize = FVector(0.12, 0.12, 0.15);
-
-		WeaponSynergy(1.3f, 0.7f, 1.0f);
-	}
-	else if (WeaponNumber == 9) {
-		WeaponReference = TEXT("StaticMesh'/Game/Weapons/SM_Throwing.SM_Throwing'");
-		WeaponDamege = 2.f;
-		HitEffectScale = 0.6f;
-		WeaponSpeed = 1.3f;
-		ElementSynergy = 2.3f;
-		WeaponAttackCostData = 5;
-		ElementEffectSize = FVector(0.04, 0.04, 0.03);
-		
-		WeaponSynergy(0.2f, 0.f, 1.5f);
-	}
-	
-	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, ElementPer);
-	MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
-	MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
-
-	UStaticMesh* NewWeapon = Cast<UStaticMesh>(StaticLoadObject(UStaticMesh::StaticClass(), NULL, WeaponReference));
-	if (NewWeapon)
-		Weapon->SetStaticMesh(NewWeapon);
-	WeaponTransformSetting(WeaponNumber);
-
-
-	WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-	if (SelectWeaponNumber == 4)
-		WeaponElementEffect->SetRelativeRotation(FRotator(180, 0, 0));
-	else
-		WeaponElementEffect->SetRelativeRotation(FRotator(0, 0, 0));
 }
 
 void ARogueWeapon::WeaponTransformSetting(int32 WeaponNumber) {

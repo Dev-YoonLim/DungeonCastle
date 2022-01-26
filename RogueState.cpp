@@ -211,7 +211,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	myRogue->SetSubDialogueIndex(LoadGame->SubDialogueIndex);
 	myRogue->SetSubDialogueKinds(LoadGame->SubDialogueKinds);
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
-	myRogue->ViewArm->bUsePawnControlRotation = LoadGame->HeadTracking;
+	myRogue->RogueHeadShake = LoadGame->HeadTracking;
 	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
 	/*else {
 		LoadGame->StageIndex = 0;
@@ -266,7 +266,6 @@ void ARogueState::SaveGameData() {
 		PlayerData->RogueKarma = CurrentKarma;
 		PlayerData->NewGameStart = MyGameMode->NewGameStart;
 		PlayerData->ItemCount = ItemCount;
-		PlayerData->HeadTracking = myRogue->ViewArm->bUsePawnControlRotation;
 		PlayerData->RollingTrdCamera = myRogue->GetRollingTrdCamera();
 		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
 		PlayerData->DungeonClearAllCount = DungeonClearAllCount;
@@ -301,6 +300,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->MainDialogueIndex = myRogue->GetMainDialogueIndex();
 		PlayerData->SubDialogueIndex = myRogue->GetSubDialogueIndex();
 		PlayerData->SubDialogueKinds = myRogue->GetSubDialogueKinds();
+		PlayerData->HeadTracking = myRogue->RogueHeadShake;
 		//PlayerData->LastLocation = myRogue->GetActorLocation();
 
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));

@@ -41,6 +41,7 @@ public:
 	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 public:
+	void DataTableInit();
 	void WeaponInit();
 
 	bool getHitCrash() { return HitCrash; }
@@ -71,6 +72,7 @@ public:
 	void ElementLevelUp(int32, float);
 
 private:
+	class UDataTable* WeaponDataTable;
 	bool HitCrash;
 	float HitEffectScale;
 	float HitElementEffectScale;

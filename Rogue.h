@@ -268,10 +268,11 @@ private:
 	bool GameSettingOn = false;
 	bool Falling;
 	bool DialogueSequence;
-	bool RogueHeadShake;
+	
 	bool RollingTrdCamera;
 
 public:
+	bool RogueHeadShake;
 	FVector LastInput;
 	UAnimInstance* SetRogueAnimInstance;
 	URogueAnimInstance* myAnimInst;
