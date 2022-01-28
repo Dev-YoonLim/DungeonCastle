@@ -129,10 +129,22 @@ public:
 		bool RollingTrdCamera;
 
 	UPROPERTY()
-		int DungeonClearCount[3];
+		int32 DungeonClearCount[3];
 
 	UPROPERTY()
-		int DungeonClearAllCount;
+		int32 DungeonClearAllCount;
+
+	UPROPERTY()
+		int32 RogueKill;
+
+	UPROPERTY()
+		int32 RogueTotalKill;
+
+	UPROPERTY()
+		int32 RogueDeath;
+
+	UPROPERTY()
+		int32 UsedData;
 
 	UPROPERTY()
 		int32 AllData;

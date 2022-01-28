@@ -101,6 +101,8 @@ DECLARE_DELEGATE_OneParam(Widget_ChangedWidgetButtonDelegateSignature, int32);
 DECLARE_DELEGATE(Widget_RogueUIValueInitDelegateSignature);
 DECLARE_DELEGATE_OneParam(Widget_StatDataDelegateSignature, float*);
 DECLARE_DELEGATE(Widget_CallStatWidgetDelegateSignature);
+DECLARE_DELEGATE(Widget_CallGameStateWidgetDelegateSignature);
+DECLARE_DELEGATE_OneParam(Widget_ReturnGameStateWidgetDelegateSignature, float*);
 DECLARE_DELEGATE(Widget_CallEquipmentWidgetDelegateSignature);
 DECLARE_DELEGATE_TwoParams(Widget_AbilityListDelegateSignature, int32, FString*);
 DECLARE_DELEGATE(Widget_CallAbilityListDelegateSignature);
@@ -225,6 +227,8 @@ public:
 
 	Widget_StatDataDelegateSignature Widget_StatDataDelegate;
 	Widget_CallStatWidgetDelegateSignature Widget_CallStatWidgetDelegate;
+	Widget_CallGameStateWidgetDelegateSignature Widget_CallGameStateWidgetDelegate;
+	Widget_ReturnGameStateWidgetDelegateSignature Widget_ReturnGameStateWidgetDelegate;
 	Widget_CallEquipmentWidgetDelegateSignature Widget_CallEquipmentWidgetDelegate;
 	Widget_AbilityListDelegateSignature Widget_AbilityListDelegate;
 	Widget_CallAbilityListDelegateSignature Widget_CallAbilityListDelegate;
@@ -255,6 +259,7 @@ public:
 	bool TabWidgetState;
 	bool TabWidgetIn;
 	bool StatWidgetState;
+	bool GameStateWidgetState;
 	bool EquipmentWidgetState;
 	bool BurningTotemWidgetState;
 	bool ChangedWeaponWidgetState;
@@ -294,6 +299,9 @@ private:
 
 	TSubclassOf<UUserWidget> TabWidgetClass;
 	class UMyRogueWidget* TabWidget;
+
+	TSubclassOf<UUserWidget> GameStateWidgetClass;
+	class UMyRogueWidget* GameStateWidget;
 
 	TSubclassOf<UUserWidget> StatWidgetClass;
 	class UMyRogueWidget* StatWidget;

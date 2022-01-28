@@ -87,6 +87,7 @@ void ARogueState::BeginPlay() {
 	MyGameMode->Widget_RogueUIValueInitDelegate.BindUObject(this, &ARogueState::Widget_ViewInit);
 	MyGameMode->Rogue_SpeedValueDelegate.BindUObject(this, &ARogueState::GetMoveSpeed);
 	MyGameMode->Widget_CallStatWidgetDelegate.BindUObject(this, &ARogueState::SetStatData);
+	MyGameMode->Widget_CallGameStateWidgetDelegate.BindUObject(this, &ARogueState::SetGameState);
 	MyGameMode->Widget_CallEquipmentWidgetDelegate.BindUObject(this, &ARogueState::SetEquipmentStrings);
 	MyGameMode->RogueTakeAbilityDelegate.BindUObject(this, &ARogueState::AbilityRandTake);
 	MyGameMode->Widget_CallAbilityListDelegate.BindUObject(this, &ARogueState::GetRogueAbilityIndexAndString);
@@ -180,6 +181,10 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	MyGameMode->NewGameStart = LoadGame->NewGameStart;
 	SetDialogueIndex(LoadGame->DialogueIndex);
 	ItemCount = LoadGame->ItemCount;
+	RogueDeath = LoadGame->RogueDeath;
+	RogueKill = LoadGame->RogueKill;
+	RogueTotalKill = LoadGame->RogueTotalKill;
+	UsedData = LoadGame->UsedData;
 	//RogueMoveSpeed = LoadGame->RogueMoveSpeed;
 	//MyGameMode->StageIndex = LoadGame->StageNumber;
 	//myRogue->SetActorLocation(LoadGame->LastLocation);
@@ -269,6 +274,10 @@ void ARogueState::SaveGameData() {
 		PlayerData->RollingTrdCamera = myRogue->GetRollingTrdCamera();
 		//PlayerData->RogueMoveSpeed = RogueMoveSpeed;
 		PlayerData->DungeonClearAllCount = DungeonClearAllCount;
+		PlayerData->RogueDeath = RogueDeath;
+		PlayerData->RogueKill = RogueKill;
+		PlayerData->RogueTotalKill = RogueTotalKill;
+		PlayerData->UsedData = UsedData;
 		for (int i = 0; i < 10; i++) {
 			PlayerData->DoorOpenCheck[i] = DoorStateCheck[i];
 		}
@@ -422,6 +431,10 @@ void ARogueState::SetDamegedRogue(float Dameged) {
 void ARogueState::SetRogueDeshData(float UseDataValue, float Data) {
 	UseDeshData += UseDataValue;
 	if (UseDeshData >= 5.f) {
+		if (Data > 0)
+			UsedData += Data;
+		else
+			AllData -= Data;
 		CurrentData -= Data;
 		if (CurrentData <= 0)
 			CurrentData = 0;
@@ -434,9 +447,15 @@ void ARogueState::SetRogueDeshData(float UseDataValue, float Data) {
 }
 
 void ARogueState::SetStaticRogueData(int32 UseDataValue) {
-	CurrentData -= UseDataValue;
 	if (UseDataValue < 0)
 		AllData -= UseDataValue;
+	else {
+		if (CurrentData < UseDataValue)
+			UsedData += CurrentData;
+		else
+			UsedData += UseDataValue;
+	}
+	CurrentData -= UseDataValue;
 	if (CurrentData <= 0)
 		CurrentData = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current StaticData : %d"), CurrentData));
@@ -446,9 +465,15 @@ void ARogueState::SetStaticRogueData(int32 UseDataValue) {
 }
 
 void ARogueState::SetDynamicRogueData(int32 UseDataValue) {
-	CurrentData -= UseDataValue * UseDataValuePercent;
 	if (UseDataValue < 0)
-		AllData -= UseDataValue;
+		AllData -= UseDataValue * UseDataValuePercent;
+	else {
+		if (CurrentData < UseDataValue * UseDataValuePercent)
+			UsedData += CurrentData;
+		else
+			UsedData += UseDataValue * UseDataValuePercent;
+	}
+	CurrentData -= UseDataValue * UseDataValuePercent;
 	if (CurrentData <= 0)
 		CurrentData = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("Current DynamicData : %d"), CurrentData));
@@ -472,6 +497,7 @@ void ARogueState::SetPlusCurrentKarma(int32 newKarma) {
 
 void ARogueState::DataInit() {
 	CurrentData = 300;
+	AllData = 300;
 }
 void ARogueState::KarmaInit() {
 	CurrentKarma = 100;
@@ -882,6 +908,16 @@ void ARogueState::SetEquipmentAttackFormString(TCHAR** AttackFormString) {
 	EquipAttackFormRefData[2] = AttackFormString[2];
 }
 
+
+void ARogueState::SetGameState() {
+	GameStateData[0] = GetRogueTotalKill();
+	GameStateData[1] = GetRogueDeath();
+	GameStateData[2] = GetRogueAllData();
+	GameStateData[3] = GetRogueUsedData();
+	GameStateData[4] = GetDungeonClearAllCount();
+	MyGameMode->Widget_ReturnGameStateWidgetDelegate.ExecuteIfBound(GameStateData);
+}
+
 void ARogueState::SetStatData() {
 	StatData[0] = GetRogueFullHp();
 	StatData[1] = GetRogueData();
@@ -1177,6 +1213,7 @@ void ARogueState::DeleteAbility() {
 	WeaponNumber = 1;
 	WeaponElementNumber = 0;
 	TorchElementNumber = 0;
+	RogueKill = 0;
 	LastWeaponDamegeSetting();
 	LastTorchDamegeSetting();
 	LastSpeedSetting();

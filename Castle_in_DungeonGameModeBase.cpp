@@ -64,6 +64,12 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 		EquipmentWidgetClass = EquipmentUIWidget.Class;
 	}
 
+	auto GameStateUIWidget = ConstructorHelpers::FClassFinder<UMyRogueWidget>
+		(TEXT("WidgetBlueprint'/Game/UI/RogueGameState.RogueGameState_C'"));
+	if (GameStateUIWidget.Succeeded()) {
+		GameStateWidgetClass = GameStateUIWidget.Class;
+	}
+
 	auto BurningTotemUIWidget = ConstructorHelpers::FClassFinder<UMyRogueWidget>
 		(TEXT("WidgetBlueprint'/Game/UI/BurningTotemMenu.BurningTotemMenu_C'"));
 	if (BurningTotemUIWidget.Succeeded()) {
@@ -273,6 +279,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -302,6 +309,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -330,6 +338,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -359,6 +368,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(2);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -388,6 +398,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(2);
 		RemoveView(3);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -416,6 +427,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(2);
 		RemoveView(3);
 		RemoveView(4);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -433,6 +445,35 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 			}
 		}
 	}
+	else if (WidgetPageNumber == 6) {
+	Widget_MouseCursorChangedDelegate.ExecuteIfBound(1);
+	if (GameStateWidget != nullptr) {
+		GameStateWidget->RemoveFromViewport();
+		GameStateWidget = nullptr;
+	}
+	RemoveView(0);
+	RemoveView(1);
+	RemoveView(2);
+	RemoveView(3);
+	RemoveView(4);
+	RemoveView(5);
+	RemoveView(7);
+	RemoveView(8);
+	RemoveView(9);
+	RemoveView(10);
+	RemoveView(11);
+	RemoveView(99);
+	RemoveView(-1);
+	RemoveView(-2);
+	RemoveView(-3);
+	if (GameStateWidgetClass != nullptr) {
+		GameStateWidgetState = true;
+		GameStateWidget = Cast<UMyRogueWidget>(CreateWidget(GetWorld(), NewWidgetclass));
+		if (GameStateWidget != nullptr) {
+			GameStateWidget->AddToViewport();
+		}
+	}
+	}
 	else if (WidgetPageNumber == 7) {
 		Widget_MouseCursorChangedDelegate.ExecuteIfBound(1);
 		if (BurningTotemWidget != nullptr) {
@@ -445,6 +486,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(8);
 		RemoveView(9);
 		RemoveView(10);
@@ -473,6 +515,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(9);
 		RemoveView(10);
@@ -501,6 +544,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(10);
@@ -529,6 +573,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -557,6 +602,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -586,6 +632,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -614,6 +661,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -643,6 +691,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -672,6 +721,7 @@ void ACastle_in_DungeonGameModeBase::ChangedWidget(TSubclassOf<UUserWidget> NewW
 		RemoveView(3);
 		RemoveView(4);
 		RemoveView(5);
+		RemoveView(6);
 		RemoveView(7);
 		RemoveView(8);
 		RemoveView(9);
@@ -711,6 +761,9 @@ void ACastle_in_DungeonGameModeBase::GetWidgetNumber(int32 PageNumber) {
 	}
 	else if (WidgetPageNumber == 5) {
 		WidgetPush(EquipmentWidgetClass);
+	}
+	else if (WidgetPageNumber == 6) {
+		WidgetPush(GameStateWidgetClass);
 	}
 	else if (WidgetPageNumber == 7) {
 		WidgetPush(BurningTotemWidgetClass);
@@ -803,6 +856,13 @@ void ACastle_in_DungeonGameModeBase::RemoveView(int32 StateNumber) {
 			EquipmentWidget->RemoveFromViewport();
 			EquipmentWidget = nullptr;
 			EquipmentWidgetState = false;
+		}
+		break;
+	case 6:
+		if (GameStateWidgetState == true) {
+			GameStateWidget->RemoveFromViewport();
+			GameStateWidget = nullptr;
+			GameStateWidgetState = false;
 		}
 		break;
 	case 7:

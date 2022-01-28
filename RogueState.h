@@ -40,12 +40,19 @@ public:
 	void SetPlusCurrentKarma(int32 newKarma);
 
 	int32 GetRogueKill() { return RogueKill; }
-	void setRogueKill(int32 newKill) { RogueKill = newKill; }
+	void setRogueKill(int32 newKill) { RogueKill += newKill; }
+	
+	int32 GetRogueTotalKill() { return RogueTotalKill; }
+	void setRogueTotalKill(int32 newKill) { RogueTotalKill += newKill; }
+	
+	int32 GetRogueDeath() { return RogueDeath; }
+	void setRogueDeath(int32 newDeath) { RogueDeath += newDeath; }
 
 	int32 GetRogueData() { return CurrentData; }
 	void SetStaticRogueData(int32 UseDataValue);
 
 	int32 GetRogueAllData() { return AllData; }
+	int32 GetRogueUsedData() { return UsedData; }
 
 	void SetRogueDeshData(float UseDataValue, float Data);
 
@@ -123,6 +130,7 @@ public:
 	void SetEquipmentStrings();
 	void SetEquipmentAttackFormString(TCHAR** AttackFormString);
 	void SetStatData();
+	void SetGameState();
 	void GetMoveSpeed(float MoveSpeed);
 	int32 GetDialogueIndex();
 	void SetDialogueIndex(int32 NewIndex);
@@ -247,8 +255,11 @@ private:
 	int32 FullMaxHp;
 	int32 CurrentKarma;
 	int32 RogueKill;
+	int32 RogueTotalKill;
+	int32 RogueDeath;
 	int32 CurrentData;
 	int32 AllData;
+	int32 UsedData;
 	int32 DialogueIndex;
 	float UseDataValuePercent;
 	float UseDeshData;
@@ -317,6 +328,7 @@ private:
 	int32 Agility;
 
 	float StatData[16];
+	float GameStateData[5];
 	FString SaveSlotName;
 	FString EquipData[6];
 	int32 EquipNumberData[3];

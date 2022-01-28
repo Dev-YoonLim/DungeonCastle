@@ -49,6 +49,7 @@ void UMyRogueWidget::NativeConstruct() {
 	TabMenuInit();
 	StatMenuInit();
 	EquipMenuInit();
+	GameStateInit();
 	BurningTotemMenuInit();
 	ChangedWeaponMenuInit();
 	ChangedAttackMotionInit();
@@ -79,6 +80,7 @@ void UMyRogueWidget::DelegateInit() {
 	MyGameMode->Return_RogueUseWeaponReferenceDelegate.BindUObject(this, &UMyRogueWidget::Receive_ReturnRogueUseWeaponRef);
 	MyGameMode->Return_RogueTakeAttackFormDelegate.BindUObject(this, &UMyRogueWidget::Return_HaveAttackFormList);
 	MyGameMode->Return_RogueTakeElementalDelegate.BindUObject(this, &UMyRogueWidget::Return_HaveElementalList);
+	MyGameMode->Widget_ReturnGameStateWidgetDelegate.BindUObject(this, &UMyRogueWidget::Return_GameStateData);
 }
 
 void UMyRogueWidget::PageInit() {
@@ -313,6 +315,19 @@ void UMyRogueWidget::StatMenuInit() {
 		RogueStatBackButton->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
 		MyGameMode->Widget_CallStatWidgetDelegate.ExecuteIfBound();
 		PageMain = false;
+	}
+}
+
+void UMyRogueWidget::GameStateInit() {
+	KillCountValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("KillCountBlock")));
+	DeathCountValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("DeathCountBlock")));
+	TotalDataValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("TotalDataBlock")));
+	UsedDataValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("UsedDataBlock")));
+	DungeonClearValue = Cast<UTextBlock>(GetWidgetFromName(TEXT("DungeonClearBlock")));
+	GameStateBackButton = Cast<UButton>(GetWidgetFromName(TEXT("GameStateButtons")));
+	if (GameStateBackButton != nullptr) {
+		GameStateBackButton->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
+		MyGameMode->Widget_CallGameStateWidgetDelegate.ExecuteIfBound();
 	}
 }
 
@@ -874,7 +889,7 @@ void UMyRogueWidget::GetRogueEquip() {
 }
 
 void UMyRogueWidget::GetGameState() {
-	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(6);
+	MyGameMode->GetWidgetNumber(6);
 }
 
 void UMyRogueWidget::GetBurningTotemMenu() {
@@ -958,6 +973,18 @@ void UMyRogueWidget::GetRogueKarmaValue(int32 SetKarma) {
 	RogueKarmaString = FString::Printf(TEXT("%d"), RogueKarma);
 	if (PageMain == true)
 		RogueKarmaValue->SetText(FText::FromString(RogueKarmaString));
+}
+
+void UMyRogueWidget::Return_GameStateData(float* SetData) {
+	FString GameStateValueText[5];
+	for (int i = 0; i < 5; i++) {
+		GameStateValueText[i] = FString::Printf(TEXT("%.0f"), SetData[i]);
+	}
+	KillCountValue->SetText(FText::FromString(GameStateValueText[0]));
+	DeathCountValue->SetText(FText::FromString(GameStateValueText[1]));
+	TotalDataValue->SetText(FText::FromString(GameStateValueText[2]));
+	UsedDataValue->SetText(FText::FromString(GameStateValueText[3]));
+	DungeonClearValue->SetText(FText::FromString(GameStateValueText[4]));
 }
 
 void UMyRogueWidget::GetRogueStatValue(float* SetData) {

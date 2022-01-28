@@ -1384,6 +1384,7 @@ void ARogue::DeathZoneDirectDie() {
 }
 
 void ARogue::RogueDie() {
+	MyRogueState->setRogueDeath(1);
 	MyGameMode->NewGameStart = true;
 	MyRogueState->SetSaveState(true);
 	MyRogueState->DeleteAbility();
