@@ -58,7 +58,9 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UCheckBox* CheckBox;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-		class UCheckBox* CheckBox2;
+		class UCheckBox* KorCheckBox;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+		class UCheckBox* EngCheckBox;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 		class UButton* NewGameButton;
@@ -458,6 +460,8 @@ public:
 	UFUNCTION(BlueprintCallable) void SetFOVVolume(float Value);
 	UFUNCTION(BlueprintCallable) void ChangeHeadShake(bool Check);
 	UFUNCTION(BlueprintCallable) void ChangeTrdCamera(bool Check);
+	UFUNCTION(BlueprintCallable) void ChangeLanguageKor(bool Check);
+	UFUNCTION(BlueprintCallable) void ChangeLanguageEng(bool Check);
 
 		/*UFUNCTION(BlueprintCallable)	   X-Slash");
 			void SlashButtonsFuntion();		   DownUpperCombo"

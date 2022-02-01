@@ -15,6 +15,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	WidgetPrePageNumber = 0;
 	WidgetCount = 0;
 	GameStartCheck = 0;
+	LanguageType = 0;
 	NewGameStart = true;
 	GameSettingOn = false;
 	

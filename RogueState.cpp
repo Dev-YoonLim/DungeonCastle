@@ -218,6 +218,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
 	myRogue->RogueHeadShake = LoadGame->HeadTracking;
 	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
+	MyGameMode->LanguageType = LoadGame->LanguageType;
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
@@ -310,6 +311,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->SubDialogueIndex = myRogue->GetSubDialogueIndex();
 		PlayerData->SubDialogueKinds = myRogue->GetSubDialogueKinds();
 		PlayerData->HeadTracking = myRogue->RogueHeadShake;
+		PlayerData->LanguageType = MyGameMode->LanguageType;
 		//PlayerData->LastLocation = myRogue->GetActorLocation();
 
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
@@ -1516,50 +1518,86 @@ void ARogueState::DialgoueStateInit() {
 }
 
 void ARogueState::DialogueRefInit() {
-	StartDialogueSourceRef[0] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Opening_0.Opening_0'");
-	StartDialogueSourceRef[1] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/PupleFire_Item.PupleFire_Item'");
-	StartDialogueSourceRef[2] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Castle_main_in.Castle_main_in'");
-	StartDialogueSourceRef[3] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Enemy.Enemy'");
-	StartDialogueSourceRef[4] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_One.Smelting_One'");
-	StartDialogueSourceRef[5] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Two.Smelting_Two'");
-	StartDialogueSourceRef[6] = TEXT("FileMediaSource'/Game/Dialogue_Video/Source/First/Smelting_Three.Smelting_Three'");
+	StartDialogueSourceRef[0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/Opening_0.Opening_0'");
+	StartDialogueSourceRef[1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/PupleFire_Item.PupleFire_Item'");
+	StartDialogueSourceRef[2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/Castle_main_in.Castle_main_in'");
+	StartDialogueSourceRef[3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/Enemy.Enemy'");
+	StartDialogueSourceRef[4][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/Smelting_One.Smelting_One'");
+	StartDialogueSourceRef[5][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/Smelting_Two.Smelting_Two'");
+	StartDialogueSourceRef[6][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Tutorial/Smelting_Three.Smelting_Three'");
 
-	StartDialogueSoundRef[0] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'");
+	StartDialogueSourceRef[0][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/Opening_0.Opening_0'");
+	StartDialogueSourceRef[1][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/PupleFire_Item.PupleFire_Item'");
+	StartDialogueSourceRef[2][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/Castle_main_in.Castle_main_in'");
+	StartDialogueSourceRef[3][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/Enemy.Enemy'");
+	StartDialogueSourceRef[4][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/Smelting_One.Smelting_One'");
+	StartDialogueSourceRef[5][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/Smelting_Two.Smelting_Two'");
+	StartDialogueSourceRef[6][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Tutorial/Smelting_Three.Smelting_Three'");
+
+	StartDialogueSourceRef[0][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'");
+	StartDialogueSourceRef[1][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GetFire_Cue.GetFire_Cue'");
+	StartDialogueSourceRef[2][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/StartCamp_Cue.StartCamp_Cue'");
+	StartDialogueSourceRef[3][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstEnemy_Cue.FirstEnemy_Cue'");
+	StartDialogueSourceRef[4][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstBonFire_Cue.FirstBonFire_Cue'");
+	StartDialogueSourceRef[5][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/SecondBonFire_Cue.SecondBonFire_Cue'");
+	StartDialogueSourceRef[6][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");
+
+	/*StartDialogueSoundRef[0] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GameStart_Cue.GameStart_Cue'");
 	StartDialogueSoundRef[1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/GetFire_Cue.GetFire_Cue'");
 	StartDialogueSoundRef[2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/StartCamp_Cue.StartCamp_Cue'");
 	StartDialogueSoundRef[3] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstEnemy_Cue.FirstEnemy_Cue'");
 	StartDialogueSoundRef[4] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/FirstBonFire_Cue.FirstBonFire_Cue'");
 	StartDialogueSoundRef[5] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/SecondBonFire_Cue.SecondBonFire_Cue'");
-	StartDialogueSoundRef[6] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");
+	StartDialogueSoundRef[6] = TEXT("SoundCue'/Game/Movies/NewDialogue/Tutorial/Audio/ThirdBonFire_Cue.ThirdBonFire_Cue'");*/
 
-	MainStoryDialogueSourceRef[0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_1.Main1_1'");
-	MainStoryDialogueSourceRef[0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_1_Cue.Main1_1_Cue'");
-	MainStoryDialogueSourceRef[1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_2.Main1_2'");
-	MainStoryDialogueSourceRef[1][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_2_Cue.Main1_2_Cue'");
-	MainStoryDialogueSourceRef[2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_3.Main1_3'");
-	MainStoryDialogueSourceRef[2][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_3_Cue.Main1_3_Cue'");
-	MainStoryDialogueSourceRef[3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_4.Main1_4'");
-	MainStoryDialogueSourceRef[3][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_4_Cue.Main1_4_Cue'");
-	MainStoryDialogueSourceRef[4][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_5.Main1_5'");
-	MainStoryDialogueSourceRef[4][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_5_Cue.Main1_5_Cue'");
-
-	SubStoryDialogueSourceRef[0][0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_1.Sub1_1'");
-	SubStoryDialogueSourceRef[0][0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_1_Cue.Sub1_1_Cue'");
-	SubStoryDialogueSourceRef[0][1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_2.Sub1_2'");
-	SubStoryDialogueSourceRef[0][1][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_2_Cue.Sub1_2_Cue'");
-	SubStoryDialogueSourceRef[0][2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_3.Sub1_3'");
-	SubStoryDialogueSourceRef[0][2][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_3_Cue.Sub1_3_Cue'");
-	SubStoryDialogueSourceRef[0][3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_4.Sub1_4'");
-	SubStoryDialogueSourceRef[0][3][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_4_Cue.Sub1_4_Cue'");
 	
-	SubStoryDialogueSourceRef[1][0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_1.Sub2_1'");
-	SubStoryDialogueSourceRef[1][0][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_1_Cue.Sub2_1_Cue'");
-	SubStoryDialogueSourceRef[1][1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_2.Sub2_2'");
-	SubStoryDialogueSourceRef[1][1][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_2_Cue.Sub2_2_Cue'");
-	SubStoryDialogueSourceRef[1][2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_3.Sub2_3'");
-	SubStoryDialogueSourceRef[1][2][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_3_Cue.Sub2_3_Cue'");
-	SubStoryDialogueSourceRef[1][3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_4.Sub2_4'");
-	SubStoryDialogueSourceRef[1][3][1] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_4_Cue.Sub2_4_Cue'");
+	MainStoryDialogueSourceRef[0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Main/Main1_1.Main1_1'");
+	MainStoryDialogueSourceRef[1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Main/Main1_2.Main1_2'");
+	MainStoryDialogueSourceRef[2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Main/Main1_3.Main1_3'");
+	MainStoryDialogueSourceRef[3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Main/Main1_4.Main1_4'");
+	MainStoryDialogueSourceRef[4][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Main/Main1_5.Main1_5'");
+
+	MainStoryDialogueSourceRef[0][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_1.Main1_1'");
+	MainStoryDialogueSourceRef[1][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_2.Main1_2'");
+	MainStoryDialogueSourceRef[2][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_3.Main1_3'");
+	MainStoryDialogueSourceRef[3][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_4.Main1_4'");
+	MainStoryDialogueSourceRef[4][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Main/Main1_5.Main1_5'");
+
+	MainStoryDialogueSourceRef[0][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_1_Cue.Main1_1_Cue'");
+	MainStoryDialogueSourceRef[1][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_2_Cue.Main1_2_Cue'");
+	MainStoryDialogueSourceRef[2][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_3_Cue.Main1_3_Cue'");
+	MainStoryDialogueSourceRef[3][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_4_Cue.Main1_4_Cue'");
+	MainStoryDialogueSourceRef[4][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Main/Audio/Main1_5_Cue.Main1_5_Cue'");
+
+	SubStoryDialogueSourceRef[0][0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub1/Sub1_1.Sub1_1'");
+	SubStoryDialogueSourceRef[0][1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub1/Sub1_2.Sub1_2'");
+	SubStoryDialogueSourceRef[0][2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub1/Sub1_3.Sub1_3'");
+	SubStoryDialogueSourceRef[0][3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub1/Sub1_4.Sub1_4'");
+
+	SubStoryDialogueSourceRef[0][0][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_1.Sub1_1'");
+	SubStoryDialogueSourceRef[0][1][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_2.Sub1_2'");
+	SubStoryDialogueSourceRef[0][2][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_3.Sub1_3'");
+	SubStoryDialogueSourceRef[0][3][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub1/Sub1_4.Sub1_4'");
+
+	SubStoryDialogueSourceRef[0][0][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_1_Cue.Sub1_1_Cue'");
+	SubStoryDialogueSourceRef[0][1][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_2_Cue.Sub1_2_Cue'");
+	SubStoryDialogueSourceRef[0][2][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_3_Cue.Sub1_3_Cue'");
+	SubStoryDialogueSourceRef[0][3][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub1/Audio/Sub1_4_Cue.Sub1_4_Cue'");
+	
+	SubStoryDialogueSourceRef[1][0][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub2/Sub2_1.Sub2_1'");
+	SubStoryDialogueSourceRef[1][1][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub2/Sub2_2.Sub2_2'");
+	SubStoryDialogueSourceRef[1][2][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub2/Sub2_3.Sub2_3'");
+	SubStoryDialogueSourceRef[1][3][0] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Eng/Sub/Sub2/Sub2_4.Sub2_4'");
+
+	SubStoryDialogueSourceRef[1][0][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_1.Sub2_1'");
+	SubStoryDialogueSourceRef[1][1][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_2.Sub2_2'");
+	SubStoryDialogueSourceRef[1][2][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_3.Sub2_3'");
+	SubStoryDialogueSourceRef[1][3][1] = TEXT("FileMediaSource'/Game/Movies/NewDialogue/Sub/Sub2/Sub2_4.Sub2_4'");
+
+	SubStoryDialogueSourceRef[1][0][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_1_Cue.Sub2_1_Cue'");
+	SubStoryDialogueSourceRef[1][1][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_2_Cue.Sub2_2_Cue'");
+	SubStoryDialogueSourceRef[1][2][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_3_Cue.Sub2_3_Cue'");
+	SubStoryDialogueSourceRef[1][3][2] = TEXT("SoundCue'/Game/Movies/NewDialogue/Sub/Sub2/Audio/Sub2_4_Cue.Sub2_4_Cue'");
 }
 
 void ARogueState::PlusDungeonClearCount(int32 DungeonIndex) {

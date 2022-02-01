@@ -152,6 +152,9 @@ public:
 	UPROPERTY()
 		int32 DoorOpenCheck[10];
 
+	UPROPERTY()
+		int32 LanguageType;
+
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()

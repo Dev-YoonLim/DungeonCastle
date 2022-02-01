@@ -230,13 +230,26 @@ void UMyRogueWidget::ControllUIInit() {
 	FOVSlider = Cast<USlider>(GetWidgetFromName(TEXT("FOVSlide")));
 	FOVValues = Cast<UTextBlock>(GetWidgetFromName(TEXT("FOVValue")));
 	CheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs")));
-	//CheckBox2 = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs2")));
+	KorCheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("KoreanCheck")));
+	EngCheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("EnglishCheck")));
 	if (CheckBox != nullptr) {
 		if(MyRogue->ViewArm->bUsePawnControlRotation == true)
 			CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
 		else
 			CheckBox->SetCheckedState(ECheckBoxState::Checked);
 		CheckBox->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeHeadShake);
+	}
+	if (KorCheckBox != nullptr && EngCheckBox != nullptr) {
+		if (MyGameMode->LanguageType == 0) {
+			KorCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+			EngCheckBox->SetCheckedState(ECheckBoxState::Checked);
+		}
+		else if (MyGameMode->LanguageType == 1) {
+			KorCheckBox->SetCheckedState(ECheckBoxState::Checked);
+			EngCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+		}
+		EngCheckBox->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeLanguageEng);
+		KorCheckBox->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeLanguageKor);
 	}
 	
 	/*if (CheckBox2 != nullptr) {
@@ -804,6 +817,16 @@ void UMyRogueWidget::ChangeHeadShake(bool Check) {
 	MyGameMode->Call_HeadShakeDelegate.ExecuteIfBound(Check);
 	//MyRogue->ViewArm->bUsePawnControlRotation = Check;
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+}
+
+void UMyRogueWidget::ChangeLanguageEng(bool Check) {
+	KorCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+	MyGameMode->LanguageType = 0;
+}
+
+void UMyRogueWidget::ChangeLanguageKor(bool Check) {
+	EngCheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+	MyGameMode->LanguageType = 1;
 }
 
 void UMyRogueWidget::ChangeTrdCamera(bool Check) {

@@ -367,6 +367,7 @@ public:
 	FTimerHandle RevivalAlphaPlusTimeHandle;
 	FTimerHandle RevivalAlphaMinusTimeHandle;
 	FTimerHandle TitleBorderBlackTimeHandle;
+	int32 LanguageType;
 	int32 StageCount = 0;
 	int32 StageX = 0;
 	int32 StageY = 0;
