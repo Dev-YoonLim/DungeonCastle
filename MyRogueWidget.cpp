@@ -43,7 +43,6 @@ void UMyRogueWidget::NativeConstruct() {
 		TEXT("Font'/Game/Fonts/Cardo-Regular_Font.Cardo-Regular_Font'")));
 	WorldGameModeInit();
 	DelegateInit();
-	TitleMenuInit();
 	MainMenuInit();
 	ReSumeMenuInit();
 	TabMenuInit();
@@ -62,6 +61,7 @@ void UMyRogueWidget::NativeConstruct() {
 	ToolTipInit();
 	PageInit();
 	ControllUIInit();
+	TitleMenuInit();
 	//MyGameMode->Widget_StatDataDelegate.BindUObject(this, &UMyRogueWidget::GetRogueStatValue);
 	//MyGameMode->Widget_GetRogueEquipmentDelegate.BindUObject(this, &UMyRogueWidget::GetRogueEquipmentValue);
 	//MyGameMode->Widget_AbilityListDelegate.BindUObject(this, &UMyRogueWidget::GetRogueAbilityIndexAndString);
@@ -232,8 +232,12 @@ void UMyRogueWidget::ControllUIInit() {
 	CheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("CheckBoxs")));
 	KorCheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("KoreanCheck")));
 	EngCheckBox = Cast<UCheckBox>(GetWidgetFromName(TEXT("EnglishCheck")));
+	if (ControllBack != nullptr) {
+		MyRogue->MyRogueState->GameSettingSaveInit();
+		ControllBack->OnClicked.AddDynamic(this, &UMyRogueWidget::SaveSetting);
+	}
 	if (CheckBox != nullptr) {
-		if(MyRogue->ViewArm->bUsePawnControlRotation == true)
+		if(MyRogue->RogueHeadShake == false)
 			CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
 		else
 			CheckBox->SetCheckedState(ECheckBoxState::Checked);
@@ -260,9 +264,6 @@ void UMyRogueWidget::ControllUIInit() {
 		CheckBox2->OnCheckStateChanged.AddDynamic(this, &UMyRogueWidget::ChangeTrdCamera);
 	}*/
 	
-	if (ControllBack != nullptr) {
-		ControllBack->OnClicked.AddDynamic(this, &UMyRogueWidget::GetBackButton);
-	}
 	if (SoundSlider != nullptr) {
 		SoundSlider->SetValue(MyGameMode->FXSoundClass->Properties.Volume);
 		SoundSlider->OnValueChanged.AddDynamic(this, &UMyRogueWidget::SetSoundVolume);
@@ -835,18 +836,20 @@ void UMyRogueWidget::ChangeTrdCamera(bool Check) {
 }
 
 void UMyRogueWidget::SetSoundVolume(float Value) {
+	//Sound = Value;
 	MyGameMode->FXSoundClass->Properties.Volume = Value;
 	FText ValueText = FText::FromString(FString::Printf(TEXT("%.0f"), SoundSlider->GetValue() * 100.f / 3.f));
 	SoundVolumeValues->SetText(ValueText);
-	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+	//MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 }
 
 void UMyRogueWidget::SetFOVVolume(float Value) {
+	//FOV = 100 * Value;
 	MyGameMode->FOVValue = 100 * Value;
 	MyGameMode->Call_RogueFOVDelegate.ExecuteIfBound(MyGameMode->FOVValue);
 	FText ValueText = FText::FromString(FString::Printf(TEXT("%.0f"), FOVSlider->GetValue() * 100.f));
 	FOVValues->SetText(ValueText);
-	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
+	//MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();
 }
 
 void UMyRogueWidget::GetExitGame() {
@@ -864,8 +867,13 @@ void UMyRogueWidget::GetBackButton() {
 	MyGameMode->WidgetPop();
 }
 
+void UMyRogueWidget::SaveSetting() {
+	MyGameMode->Call_GameSettingSaveDelegate.ExecuteIfBound();
+	MyGameMode->WidgetPop();
+}
+
 void UMyRogueWidget::GetTitleMenu() {
-	UGameplayStatics::OpenLevel(this, FName(TEXT("StartMap")), false);
+	UGameplayStatics::OpenLevel(this, FName(TEXT("StartMap_2")), false);
 	
 }
 
@@ -886,6 +894,7 @@ void UMyRogueWidget::GetKeyMenu() {
 }
 
 void UMyRogueWidget::GetRogueMain() {
+	//MyGameMode->GameStartCheck = 0;
 	MyGameMode->StageIndex = 0;
 	MyGameMode->StageSubIndex = 0;
 	MyGameMode->Call_GameSaveDelegate.ExecuteIfBound();

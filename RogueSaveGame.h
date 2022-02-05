@@ -78,11 +78,7 @@ public:
 	UPROPERTY()
 		bool DungeonIn;
 
-	UPROPERTY()
-		float FXSoundVolume;
-
-	UPROPERTY()
-		float FOVValue;
+	
 
 	UPROPERTY()
 		int32 StoryProgress[3];
@@ -122,8 +118,7 @@ public:
 	UPROPERTY()
 		float RogueMoveSpeed;
 
-	UPROPERTY()
-		bool HeadTracking;
+	
 
 	UPROPERTY()
 		bool RollingTrdCamera;
@@ -152,8 +147,6 @@ public:
 	UPROPERTY()
 		int32 DoorOpenCheck[10];
 
-	UPROPERTY()
-		int32 LanguageType;
 
 	/*UPROPERTY()
 		int32 AttackIncreaseValue[3];

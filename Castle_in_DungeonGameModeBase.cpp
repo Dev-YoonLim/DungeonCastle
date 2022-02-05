@@ -14,7 +14,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	WidgetPageNumber = 0;
 	WidgetPrePageNumber = 0;
 	WidgetCount = 0;
-	GameStartCheck = 0;
+	GameStartCheck = -1;
 	LanguageType = 0;
 	NewGameStart = true;
 	GameSettingOn = false;
@@ -139,15 +139,19 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	else {
 		LoadGameData(LoadGame);
 	}
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap") || UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap_2") || UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
 		StageIndex = 0;
+		if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap_2"))
+			GameStartCheck = -1;
+		else
+			GameStartCheck = 0;
 	}
 	if(GameStartCheck == 0)
 		GetWidgetNumber(-1);
 	else
-		GetWidgetNumber(0);
+		GetWidgetNumber(-1);
 	
-	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap"))
+	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_2"))
 		LevelLoading();
 }
 
@@ -155,8 +159,8 @@ void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
 	URogueSaveGame* LoadGame = Cast<URogueSaveGame>(LoadData);
 	StageIndex = LoadGame->StageIndex;
 	StageSubIndex = LoadGame->StageSubIndex;
-	FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
-	FOVValue = LoadGame->FOVValue;
+	//FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
+	//FOVValue = LoadGame->FOVValue;
 	//for(int i = 0; i < 3; i ++)
 		//StoryProgress[i] = LoadGame->StoryProgress[i];
 	//myRogue->SetActorLocation(LoadGame->LastLocation);

@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "Castle_in_DungeonGameModeBase.h"
 #include "RogueSaveGame.h"
+#include "GameSettingSave.h"
 #include "Door.h"
 #include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
@@ -236,9 +237,11 @@ public:
 	void LastSpeedSetting();
 	void DeleteAbility();
 	void SaveGameData();
-	void SaveSettingData();
+	void SaveGameSetting();
 	void RogueDataInit();
+	void GameSettingSaveInit();
 	void LoadGameData(URogueSaveGame* SaveData);
+	void LoadGameSetting(UGameSettingSave* SaveSettingData);
 	void DialogueRefInit();
 	void DialgoueStateInit();
 	void PlusDungeonClearCount(int32 DungeonIndex);
@@ -330,6 +333,7 @@ private:
 	float StatData[16];
 	float GameStateData[5];
 	FString SaveSlotName;
+	FString GameSettingName;
 	FString EquipData[6];
 	int32 EquipNumberData[3];
 	TCHAR* EquipAttackFormVideoData[3];

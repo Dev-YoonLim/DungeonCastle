@@ -66,6 +66,7 @@ void ARogueState::AbilityInit() {
 	TorchLevelValue = 1.f + TorchLevel * 0.05;
 	ElementLevelValue = 1.f + ElementLevel * 0.05;
 	SaveSlotName = TEXT("SaveSlot");
+	GameSettingName = TEXT("GameSettingSave");
 	DialogueIndex = 0;
 }
 
@@ -106,11 +107,34 @@ void ARogueState::BeginPlay() {
 	MyGameMode->Call_TakeAttackFormDelegate.BindUObject(this, &ARogueState::AttackFormChange);
 	MyGameMode->Call_RogueDamageDelegate.BindUObject(this, &ARogueState::SetDamegedRogue);
 	MyGameMode->Call_GameSaveDelegate.BindUObject(this, &ARogueState::SaveGameData);
-	MyGameMode->Call_GameSettingSaveDelegate.BindUObject(this, &ARogueState::SaveSettingData);
+	MyGameMode->Call_GameSettingSaveDelegate.BindUObject(this, &ARogueState::SaveGameSetting);
 	//RogueDataInit();
 	//Call_RogueStartAttackFormNumber();
 	//Call_RogueStartWeaponNumber();
 	//Call_RogueStartTorchElementalNumber();
+}
+
+void ARogueState::GameSettingSaveInit() {
+	UGameSettingSave* LoadSetting = Cast<UGameSettingSave>(UGameplayStatics::LoadGameFromSlot(GameSettingName, 0));
+	if (LoadSetting == nullptr) {
+		//MyGameMode->NewGameStart = true;
+		GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Orange, FString::Printf(TEXT("LoadFailCheck")));
+		LoadSetting = GetMutableDefault<UGameSettingSave>();
+	}
+	else {
+		//MyGameMode->NewGameStart = false;
+		LoadGameSetting(LoadSetting);
+	}
+	SaveGameSetting();
+}
+
+void ARogueState::LoadGameSetting(UGameSettingSave* LoadSettingData) {
+	UGameSettingSave* LoadSettings = Cast<UGameSettingSave>(LoadSettingData);
+	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	MyGameMode->FXSoundClass->Properties.Volume = LoadSettings->FXSoundVolume;
+	MyGameMode->FOVValue = LoadSettings->FOVValue;
+	myRogue->RogueHeadShake = LoadSettings->HeadTracking;
+	MyGameMode->LanguageType = LoadSettings->LanguageType;
 }
 
 void ARogueState::RogueDataInit() {
@@ -164,8 +188,8 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
 		SetElementLevelUp();
 	}
-	MyGameMode->FXSoundClass->Properties.Volume = LoadGame->FXSoundVolume;
-	MyGameMode->FOVValue = LoadGame->FOVValue;
+	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
+
 	MyGameMode->StageIndex = LoadGame->StageIndex;
 	MyGameMode->StageSubIndex = LoadGame->StageSubIndex;
 	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("Load Stage Index %d"), LoadGame->StageIndex));
@@ -196,7 +220,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 		AttackForm[i] = LoadGame->AttackForm[i];
 		AttackFormIndex[i] = LoadGame->AttackFormDetail[i];
 	}
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) == TEXT("StartMap")) {
+	if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) == TEXT("StartMap_2")) {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}
@@ -216,20 +240,24 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	myRogue->SetSubDialogueIndex(LoadGame->SubDialogueIndex);
 	myRogue->SetSubDialogueKinds(LoadGame->SubDialogueKinds);
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
-	myRogue->RogueHeadShake = LoadGame->HeadTracking;
-	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
-	MyGameMode->LanguageType = LoadGame->LanguageType;
+	
 	/*else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}*/
 }
 
-void ARogueState::SaveSettingData() {
-	URogueSaveGame* PlayerData = NewObject<URogueSaveGame>();
+void ARogueState::SaveGameSetting() {
+	UGameSettingSave* SettingData = NewObject<UGameSettingSave>();
+	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSettingSave")));
-	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
-	PlayerData->FOVValue = MyGameMode->FOVValue;
+	SettingData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
+	SettingData->FOVValue = MyGameMode->FOVValue;
+	SettingData->HeadTracking = myRogue->RogueHeadShake;
+	SettingData->LanguageType = MyGameMode->LanguageType;
+	if (UGameplayStatics::SaveGameToSlot(SettingData, GameSettingName, 0) == false) {
+		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
+	}
 }
 
 void ARogueState::SaveGameData() {
@@ -238,9 +266,11 @@ void ARogueState::SaveGameData() {
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
 	//ShortCutDoor = Cast<TArray<ADoor>>(UGameplayStatics::GetActorOfClass(GetWorld(), ADoor::StaticClass()));
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
-	PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
-	PlayerData->FOVValue = MyGameMode->FOVValue;
-	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap") && SaveState == true) {
+	if (SaveState == true) {
+		/*PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
+		PlayerData->FOVValue = MyGameMode->FOVValue;
+		PlayerData->HeadTracking = myRogue->RogueHeadShake;
+		PlayerData->LanguageType = MyGameMode->LanguageType;*/
 		PlayerData->DialogueTutorialCount = DialogueTutorialCount;
 		PlayerData->StageIndex = MyGameMode->StageIndex;
 		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
@@ -310,8 +340,6 @@ void ARogueState::SaveGameData() {
 		PlayerData->MainDialogueIndex = myRogue->GetMainDialogueIndex();
 		PlayerData->SubDialogueIndex = myRogue->GetSubDialogueIndex();
 		PlayerData->SubDialogueKinds = myRogue->GetSubDialogueKinds();
-		PlayerData->HeadTracking = myRogue->RogueHeadShake;
-		PlayerData->LanguageType = MyGameMode->LanguageType;
 		//PlayerData->LastLocation = myRogue->GetActorLocation();
 
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));

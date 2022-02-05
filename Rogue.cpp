@@ -415,7 +415,7 @@ void ARogue::RogueWeaponNumberInit(int32 WeaponNumbers) {
 }
 
 bool ARogue::IdleState() {
-	if (GetCharacterMovement()->IsFalling() == true) {
+	if (GetCharacterMovement()->IsFalling() == true && NotRogueDie() == true) {
 		myAnimInst->Idle();
 		Falling = true;
 	}
@@ -1309,6 +1309,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 			MyRogueState->MoveSpeedIncreaseCountValue = 1.f;
 			SetMultiplySpeed(0.1f);
 			MyRogueState->RogueDataInit();
+			MyRogueState->GameSettingSaveInit();
 			MyRogueState->Call_RogueStartWeaponNumber();
 			MyRogueState->Call_RogueStartAttackFormNumber();
 			MyRogueState->Call_RogueStartTorchElementalNumber();
@@ -1344,7 +1345,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 					BeepCall();
 				}
 			}
-			else {
+			else if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_2")){
 				//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("SubDialogue : %d"), MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 				MyRogueState->TaskLevel = MyGameMode->StageIndex + 5;
 				if (SubDialogueIndex == 4) {
@@ -1377,6 +1378,7 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 }
 
 void ARogue::DeathZoneDamege() {
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DeathZones1")));
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(50);
 	TakeHitState(FMath::RandRange(0, 5));
 	if (RogueHp <= 0) {
@@ -1388,6 +1390,7 @@ void ARogue::DeathZoneDamege() {
 }
 
 void ARogue::DeathZoneDirectDie() {
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("DeathZones2")));
 	MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(9999);
 	RogueDieState(FMath::RandRange(0, 5));
 	GetWorldTimerManager().SetTimer(RogueDieTimeHandle, this, &ARogue::RogueDie, 2, false, 4);

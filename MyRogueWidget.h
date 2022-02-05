@@ -371,6 +371,7 @@ public:
 	UFUNCTION(BlueprintCallable) void GetRogueMain();
 	UFUNCTION(BlueprintCallable) void GetTitleMenu();
 	UFUNCTION(BlueprintCallable) void GetBackButton();
+	UFUNCTION(BlueprintCallable) void SaveSetting();
 	
 	UFUNCTION(BlueprintCallable) void GetTabMenu();
 	UFUNCTION(BlueprintCallable) void GetRogueStat();
@@ -628,6 +629,11 @@ public:
 	UMediaPlayer* TestPlayer;
 	
 	USoundCue* SelectSound;
+	FString SaveSlotName;
+	float FOV;
+	float Sound;
+	int32 Language;
+	bool HeadShackCheck;
 	//UTexture2D WeaponTexture;
 
 };
