@@ -149,9 +149,9 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	if(GameStartCheck == 0)
 		GetWidgetNumber(-1);
 	else
-		GetWidgetNumber(-1);
+		GetWidgetNumber(0);
 	
-	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_2"))
+	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_3") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_2"))
 		LevelLoading();
 }
 

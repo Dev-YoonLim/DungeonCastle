@@ -198,7 +198,10 @@ void ARogue::DialogueVideoPlay() {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
 			MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
-			MainDialogueIndex++;
+			if(MainDialogueIndex < 4)
+				MainDialogueIndex++;
+			if (MainDialogueIndex > 4)
+				MyRogueState->MainDialogueState[MainDialogueIndex] = 2;
 		}
 	}
 	else if (DialogueKinds == 2 && MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] == 0 && MyRogueState->GetRogueAllData() > SubDialogueIndex * 500) {
@@ -215,10 +218,14 @@ void ARogue::DialogueVideoPlay() {
 			DialoguePlayer->OpenSource(DialogueSource);
 			DialogueSound->Play();
 			MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 2;
-			SubDialogueIndex++;
-			if (SubDialogueIndex == 4) {
+			if(SubDialogueKinds < 2 && SubDialogueIndex < 4)
+				SubDialogueIndex++;
+			if (SubDialogueIndex == 4 ) {
 				SubDialogueKinds++;
 				SubDialogueIndex = 0;
+			}
+			if (SubDialogueKinds > 1) {
+				MyRogueState->SubDialogueState[SubDialogueKinds][SubDialogueIndex] = 2;
 			}
 		}
 	}
@@ -1341,12 +1348,12 @@ void ARogue::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 						MyRogueState->TaskLevel = 9;
 					else
 						MyRogueState->TaskLevel = 10;
-					GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("MainDialogue")));
+					GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("MainDialogue : %d"), MainDialogueIndex));
 					BeepCall();
 				}
 			}
 			else if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_2")){
-				//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("SubDialogue : %d"), MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
+				GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("SubDialogue : %d"), MyRogueState->SubStoryDialogueSourceRef[SubDialogueKinds][SubDialogueIndex][0]));
 				MyRogueState->TaskLevel = MyGameMode->StageIndex + 5;
 				if (SubDialogueIndex == 4) {
 					SubDialogueKinds++;

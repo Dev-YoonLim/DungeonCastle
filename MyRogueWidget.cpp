@@ -15,6 +15,7 @@ void UMyRogueWidget::WorldGameModeInit() {
 	MyGameMode = Cast<ACastle_in_DungeonGameModeBase>(GameMode);
 	APawn* myPawn = Cast<APawn>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	MyRogue = Cast<ARogue>(myPawn);
+	ElementIconInit();
 	//if (UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap"))
 		//MyRogueState = Cast<ARogueState>(myPawn->GetPlayerState());
 	//AActor* WeaponActor = UGameplayStatics::GetActorOfClass(TheWorld, TSubclassOf<AActor>(ARogueWeapon::StaticClass()));
@@ -30,7 +31,7 @@ void UMyRogueWidget::NativeConstruct() {
 	}
 	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("WidgetOn")));
 
-	ElementIconInit();
+	//ElementIconInit();
 	AbilityListString();
 	WeaponListString();
 	AttackFormString();
