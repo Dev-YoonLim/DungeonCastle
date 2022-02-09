@@ -14,7 +14,7 @@ ACastle_in_DungeonGameModeBase::ACastle_in_DungeonGameModeBase(){
 	WidgetPageNumber = 0;
 	WidgetPrePageNumber = 0;
 	WidgetCount = 0;
-	GameStartCheck = -1;
+	GameStartCheck = 1;
 	LanguageType = 0;
 	NewGameStart = true;
 	GameSettingOn = false;
@@ -142,11 +142,11 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap_2") || UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("Stage0")) {
 		StageIndex = 0;
 		if (UGameplayStatics::GetCurrentLevelName(GetWorld()) == TEXT("StartMap_2"))
-			GameStartCheck = -1;
-		else
 			GameStartCheck = 0;
+		else
+			GameStartCheck = 1;
 	}
-	if(GameStartCheck == 0)
+	if(GameStartCheck == 1)
 		GetWidgetNumber(-1);
 	else
 		GetWidgetNumber(0);
