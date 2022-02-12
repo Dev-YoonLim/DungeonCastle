@@ -245,13 +245,14 @@ public:
 	void DialogueRefInit();
 	void DialgoueStateInit();
 	void PlusDungeonClearCount(int32 DungeonIndex);
-	int32 GetDungeonClearCount(int32 DungeonIndex);
-	int32 GetDungeonClearAllCount();
+	UFUNCTION(BlueprintCallable)
+		int32 GetDungeonClearCount(int32 DungeonIndex);
+	UFUNCTION(BlueprintCallable)
+		int32 GetDungeonClearAllCount();
 	//void GetRogue();
 
 public:
 	ACastle_in_DungeonGameModeBase* MyGameMode;
-
 
 private:
 	int32 RogueHp;
@@ -405,8 +406,10 @@ private:
 	bool Mad;
 	bool Stablity;
 
-	int32 DungeonClearCount[3];
-	int32 DungeonClearAllCount;
+	UPROPERTY(EditAnywhere)
+		int32 DungeonClearCount[3];
+	UPROPERTY(EditAnywhere)
+		int32 DungeonClearAllCount;
 
 
 

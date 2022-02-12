@@ -26,6 +26,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
+	UFUNCTION(BlueprintCallable)
+		void EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor
+			, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 public:
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* EndingBox;

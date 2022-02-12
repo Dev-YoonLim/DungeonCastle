@@ -375,8 +375,6 @@ public:
 	int32 NextDirection = 0;
 	int32 PreDirectionIndex = 0;
 	int32 NextDirectionIndex = 0;
-	int32 StageIndex;
-	int32 StageSubIndex;
 	bool NextStageDirection[4];
 	bool FloorUp = false;
 	bool LevelFloorCheck1[5][5];
@@ -391,4 +389,9 @@ public:
 
 	int32 StoryProgress[3];
 	int32 SpecialStoryProgress[3];
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 StageIndex;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 StageSubIndex;
 };

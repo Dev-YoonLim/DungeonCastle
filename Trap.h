@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Rogue.h"
 #include "Components/BoxComponent.h"
 #include "Trap.generated.h"
 
@@ -51,6 +52,7 @@ public:
 
 	FTimerHandle TrapCountDown;
 
+	int32 TrapState;
 
 
 };

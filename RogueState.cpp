@@ -5,6 +5,7 @@
 #include "Rogue.h"
 #include "EnemyRogue.h"
 
+
 ARogueState::ARogueState() {
 	TorchElementInit();
 	WeaponElementInit();

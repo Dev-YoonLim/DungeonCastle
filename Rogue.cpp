@@ -969,7 +969,7 @@ void ARogue::AxisMapping(UPlayerInput* PlayerInputControll) {
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("MouseLeft", EKeys::LeftMouseButton));
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("MouseRight", EKeys::RightMouseButton));
 
-	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 0", EKeys::Zero));
+	/*PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 0", EKeys::Zero));
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 1", EKeys::One));
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 2", EKeys::Two));
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 3", EKeys::Three));
@@ -995,7 +995,7 @@ void ARogue::AxisMapping(UPlayerInput* PlayerInputControll) {
 	PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 4alt", EKeys::Four, false, false, true));
 	//PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Stat", EKeys::T));
 
-	//PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 1alt", EKeys::One, false, true));
+	//PlayerInputControll->AddActionMapping(FInputActionKeyMapping("Number 1alt", EKeys::One, false, true));*/
 }
 
 void ARogue::BindAxis_func(UInputComponent* PlayerInputComponent) {
@@ -1013,7 +1013,7 @@ void ARogue::BindAxis_func(UInputComponent* PlayerInputComponent) {
 	PlayerInputComponent->BindAction("MouseLeft", IE_Pressed, this, &ARogue::Attack);
 	PlayerInputComponent->BindAction("MouseRight", IE_Pressed, this, &ARogue::TorchAttack);
 	
-	PlayerInputComponent->BindAction("Number 0", IE_Pressed, this, &ARogue::SetWeaponNumberToZero);
+	/*PlayerInputComponent->BindAction("Number 0", IE_Pressed, this, &ARogue::SetWeaponNumberToZero);
 	PlayerInputComponent->BindAction("Number 1", IE_Pressed, this, &ARogue::SetWeaponNumberToOne);
 	PlayerInputComponent->BindAction("Number 2", IE_Pressed, this, &ARogue::SetWeaponNumberToTwo);
 	PlayerInputComponent->BindAction("Number 3", IE_Pressed, this, &ARogue::SetWeaponNumberToThree);
@@ -1037,7 +1037,7 @@ void ARogue::BindAxis_func(UInputComponent* PlayerInputComponent) {
 
 	PlayerInputComponent->BindAction("Number 4ctrl", IE_Pressed, this, &ARogue::setFourTorchElementForm);
 	PlayerInputComponent->BindAction("Number 4alt", IE_Pressed, this, &ARogue::setFourWeaponElementForm);
-	//PlayerInputComponent->BindAction("Stat", IE_Pressed, this, &ARogue::setFourWeaponElementForm);
+	//PlayerInputComponent->BindAction("Stat", IE_Pressed, this, &ARogue::setFourWeaponElementForm);*/
 }
 
 void ARogue::setZeroTorchElementForm() {
@@ -1238,6 +1238,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 			SubDialogueIndex = 0;
 		}*/
 		MyRogueState->PlusDungeonClearCount(MyGameMode->StageIndex);
+
 		MyGameMode->StageIndex = 0;
 		MyGameMode->StageSubIndex = 0;
 		MyGameMode->WidgetCount = 0;
