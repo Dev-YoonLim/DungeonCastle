@@ -1216,7 +1216,7 @@ void ARogue::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 	if (OtherComp->GetCollisionProfileName() == TEXT("DeathZone")) {
 		ADeathZone* DeathZone = Cast<ADeathZone>(OtherActor);
 		if (DeathZone->DeathZoneNumber == 1)
-			GetWorldTimerManager().SetTimer(RogueDeathZone, this, &ARogue::DeathZoneDamege, 0.5, true);
+			GetWorldTimerManager().SetTimer(RogueDeathZone, this, &ARogue::DeathZoneDamege, 1, true);
 		else if (DeathZone->DeathZoneNumber == 0)
 			DeathZoneDirectDie();
 	}

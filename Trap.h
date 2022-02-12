@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Rogue.h"
+#include "Particles/ParticleSystem.h"
 #include "Components/BoxComponent.h"
 #include "Trap.generated.h"
 
@@ -28,15 +29,21 @@ public:
 public:
 	virtual void TrapDown();
 	virtual void TrapStart();
+	virtual void TrapDamegeFunc();
 	virtual UStaticMeshComponent* GetTriggerMesh() { return TrapTriggerMesh; }
 	virtual UStaticMeshComponent* GetPlaceMesh() { return TrapPlaceMesh; }
 	virtual UStaticMeshComponent* GetWorkMesh() { return TrapWorkMesh; }
 	UFUNCTION()
 		void EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-
+	UFUNCTION()
+		void EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+			UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 	void TrapInit();
 public:
+
+	ARogue* myRogue;
+
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* TrapTriggerMesh;
 	UPROPERTY(EditAnywhere)
@@ -48,11 +55,20 @@ public:
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* TrapHitBox;
 	UPROPERTY(EditAnywhere)
-		UParticleSystem* TrapFire;
+		UParticleSystem* TrapEffect;;
 
 	FTimerHandle TrapCountDown;
+	FTimerHandle TrapDamegeCounter;
 
 	int32 TrapState;
+	int32 TrapCount;
+	int32 HitOn;
+
+	UPROPERTY(EditAnywhere)
+		int32 TrapCountLimit;
+	UPROPERTY(EditAnywhere)
+		int32 TrapLoopLimit;
+	
 
 
 };

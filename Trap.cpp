@@ -15,7 +15,9 @@ ATrap::ATrap()
 void ATrap::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	TrapTriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::EnterBeginOverlap);
+	TrapHitBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::EnterBeginOverlap);
+	TrapHitBox->OnComponentEndOverlap.AddDynamic(this, &ATrap::EnterEndOverlap);
 }
 
 // Called every frame
@@ -26,7 +28,9 @@ void ATrap::Tick(float DeltaTime)
 }
 
 void ATrap::TrapInit() {
-	TrapState = 0;
+	TrapState = -1;
+	TrapCountLimit = 7;
+	TrapLoopLimit = 9;
 	TrapPlaceMesh = CreateDefaultSubobject<UStaticMeshComponent>("TrapPlaceMesh");
 	TrapHitBox = CreateDefaultSubobject<UBoxComponent>("TrapHitBox");
 	TrapTriggerMesh = CreateDefaultSubobject<UStaticMeshComponent> ("TrapTriggerMesh");
@@ -48,29 +52,76 @@ void ATrap::TrapInit() {
 		TrapTriggerMesh->SetStaticMesh(TriggerAsset.Object);
 	}
 
+	auto TrapEffectAsset = ConstructorHelpers::FObjectFinder<UParticleSystem>(TEXT("ParticleSystem'/Game/Level/Fire_5.Fire_5'"));
+	if (TrapEffectAsset.Succeeded()) {
+		TrapEffect = TrapEffectAsset.Object;
+	}
+
 	TrapTriggerBox->SetRelativeScale3D(FVector(0.8, 0.3, 1));
 	
 	TrapTriggerBox->SetCollisionProfileName(TEXT("TrapCollision"));
 	TrapTriggerMesh->SetCollisionProfileName(TEXT("LevelDeco"));
-	TrapHitBox->SetCollisionProfileName(TEXT("LevelDeco"));
+	TrapHitBox->SetCollisionProfileName(TEXT("TrapDamegeCollision"));
 	TrapPlaceMesh->SetCollisionProfileName(TEXT("LevelDeco"));
+
+	TrapTriggerBox->SetGenerateOverlapEvents(true);
+	TrapHitBox->SetGenerateOverlapEvents(true);
 	//TrapPlaceMesh->SetCollisionProfileName(TEXT("LevelDeco"));
 }
 
 void ATrap::TrapDown() {
+	TrapState = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("TrapDown")));
 	TrapTriggerMesh->AddRelativeLocation(FVector(0, 0, -5));
-	GetWorldTimerManager().SetTimer(TrapCountDown, this, &ATrap::TrapStart, 1.f, false, 1.f);
+	GetWorldTimerManager().SetTimer(TrapCountDown, this, &ATrap::TrapStart, 1.8f, true, 1.5f);
 }
 
 void ATrap::TrapStart() {
+	TrapCount++;
+	if (TrapState == 0) {
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TrapEffect, GetActorLocation(),
+			FRotator(0, 0, 0), FVector(1.5f, 1.5f, 2.5f));
+		if (HitOn == 1)
+			TrapDamegeFunc();
+		if(TrapCount == TrapCountLimit)
+			TrapState = 1;
+	}
+	else if (TrapState == 1) {
+		if (HitOn == 1) {
+			GetWorldTimerManager().ClearTimer(TrapDamegeCounter);
+		}
+		if (TrapCount == TrapLoopLimit) {
+			TrapCount = 0;
+			TrapState = -1;
+			TrapTriggerMesh->AddRelativeLocation(FVector(0, 0, 5));
+			GetWorldTimerManager().ClearTimer(TrapCountDown);
+		}
+	}
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("TrapStart")));
 }
 
 void ATrap::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
-	ARogue* myRogue = Cast<ARogue>(OtherActor);
+	myRogue = Cast<ARogue>(OtherActor);
 	if (myRogue && OverlappedComponent->GetCollisionProfileName() == TEXT("TrapCollision")) {
+		//myRogue->MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(50);
 		TrapDown();
 	}
+	if (myRogue && OverlappedComponent->GetCollisionProfileName() == TEXT("TrapDamegeCollision")) {
+		HitOn = 1;
+		//GetWorldTimerManager().SetTimer(TrapDamegeCounter, this, &ATrap::TrapDamegeFunc, 1.f, true);
+	}
+}
+
+void ATrap::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
+	myRogue = Cast<ARogue>(OtherActor);
+	if (myRogue && OverlappedComponent->GetCollisionProfileName() == TEXT("TrapDamegeCollision")) {
+		HitOn = 0;
+	}
+}
+
+void ATrap::TrapDamegeFunc() {
+	myRogue->DeathZoneDamege();
+	myRogue->MyGameMode->Call_SetStaticDataChangeDelegate.ExecuteIfBound(10);
 }
