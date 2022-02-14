@@ -56,6 +56,11 @@ public:
 		UBoxComponent* TrapHitBox;
 	UPROPERTY(EditAnywhere)
 		UParticleSystem* TrapEffect;;
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* TrapTriggerSound;
+	UPROPERTY(EditAnywhere)
+		UAudioComponent* TrapStartSound;
+
 
 	FTimerHandle TrapCountDown;
 	FTimerHandle TrapDamegeCounter;

@@ -217,7 +217,7 @@ void AEnemyRogue::EnemyRogueStateInit() {
 			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
-			GetCharacterMovement()->MaxWalkSpeed = 145.f;
+			GetCharacterMovement()->MaxWalkSpeed = 165.f;
 			HitCountLimite = 3;
 			HitSuperArmorCount = 0;
 			HitSuperArmorCountLimit = 2;
@@ -232,7 +232,7 @@ void AEnemyRogue::EnemyRogueStateInit() {
 			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_2.BP_EnemyRogueAnimation_2_C'"));
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
-			GetCharacterMovement()->MaxWalkSpeed = 165.f;
+			GetCharacterMovement()->MaxWalkSpeed = 185.f;
 			HitCountLimite = 2;
 			HitSuperArmorCount = 0;
 			HitSuperArmorCountLimit = 2;
@@ -247,7 +247,7 @@ void AEnemyRogue::EnemyRogueStateInit() {
 			(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation_3.BP_EnemyRogueAnimation_3_C'"));
 		if (BlandAnim.Succeeded()) {
 			GetMesh()->SetAnimInstanceClass(BlandAnim.Class);
-			GetCharacterMovement()->MaxWalkSpeed = 75.f;
+			GetCharacterMovement()->MaxWalkSpeed = 95.f;
 			HitCountLimite =2;
 			HitSuperArmorCount = 0;
 			HitSuperArmorCountLimit = 3;

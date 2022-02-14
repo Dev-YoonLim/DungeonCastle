@@ -660,7 +660,7 @@ void ARogue::TorchAttack() {
 }
 
 void ARogue::Attack() {
-	if (CanInput == true && NotTakeHitCheck() == true && TakeHitOn == false) {
+	if (CanInput == true && NotTakeHitCheck() == true && TakeHitOn == false && MyGameMode->GameSettingOn == true) {
 		AttackFowardVectors = GetControlRotation().Vector();
 		MyGameMode->RogueAttackVectorToEnemyRogueDelegate.Broadcast(AttackFowardVectors);
 		if (RogueHeadShake == false) {

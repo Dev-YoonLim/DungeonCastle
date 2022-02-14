@@ -15,6 +15,8 @@ ATrap::ATrap()
 void ATrap::BeginPlay()
 {
 	Super::BeginPlay();
+	TrapTriggerSound->Stop();
+	TrapStartSound->Stop();
 	TrapTriggerBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::EnterBeginOverlap);
 	TrapHitBox->OnComponentBeginOverlap.AddDynamic(this, &ATrap::EnterBeginOverlap);
 	TrapHitBox->OnComponentEndOverlap.AddDynamic(this, &ATrap::EnterEndOverlap);
@@ -36,11 +38,17 @@ void ATrap::TrapInit() {
 	TrapTriggerMesh = CreateDefaultSubobject<UStaticMeshComponent> ("TrapTriggerMesh");
 	TrapTriggerBox = CreateDefaultSubobject<UBoxComponent>("TrapTriggerBox");
 
+	TrapTriggerSound = CreateDefaultSubobject<UAudioComponent>("TrapTriggerSound");
+	TrapStartSound = CreateDefaultSubobject<UAudioComponent>("TrapStartSound");
+
 	TrapPlaceMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TrapHitBox->AttachToComponent(TrapPlaceMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	TrapTriggerMesh->AttachToComponent(TrapPlaceMesh, FAttachmentTransformRules::KeepRelativeTransform);
 	TrapTriggerBox->AttachToComponent(TrapTriggerMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	
+	TrapTriggerSound->AttachToComponent(TrapTriggerMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	TrapStartSound->AttachToComponent(TrapPlaceMesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	auto PlaceAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Game/Level/TrapPlaceMesh.TrapPlaceMesh'"));
 	if (PlaceAsset.Succeeded()) {
@@ -57,8 +65,18 @@ void ATrap::TrapInit() {
 		TrapEffect = TrapEffectAsset.Object;
 	}
 
+	auto TriggerSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("SoundCue'/Game/Sound/SoundQue/Roll/TrapTrigger_Cue.TrapTrigger_Cue'"));
+	if (TriggerSound.Succeeded()) {
+		TrapTriggerSound->SetSound(TriggerSound.Object);
+	}
+
+	auto StartSound = ConstructorHelpers::FObjectFinder<USoundBase>(TEXT("SoundCue'/Game/Sound/SoundQue/Fire/TrapFire_Cue.TrapFire_Cue'"));
+	if (StartSound.Succeeded()) {
+		TrapStartSound->SetSound(StartSound.Object);
+	}
+
 	TrapTriggerBox->SetRelativeScale3D(FVector(0.8, 0.3, 1));
-	
+	TrapHitBox->SetRelativeScale3D(FVector(1.2, 1.2, 1.2));
 	TrapTriggerBox->SetCollisionProfileName(TEXT("TrapCollision"));
 	TrapTriggerMesh->SetCollisionProfileName(TEXT("LevelDeco"));
 	TrapHitBox->SetCollisionProfileName(TEXT("TrapDamegeCollision"));
@@ -70,6 +88,7 @@ void ATrap::TrapInit() {
 }
 
 void ATrap::TrapDown() {
+	TrapTriggerSound->Play();
 	TrapState = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("TrapDown")));
 	TrapTriggerMesh->AddRelativeLocation(FVector(0, 0, -5));
@@ -79,18 +98,22 @@ void ATrap::TrapDown() {
 void ATrap::TrapStart() {
 	TrapCount++;
 	if (TrapState == 0) {
+		if (TrapStartSound->IsPlaying() == false) {
+			TrapStartSound->Play();
+		}
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TrapEffect, GetActorLocation(),
 			FRotator(0, 0, 0), FVector(1.5f, 1.5f, 2.5f));
 		if (HitOn == 1)
 			TrapDamegeFunc();
-		if(TrapCount == TrapCountLimit)
+		if(TrapCount >= TrapCountLimit)
 			TrapState = 1;
 	}
 	else if (TrapState == 1) {
+		TrapStartSound->Stop();
 		if (HitOn == 1) {
 			GetWorldTimerManager().ClearTimer(TrapDamegeCounter);
 		}
-		if (TrapCount == TrapLoopLimit) {
+		if (TrapCount >= TrapLoopLimit) {
 			TrapCount = 0;
 			TrapState = -1;
 			TrapTriggerMesh->AddRelativeLocation(FVector(0, 0, 5));
@@ -103,7 +126,7 @@ void ATrap::TrapStart() {
 void ATrap::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	myRogue = Cast<ARogue>(OtherActor);
-	if (myRogue && OverlappedComponent->GetCollisionProfileName() == TEXT("TrapCollision")) {
+	if (myRogue && OverlappedComponent->GetCollisionProfileName() == TEXT("TrapCollision") && TrapState == -1) {
 		//myRogue->MyGameMode->Call_RogueDamageDelegate.ExecuteIfBound(50);
 		TrapDown();
 	}
