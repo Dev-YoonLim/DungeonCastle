@@ -368,6 +368,7 @@ void ARogueTorch::TorchAttackEffectPlay() {
 					UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), TorchHitBurnAttacksCriEffect, GetActorLocation() +
 						FVector(0, -70, 0), FRotator(0, 0, 0), FVector(0.5, 0.5, 0.5) * ElementLevelValueSize * 1.5);
 					BurnAttacksSpecialOn = false;
+					myRogue->MyRogueState->ElementLevelEx++;
 				}
 				else { //³´½ºÆä¼ÈÀÌÆåÆ®
 					EnemyRogue->EnemyRogueTakeTorchDamege(TorchStabDamegeValue, TorchBurnAttacksDamegeValue, TorchSpecialDamegeValue,
@@ -382,7 +383,14 @@ void ARogueTorch::TorchAttackEffectPlay() {
 				CanStabAttack = false;
 			}
 		}
+		myRogue->MyRogueState->TorchLevelEx++;
 		TorchHitCounter++;
+		if (myRogue->MyRogueState->TorchLevelEx > myRogue->MyRogueState->TorchLevelExMax) {
+			myRogue->MyRogueState->SetTorchLevelUp();
+		}
+		if (myRogue->MyRogueState->ElementLevelEx > myRogue->MyRogueState->ElementLevelExMax) {
+			myRogue->MyRogueState->SetElementLevelUp();
+		}
 	}
 	else {
 		GetWorldTimerManager().ClearTimer(HitTimeHandle);

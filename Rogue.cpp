@@ -99,6 +99,7 @@ void ARogue::getWorldGameMode() {
 	MyRogueState = Cast<ARogueState>(GetPlayerState());
 	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &ARogue::EnterBeginOverlap);
 	GetCapsuleComponent()->OnComponentEndOverlap.AddDynamic(this, &ARogue::EnterEndOverlap);
+	
 }
 
 void ARogue::WeaponTorchDelegateInit() {

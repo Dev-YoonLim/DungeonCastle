@@ -290,6 +290,8 @@ private:
 	float WeaponElementPer;
 	float WeaponElementPerValue;
 	float AvgWeaponDamege;
+	float LastAvgWeaponDamege;
+	float LastAvgWeaponEDamge;
 
 	float TorchStabDefaultDamege;
 	float TorchBurnAttacksDefaultDamege;
@@ -390,6 +392,12 @@ public:
 	int32 DialogueTutorialCount;
 	float MoveSpeedIncreaseCountValue;
 	int32 DoorStateCheck[10];
+	float WeaponLevelEx;
+	float TorchLevelEx;
+	float ElementLevelEx;
+	float WeaponLevelExMax;
+	float TorchLevelExMax;
+	float ElementLevelExMax;
 
 private:
 	bool HadTorchElement[5];

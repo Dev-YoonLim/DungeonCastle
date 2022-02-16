@@ -135,7 +135,7 @@ void ARogueLevel::LevelFloorInit() {
 
 	EndPointActor = CreateDefaultSubobject<UChildActorComponent>("EndPoint");
 	auto EndPointAsset = ConstructorHelpers::FClassFinder<ADungeonEnd>
-		(TEXT("Class'/Script/Castle_in_Dungeon.DungeonEnd'"));
+		(TEXT("Blueprint'/Game/MyDungeonEnd.MyDungeonEnd_C'"));
 	if (EndPointAsset.Succeeded()) {
 		EndPointActor->SetChildActorClass(EndPointAsset.Class);
 	}

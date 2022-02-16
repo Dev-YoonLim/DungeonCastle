@@ -30,6 +30,7 @@ void ATrap::Tick(float DeltaTime)
 }
 
 void ATrap::TrapInit() {
+	TrapDelay = 2.5f;
 	TrapState = -1;
 	TrapCountLimit = 7;
 	TrapLoopLimit = 9;
@@ -76,7 +77,8 @@ void ATrap::TrapInit() {
 	}
 
 	TrapTriggerBox->SetRelativeScale3D(FVector(0.8, 0.3, 1));
-	TrapHitBox->SetRelativeScale3D(FVector(1.2, 1.2, 1.2));
+	TrapHitBox->SetRelativeScale3D(FVector(1.6, 1.6, 1.2));
+	TrapPlaceMesh->SetRelativeScale3D(FVector(1.5, 1.5, 1));
 	TrapTriggerBox->SetCollisionProfileName(TEXT("TrapCollision"));
 	TrapTriggerMesh->SetCollisionProfileName(TEXT("LevelDeco"));
 	TrapHitBox->SetCollisionProfileName(TEXT("TrapDamegeCollision"));
@@ -92,7 +94,7 @@ void ATrap::TrapDown() {
 	TrapState = 0;
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("TrapDown")));
 	TrapTriggerMesh->AddRelativeLocation(FVector(0, 0, -5));
-	GetWorldTimerManager().SetTimer(TrapCountDown, this, &ATrap::TrapStart, 1.8f, true, 1.5f);
+	GetWorldTimerManager().SetTimer(TrapCountDown, this, &ATrap::TrapStart, TrapDelay, true, 0.8f);
 }
 
 void ATrap::TrapStart() {

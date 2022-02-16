@@ -63,6 +63,12 @@ void ARogueState::AbilityInit() {
 	WeaponLevel = 1;
 	TorchLevel = 1;
 	ElementLevel = 1;
+	WeaponLevelEx = 0.f;
+	TorchLevelEx = 0.f;
+	ElementLevelEx = 0.f;
+	WeaponLevelExMax = 10.f;
+	TorchLevelExMax = 10.f;
+	ElementLevelExMax = 10.f;
 	WeaponLevelValue = 1.f+WeaponLevel * 0.05;
 	TorchLevelValue = 1.f + TorchLevel * 0.05;
 	ElementLevelValue = 1.f + ElementLevel * 0.05;
@@ -73,6 +79,7 @@ void ARogueState::AbilityInit() {
 
 void ARogueState::BeginPlay() {
 	Super::BeginPlay();
+	HadWeaponCheckInit();
 	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("RogueStateOn")));
 	DialgoueStateInit();
 	getWorldGameModeBase();
@@ -86,6 +93,7 @@ void ARogueState::BeginPlay() {
 	LastTorchDamegeSetting();
 	LastSpeedSetting();
 	RogueAttackPlusIncreaseDelegateInit();
+	MyGameMode->RogueWeaponLevelDelegate.BindUObject(this, &ARogueState::SetWeaponLevelUp);
 	MyGameMode->Widget_RogueUIValueInitDelegate.BindUObject(this, &ARogueState::Widget_ViewInit);
 	MyGameMode->Rogue_SpeedValueDelegate.BindUObject(this, &ARogueState::GetMoveSpeed);
 	MyGameMode->Widget_CallStatWidgetDelegate.BindUObject(this, &ARogueState::SetStatData);
@@ -182,12 +190,15 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	}
 	for (int i = 2; i <= LoadGame->WeaponLevel; i++) {
 		SetWeaponLevelUp();
+		WeaponLevelExMax = WeaponLevelExMax + (5 * 1.2 * WeaponLevel);
 	}
 	for (int i = 2; i <= LoadGame->TorchLevel; i++) {
 		SetTorchLevelUp();
+		TorchLevelExMax = WeaponLevelExMax + (5 * 1.2 * TorchLevel);
 	}
 	for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
 		SetElementLevelUp();
+		ElementLevelExMax = WeaponLevelExMax + (5 * 1.2 * ElementLevel);
 	}
 	myRogue->SetRollingTrdCamera(LoadGame->RollingTrdCamera);
 
@@ -602,10 +613,13 @@ void ARogueState::GetTorchStatusSynergy(float ElementStabDefaultDamege, float El
 
 void ARogueState::GetTorchDemege() {
 	TorchStabTotalDamege = TorchStabDefaultDamege * TorchLevelValue  * ElementLevelValue * CertainElementSynergy[TorchElementNumber];
+	
 	TorchBurnAttacksTotalDamege = TorchBurnAttacksDefaultDamege * ElementLevelValue * CertainElementSynergy[TorchElementNumber] *
 		TorchBurnAttackSynergy * TorchBurnAttackSynergyValue;
+	
 	TorchSpecialTotalDamege = TorchElementSpecialDefaultDamege * CertainElementSynergy[TorchElementNumber] * ElementLevelValue *
 		TorchElementSpecialSynergy * TorchSpecialTotalDamegeValue;
+	
 	MyGameMode->TorchTotalDamegeDelegate.ExecuteIfBound(TorchStabTotalDamege, TorchBurnAttacksTotalDamege, TorchSpecialTotalDamege, TorchElementCriper);
 }
 
@@ -690,6 +704,7 @@ void ARogueState::GetWeaponTotalDamege() {
 }
 
 void ARogueState::SetTorchLevelUp() {
+	TorchLevelExMax += (5 * 1.2 * TorchLevel);
 	TorchLevel += 1;
 	TorchLevelValue = 1.f + TorchLevel * 0.05;
 	//MyGameMode->RogueTorchLevelUpDelegate.ExecuteIfBound();
@@ -699,6 +714,7 @@ void ARogueState::SetTorchLevelUp() {
 }
 
 void ARogueState::SetWeaponLevelUp() {
+	WeaponLevelExMax += (5 * 1.2 * WeaponLevel);
 	WeaponLevel += 1;
 	WeaponLevelValue = 1.0f + WeaponLevel * 0.05; 
 	MyGameMode->WeaponSpeedSynergyDelegate.ExecuteIfBound(WeaponSpeed, WeaponSpeedValue, WeaponLevelValue);
@@ -708,6 +724,7 @@ void ARogueState::SetWeaponLevelUp() {
 }
 
 void ARogueState::SetElementLevelUp() {
+	ElementLevelExMax += (5 * 1.2 * ElementLevel);
 	ElementLevel++;
 	ElementLevelValue = 1.f + ElementLevel * 0.05;
 	MyGameMode->RogueElementLevelToWeaponDelegate.ExecuteIfBound(ElementLevel, ElementLevelValue);
@@ -960,8 +977,8 @@ void ARogueState::SetStatData() {
 	StatData[6] = WeaponLevel;
 	StatData[7] = TorchLevel;
 	StatData[8] = ElementLevel;
-	StatData[9] = AvgWeaponDamege;
-	StatData[10] = WeaponElementDamege;
+	StatData[9] = LastAvgWeaponDamege;
+	StatData[10] = LastAvgWeaponEDamge;
 	StatData[11] = WeaponElementPer * WeaponElementPerValue;
 	
 	StatData[12] = TorchStabTotalDamege;
@@ -1487,6 +1504,8 @@ void ARogueState::SetDialogueIndex(int32 NewIndex) {
 
 void ARogueState::LastWeaponDamegeSetting() {
 	float AttackThreeFormSynergy = 1.f;
+	float LastWeaponDmgSum = 0.f;
+	float LastWeaponEDmgSum = 0.f;
 	GetWeaponTotalDamege();
 	if (AttackForm[0] == AttackForm[1] && AttackForm[1] == AttackForm[2]) {
 		if (AttackFormIndex[0] == AttackFormIndex[1] && AttackFormIndex[1] == AttackFormIndex[2]) {
@@ -1499,20 +1518,31 @@ void ARogueState::LastWeaponDamegeSetting() {
 		AttackThreeFormSynergy = 1.1;
 	}
 	for (int i = 0; i < 3; i++) {
-		WeaponTotalDamege[i] = (WeaponPhysicsDamege[i] * AttackThreeFormSynergy *
+		/*WeaponTotalDamege[i] = (WeaponPhysicsDamege[i] * AttackThreeFormSynergy *
 			(1+HadAttackFormOverlap[AttackForm[i]][AttackFormIndex[i]]/10) 
-			*(1+ HadWeaponOverlap[WeaponNumber]/10) + WeaponElementDamege*(1+ HadElementalOverlap[WeaponElementNumber]/10));
-
+			*(1+ HadWeaponOverlap[WeaponNumber]/10) + WeaponElementDamege*(1+ HadElementalOverlap[WeaponElementNumber]/10));*/
+		WeaponTotalDamege[i] = WeaponPhysicsDamege[i] * AttackThreeFormSynergy * WeaponLevelValue *
+			(1 + HadAttackFormOverlap[AttackForm[i]][AttackFormIndex[i]] / 10) + (WeaponElementDamege * (1 + HadElementalOverlap[WeaponElementNumber] / 10));
 		
+
 		if (LowHpToHighAttackSynergyCount == 1 && GetRogueHp() < GetRogueHp() / 4) 
 			WeaponTotalDamege[i] *= 1.5;
 
 		if (FullHpToHighAttackSynergyCount == 1 && GetRogueHp() == FullMaxHp) 
 			WeaponTotalDamege[i] *= 1.3;
+
+		LastWeaponDmgSum += WeaponPhysicsDamege[i] * AttackThreeFormSynergy * WeaponLevelValue *
+			(1 + HadAttackFormOverlap[AttackForm[i]][AttackFormIndex[i]] / 10);
+		LastWeaponEDmgSum += (WeaponElementDamege * (1 + HadElementalOverlap[WeaponElementNumber] / 10));
 	}
+
+	LastAvgWeaponDamege = LastWeaponDmgSum / 3;
+	LastAvgWeaponEDamge = LastWeaponEDmgSum;
+
 	
 	MyGameMode->WeaponTotalDamegeDelegate.ExecuteIfBound(WeaponTotalDamege[0],
 		WeaponTotalDamege[1], WeaponTotalDamege[2], WeaponElementPer * WeaponElementPerValue);
+	
 	MyGameMode->WeaponDoubleAttackAndAttackDirectionDelegate.ExecuteIfBound(DoubleAttackCheck[0], DoubleAttackCheck[1],
 		DoubleAttackCheck[2], AttackDirectionCheck[0][0], AttackDirectionCheck[0][1], AttackDirectionCheck[1][0],
 		AttackDirectionCheck[1][1], AttackDirectionCheck[2][0], AttackDirectionCheck[2][1]);
@@ -1520,10 +1550,13 @@ void ARogueState::LastWeaponDamegeSetting() {
 
 void ARogueState::LastTorchDamegeSetting() {
 	TorchStabTotalDamege = TorchStabDefaultDamege * TorchLevelValue * ElementLevelValue * CertainElementSynergy[TorchElementNumber];
-	TorchBurnAttacksTotalDamege = TorchBurnAttacksDefaultDamege * ElementLevelValue * CertainElementSynergy[TorchElementNumber] *
-		TorchBurnAttackSynergy * TorchBurnAttackSynergyValue * (1 + HadElementalOverlap[TorchElementNumber+5] / 10);
-	TorchSpecialTotalDamege = TorchElementSpecialDefaultDamege * CertainElementSynergy[TorchElementNumber] * ElementLevelValue *
-		TorchElementSpecialSynergy * TorchSpecialTotalDamegeValue * (1 + HadElementalOverlap[TorchElementNumber+5] / 10);
+	
+	TorchBurnAttacksTotalDamege = TorchBurnAttacksDefaultDamege * ElementLevelValue * CertainElementSynergy[TorchElementNumber] 
+		* TorchBurnAttackSynergyValue * (1 + HadElementalOverlap[TorchElementNumber+5] / 10);
+
+	TorchSpecialTotalDamege = TorchElementSpecialDefaultDamege * CertainElementSynergy[TorchElementNumber] * ElementLevelValue 
+		* TorchSpecialTotalDamegeValue * (1 + HadElementalOverlap[TorchElementNumber+5] / 10);
+	
 	MyGameMode->TorchTotalDamegeDelegate.ExecuteIfBound(TorchStabTotalDamege, TorchBurnAttacksTotalDamege, TorchSpecialTotalDamege, TorchElementCriper* TorchElementCriperValue);
 }
 

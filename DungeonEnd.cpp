@@ -50,6 +50,7 @@ void ADungeonEnd::Tick(float DeltaTime)
 }
 
 void ADungeonEnd::NotifyActorBeginOverlap(AActor* OtherActor) {
+	//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Orange, FString::Printf(TEXT("TEstTestTests")));
 	ARogue* Rogue = Cast<ARogue>(OtherActor);
 	AItem* Item = Cast<AItem>(EndItem);
 	if (Rogue && Item) {

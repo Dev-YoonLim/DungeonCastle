@@ -153,6 +153,8 @@ void ACastle_in_DungeonGameModeBase::BeginPlay() {
 	
 	if(UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("Stage0") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_3") && UGameplayStatics::GetCurrentLevelName(GetWorld()) != TEXT("StartMap_2"))
 		LevelLoading();
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("StageIndex : %d"), StageIndex));
+	GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("StageSubIndex : %d"), StageSubIndex));
 }
 
 void ACastle_in_DungeonGameModeBase::LoadGameData(URogueSaveGame* LoadData) {
@@ -226,8 +228,6 @@ void ACastle_in_DungeonGameModeBase::TitleBorderAlphaPlus() {
 	if (TitleBorderAlphaValue >= 1.5f) {
 		TitleBorderAlphaMax = true;
 		GetWorldTimerManager().ClearTimer(TitleBorderBlackTimeHandle);
-		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("StageIndex : %d"), StageIndex));
-		GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Green, FString::Printf(TEXT("StageSubIndex : %d"), StageSubIndex));
 		switch (StageIndex) {
 		case 0:
 			UGameplayStatics::OpenLevel(this, TEXT("Stage0"), false);

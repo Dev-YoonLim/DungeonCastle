@@ -320,7 +320,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		ElementDamege = 8.f;
 		HitElementEffectScale = 0.2;
-		ElementPer = 50.f;
+		ElementPer = 30.f;
 		DefaultElementPer = 50.f;
 		break;
 	case 3:
@@ -329,7 +329,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		ElementDamege = 1.f;
 		HitElementEffectScale = 0.25;
-		ElementPer = 90.f;
+		ElementPer = 50.f;
 		DefaultElementPer = 90.f;
 		break;
 	case 4:
@@ -434,6 +434,7 @@ void ARogueWeapon::WeaponAttackEffectPlay(AActor* OtherActor, UPrimitiveComponen
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
 			ElementStack[SelectWeaponElementNumber], StateEffect,
 			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1], WeaponSpeed);
+		myRogue->MyRogueState->WeaponLevelEx++;
 		//EnemyRogue->TakeDamageCount++;
 		/*MyGameMode->EnemyRogueTakeWeaponDamegeDelegate.ExecuteIfBound(WeaponAttackDefaultPhysicsElementDameges[AttackQue], 
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
@@ -447,6 +448,12 @@ void ARogueWeapon::WeaponAttackEffectPlay(AActor* OtherActor, UPrimitiveComponen
 		}
 		if (AttackDmgPlusValue != 1.f) {
 			SetAttackDmgPlusValue(AttackDmgValue);
+		}
+		if (myRogue->MyRogueState->WeaponLevelEx > myRogue->MyRogueState->WeaponLevelExMax) {
+			myRogue->MyRogueState->SetWeaponLevelUp();
+		}
+		if (myRogue->MyRogueState->ElementLevelEx > myRogue->MyRogueState->ElementLevelExMax) {
+			myRogue->MyRogueState->SetElementLevelUp();
 		}
 	}
 }
@@ -494,6 +501,8 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 	case 0:
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetStun(InputDamege);
+			if (FMath::RandRange(0, 100) > 20)
+				myRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[0] = false;
@@ -501,6 +510,8 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 	case 1:
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetBurn(InputDamege);
+			if (FMath::RandRange(0, 100) > 20)
+				myRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[1] = false;
@@ -508,6 +519,8 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 	case 2:
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetCold(InputDamege);
+			if(FMath::RandRange(0, 100) > 50)
+				myRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[2] = false;
@@ -515,6 +528,8 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 	case 3:
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetPoison(InputDamege);
+			if (FMath::RandRange(0, 100) > 80)
+				myRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[3] = false;
@@ -567,7 +582,7 @@ void ARogueWeapon::SetElectricStack(float Per, float InputDamege) {
 		SetDamegeTaken(InputDamege*2.5f);
 		ElementStack[4] = 0;
 		Per = 0.f;
-		
+		myRogue->MyRogueState->ElementLevelEx++;
 	}
 	else{
 		StateEffect[4] = false;

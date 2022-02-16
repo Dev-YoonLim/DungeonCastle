@@ -73,6 +73,8 @@ public:
 		int32 TrapCountLimit;
 	UPROPERTY(EditAnywhere)
 		int32 TrapLoopLimit;
+	UPROPERTY(EditAnywhere)
+		float TrapDelay;
 	
 
 
