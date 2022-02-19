@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h"
+#include "Components/ActorComponent.h"
 #include "Item.h"
 #include "DungeonEnd.generated.h"
 
@@ -41,5 +42,6 @@ public:
 		UStaticMeshComponent* DungeonFinishMesh;
 
 	UPROPERTY(EditAnywhere)
-		UChildActorComponent* EndItem;
+		UParticleSystemComponent* ExitDungeonLight;
+		//UChildActorComponent* EndItem;
 };

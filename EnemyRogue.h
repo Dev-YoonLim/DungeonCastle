@@ -38,7 +38,18 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-	//USkeletalMeshComponent* EnemyRogueBody;
+	virtual void EnemyWeaponInit();
+	virtual void EnemyRogueBodyInit();
+	virtual void EnemyRogueCollisionInit();
+	virtual void EnemyRogueStateInit();
+	void EnemyRogueTakeDamegeDelegateInit();
+	virtual void TakeStackInit();
+	virtual void AllStateInit();
+	virtual void AllDotTickInit();
+	virtual void StateEffectInit();
+
+	virtual void EnemyRogueBodySetting();
+	virtual void EnemyRogueStateSetting();
 
 private:
 
@@ -150,19 +161,6 @@ public:
 	float GetFicationValue() { return ElectriFicationValue; }
 	float GetSpeedValue() { return MoveSpeedValue; }
 
-public:
-	void EnemyWeaponInit();
-	void EnemyRogueBodyInit();
-	void EnemyRogueCollisionInit();
-	void EnemyRogueStateInit();
-	void EnemyRogueTakeDamegeDelegateInit();
-	void TakeStackInit();
-	void AllStateInit();
-	void AllDotTickInit();
-	void StateEffectInit();
-
-	void EnemyRogueBodySetting();
-	void EnemyRogueStateSetting();
 	//void EnemyRogueAnimationInit();
 
 public:
@@ -178,18 +176,18 @@ public:
 	void EnemyRogueTakeColdSlowDotTimer();
 	void EnemyRogueTakePoisonDotDamege();
 	void EnemyRogueTakeElectriFicationDotTimer();
-	void EnemyRogueSlow(int32, bool);
-	void EnemyRogueDie();
+	void EnemyRogueSlow(int32 Slowstack, bool Freez);
+	virtual void EnemyRogueDie();
 	//void EnemyRogueTakeHitAnimation();
 
 public:
 	void TakeWeaponKnockBackCheck(bool);
 	void TakeAttackVector(FVector);
 
-	void TakeStun();
-	void TakeBurn();
-	void TakeCold();
-	void TakePoison();
+	virtual void TakeStun();
+	virtual void TakeBurn();
+	virtual void TakeCold();
+	virtual void TakePoison();
 
 
 	void TakeKnockBack();

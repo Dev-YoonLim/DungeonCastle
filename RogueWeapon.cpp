@@ -36,7 +36,7 @@ void ARogueWeapon::BeginPlay()
 void ARogueWeapon::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	if (myRogue->NotAttackCheck() == true)
+	if (MyRogue->NotAttackCheck() == true)
 		WeaponAttackCheck = true;
 }
 
@@ -69,8 +69,8 @@ void ARogueWeapon::DataTableInit() {
 void ARogueWeapon::WorldRogueInit() {
 	UWorld* TheWorld = GetWorld();
 	AActor* myPawn = UGameplayStatics::GetPlayerPawn(TheWorld, 0);
-	myRogue = Cast<ARogue>(myPawn);
-	myRogueState = Cast<ARogueState>(myRogue->GetPlayerState());
+	MyRogue = Cast<ARogue>(myPawn);
+	myRogueState = Cast<ARogueState>(MyRogue->GetPlayerState());
 }
 
 void ARogueWeapon::WorldGameModeInit() {
@@ -391,69 +391,69 @@ void ARogueWeapon::GetWeaponDoubleCheckAndAttackDirection(bool First, bool Snd, 
 	AttackDirection[2][1] = TwoOneDirect;
 }
 
-void ARogueWeapon::WeaponAttackEffectPlay(AActor* OtherActor, UPrimitiveComponent* OtherComp) {
-	AEnemyRogue* EnemyRogue = Cast<AEnemyRogue>(OtherActor);
-	if (myRogue->NotAttackState() == false && myRogue->getCanHit() == true ){
-		WeaponAttackCheck = false;
-		if (WeaponKnockBack == true) {
-			EnemyRogue->TakeAttackVector(TackAttackVectorValue);
-			EnemyRogue->TakeWeaponKnockBackCheck(WeaponKnockBack);
-		}
-		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, GetActorLocation() + FVector(0, EffectAvgRange + FMath::FRandRange(EffectMinRange, EffectMaxRange), 0),
-			FRotator(0, 0, 0), FVector(HitEffectScale, HitEffectScale, HitEffectScale));*/
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, HitPlace + 
-			FVector(FMath::FRandRange(EffectMinRange, EffectMaxRange), 
-				FMath::FRandRange(EffectMinRange, EffectMaxRange), 
-				FMath::FRandRange(EffectMinRange, EffectMaxRange)),
-			FRotator(0, 0, 0), FVector(HitEffectScale, HitEffectScale, HitEffectScale));
-		
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), WeaponElementHitEffect, HitPlace + 
-			FVector(FMath::FRandRange(EffectMinRange, EffectMaxRange), 
-				FMath::FRandRange(EffectMinRange, EffectMaxRange), 
-				FMath::FRandRange(EffectMinRange, EffectMaxRange)),
-			FRotator(FMath::FRandRange(EffectMinRange, EffectMaxRange), 
-				FMath::FRandRange(EffectMinRange, EffectMaxRange), 
-				FMath::FRandRange(EffectMinRange, EffectMaxRange)),
-			FVector(HitElementEffectScale, HitElementEffectScale, HitElementEffectScale));
-		
-		CostData();
-		SetDamegeTaken(0.f);
+void ARogueWeapon::SpawnHitEffect() {
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), HitEffect, HitPlace +
+		FVector(FMath::FRandRange(EffectMinRange, EffectMaxRange),
+			FMath::FRandRange(EffectMinRange, EffectMaxRange),
+			FMath::FRandRange(EffectMinRange, EffectMaxRange)),
+		FRotator(0, 0, 0), FVector(HitEffectScale, HitEffectScale, HitEffectScale));
 
-		for(int i = 0; i < 5; i++)
-			StateEffect[i] = false;
-		AttackElementStateEffect(GetElementPer(), WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), WeaponElementHitEffect, HitPlace +
+		FVector(FMath::FRandRange(EffectMinRange, EffectMaxRange),
+			FMath::FRandRange(EffectMinRange, EffectMaxRange),
+			FMath::FRandRange(EffectMinRange, EffectMaxRange)),
+		FRotator(FMath::FRandRange(EffectMinRange, EffectMaxRange),
+			FMath::FRandRange(EffectMinRange, EffectMaxRange),
+			FMath::FRandRange(EffectMinRange, EffectMaxRange)),
+		FVector(HitElementEffectScale, HitElementEffectScale, HitElementEffectScale));
+}
+
+void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* OtherComp) {
+	AEnemyRogue* EnemyRogue = Cast<AEnemyRogue>(OtherActor);
+	if (MyRogue->NotAttackState() == false && MyRogue->getCanHit() == true ){ // 무기 사용자 상태 체크
+		WeaponAttackCheck = false; 
+		CostData(); // 공격 코스트 함수
+		SetDamegeTaken(0.f); //데미지 초기화
+		for (int i = 0; i < 5; i++)
+			StateEffect[i] = false; // 속성 특수능력 발동 초기화
 		
-		if (StateEffect[4] == true) {
+		SpawnHitEffect(); // 공격 성공시 이펙트
+		if (WeaponKnockBack == true) {
+			EnemyRogue->TakeAttackVector(TackAttackVectorValue); //공격방향에 따른 백터값
+			EnemyRogue->TakeWeaponKnockBackCheck(WeaponKnockBack); //넉백 체크 및 넉백발동
+		}
+		AttackElementStateEffect(GetElementPer(), WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue);
+		//무기 속성 발동 및 상태 함수
+
+		if (StateEffect[4] == true) { // 전격속성일 경우 스택형 이펙트 발동
 			UParticleSystem* ElectricAttackBoomEffect = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
 				TEXT("ParticleSystem'/Game/Weapons/Effect/Electro/P_ky_lightning2.P_ky_lightning2'")));
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElectricAttackBoomEffect, HitPlace-FVector(0, 0, 20),
-				FRotator(0, 0, 0), FVector(0.6, 0.6, 0.6));
+				FRotator(0, 0, 0), FVector(0.6, 0.6, 0.6)); 
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Attack Que %d"), AttackQue));
+		
 		EnemyRogue->EnemyRogueTakeWeaponDamege(WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue,
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
 			ElementStack[SelectWeaponElementNumber], StateEffect,
 			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1], WeaponSpeed);
-		myRogue->MyRogueState->WeaponLevelEx++;
-		//EnemyRogue->TakeDamageCount++;
-		/*MyGameMode->EnemyRogueTakeWeaponDamegeDelegate.ExecuteIfBound(WeaponAttackDefaultPhysicsElementDameges[AttackQue], 
-			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
-			ElementStack[SelectWeaponElementNumber], StateEffect, 
-			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1]);*/
+			// 데미지 발동 함수 - 공격, 속성, 특수능력 발동, 도트데미지, 방향, 스택정보 전달
 		
-		//MyGameMode->WeaponAttackToEffectPercentIncreaseDelegate_.ExecuteIfBound();
-		if (ElementPlusValue != 0) {
+		MyRogue->MyRogueState->WeaponLevelEx++; // 무기 레벨 경험치 증가
+
+		/*if (ElementPlusValue != 0) { // 공격성공 및 피격이 없을 경우 발동되는 스택형 능력 구현 함수, 아직 완벽히 구현되지 않았음
 			SetPlusElementPer(ElementPlusValue);
 			MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, TotalElementPer);
 		}
+		
 		if (AttackDmgPlusValue != 1.f) {
 			SetAttackDmgPlusValue(AttackDmgValue);
+		}*/
+		
+		if (MyRogue->MyRogueState->WeaponLevelEx > MyRogue->MyRogueState->WeaponLevelExMax) {
+			MyRogue->MyRogueState->SetWeaponLevelUp(); // 무기 경험치 최대치 도달 시 레벨 업
 		}
-		if (myRogue->MyRogueState->WeaponLevelEx > myRogue->MyRogueState->WeaponLevelExMax) {
-			myRogue->MyRogueState->SetWeaponLevelUp();
-		}
-		if (myRogue->MyRogueState->ElementLevelEx > myRogue->MyRogueState->ElementLevelExMax) {
-			myRogue->MyRogueState->SetElementLevelUp();
+		if (MyRogue->MyRogueState->ElementLevelEx > MyRogue->MyRogueState->ElementLevelExMax) {
+			MyRogue->MyRogueState->SetElementLevelUp(); // 속성 경험치 최대치 도달 시 레벨 업
 		}
 	}
 }
@@ -463,14 +463,14 @@ void ARogueWeapon::EnterBeginOverlap(UPrimitiveComponent* OverlappedComponent, A
 		if (OtherComp->GetCollisionProfileName() == TEXT("WallCollision")) {
 			
 			AttackWallCrashDelegate();
-			//WeaponAttackEffectPlay();
+			//WeaponAttackPlay();
 		}
-		else if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueCollision") && myRogue->NotAttackCheck() == false
-			&& WeaponAttackCheck == true && myRogue->NotTorchAttackState() == true) {
+		else if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueCollision") && MyRogue->NotAttackCheck() == false
+			&& WeaponAttackCheck == true && MyRogue->NotTorchAttackState() == true) {
 			HitPlaceName = OtherComp->GetAttachSocketName();
 			HitPlace = OtherComp->GetSocketLocation(HitPlaceName);
 			HitPlace.Z = GetActorLocation().Z;
-			WeaponAttackEffectPlay(OtherActor, OtherComp);
+			WeaponAttackPlay(OtherActor, OtherComp);
 
 			
 		}
@@ -486,10 +486,10 @@ void ARogueWeapon::EnterEndOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	if (OtherComp->GetCollisionProfileName() == TEXT("WallCollision")) {
 		
 		//AttackCrashDelegate();
-		//WeaponAttackEffectPlay();
+		//WeaponAttackPlay();
 	}
-	else if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueCollision") && myRogue->NotWeaponAttackState() == false) {
-		//WeaponAttackEffectPlay();
+	else if (OtherComp->GetCollisionProfileName() == TEXT("EnemyRogueCollision") && MyRogue->NotWeaponAttackState() == false) {
+		//WeaponAttackPlay();
 		WeaponAttackCheck = true;
 	}
 	
@@ -502,7 +502,7 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetStun(InputDamege);
 			if (FMath::RandRange(0, 100) > 20)
-				myRogue->MyRogueState->ElementLevelEx++;
+				MyRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[0] = false;
@@ -511,7 +511,7 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetBurn(InputDamege);
 			if (FMath::RandRange(0, 100) > 20)
-				myRogue->MyRogueState->ElementLevelEx++;
+				MyRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[1] = false;
@@ -520,7 +520,7 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetCold(InputDamege);
 			if(FMath::RandRange(0, 100) > 50)
-				myRogue->MyRogueState->ElementLevelEx++;
+				MyRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[2] = false;
@@ -529,7 +529,7 @@ void ARogueWeapon::AttackElementStateEffect(float Per, float InputDamege) {
 		if (Per >= FMath::RandRange(0.f, 100.f)) {
 			SetPoison(InputDamege);
 			if (FMath::RandRange(0, 100) > 80)
-				myRogue->MyRogueState->ElementLevelEx++;
+				MyRogue->MyRogueState->ElementLevelEx++;
 		}
 		else
 			StateEffect[3] = false;
@@ -582,7 +582,7 @@ void ARogueWeapon::SetElectricStack(float Per, float InputDamege) {
 		SetDamegeTaken(InputDamege*2.5f);
 		ElementStack[4] = 0;
 		Per = 0.f;
-		myRogue->MyRogueState->ElementLevelEx++;
+		MyRogue->MyRogueState->ElementLevelEx++;
 	}
 	else{
 		StateEffect[4] = false;

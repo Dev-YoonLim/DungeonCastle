@@ -9,6 +9,7 @@ ADungeonEnd::ADungeonEnd()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	ExitDungeonLight = CreateDefaultSubobject<UParticleSystemComponent>("DungeonEndLight");
 	EndingBox = CreateDefaultSubobject<UBoxComponent>("EndingBox");
 	EndingBox->SetCollisionProfileName("DungeonEnd");
 	EndingBox->SetRelativeScale3D(FVector(8.f, 8.f, 8.f));
@@ -20,19 +21,17 @@ ADungeonEnd::ADungeonEnd()
 		DungeonFinishMesh->SetStaticMesh(DungeonFinishMeshAsset.Object);
 	}
 	DungeonFinishMesh->AddRelativeRotation(FRotator(0.f, 90.f, 0.f));
-
-	EndItem = CreateDefaultSubobject<UChildActorComponent>("EndItem");
-	auto EndItemAsset = ConstructorHelpers::FClassFinder<AItem>
-		(TEXT("Class'/Script/Castle_in_Dungeon.Item'"));
-	if (EndItemAsset.Succeeded()) {
-		EndItem->SetChildActorClass(EndItemAsset.Class);
-	}
 	DungeonFinishMesh->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	EndingBox->AttachToComponent(DungeonFinishMesh, FAttachmentTransformRules::KeepRelativeTransform);
-	EndItem->AttachToComponent(DungeonFinishMesh, FAttachmentTransformRules::KeepRelativeTransform);
-	EndItem->AddRelativeLocation(FVector(0.f, 0.f, 430.f));
-	EndItem->SetRelativeScale3D(FVector(1.5f, 1.5f, 1.5f));
 
+	auto EndItemAsset = ConstructorHelpers::FObjectFinder<UParticleSystem>
+		(TEXT("ParticleSystem'/Game/Level/ItemFire/DataFIre.DataFIre'"));
+	if (EndItemAsset.Succeeded()) {
+		ExitDungeonLight->SetTemplate(EndItemAsset.Object);
+	}
+	ExitDungeonLight->AttachToComponent(DungeonFinishMesh, FAttachmentTransformRules::KeepRelativeTransform);
+	ExitDungeonLight->AddRelativeLocation(FVector(0.f, 0.f, 430.f));
+	ExitDungeonLight->SetRelativeScale3D(FVector(3.f, 3.f, 3.f));
 }
 
 // Called when the game starts or when spawned
@@ -52,10 +51,10 @@ void ADungeonEnd::Tick(float DeltaTime)
 void ADungeonEnd::NotifyActorBeginOverlap(AActor* OtherActor) {
 	//GEngine->AddOnScreenDebugMessage(-1, 60, FColor::Orange, FString::Printf(TEXT("TEstTestTests")));
 	ARogue* Rogue = Cast<ARogue>(OtherActor);
-	AItem* Item = Cast<AItem>(EndItem);
+	/*AItem* Item = Cast<AItem>(EndItem);
 	if (Rogue && Item) {
 		Item->NotifyActorBeginOverlap(OtherActor);
-	}
+	}*/
 }
 
 

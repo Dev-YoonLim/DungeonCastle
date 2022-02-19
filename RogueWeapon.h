@@ -53,7 +53,7 @@ public:
 	void WeaponDelegate();
 
 	void WeaponAttackEffectInit();
-	void WeaponAttackEffectPlay(AActor*, UPrimitiveComponent*);
+	void WeaponAttackPlay(AActor*, UPrimitiveComponent*);
 
 	void WorldRogueInit();
 	void WorldGameModeInit();
@@ -70,6 +70,8 @@ public:
 
 	void WeaponLevelUp();
 	void ElementLevelUp(int32, float);
+
+	void SpawnHitEffect();
 
 private:
 	class UDataTable* WeaponDataTable;
@@ -178,7 +180,7 @@ public:
 		UParticleSystem* HitEffect;
 
 	UPROPERTY(EditAnywhere)
-		ARogue* myRogue;
+		ARogue* MyRogue;
 
 	UPROPERTY(EditAnywhere)
 		ARogueState*	myRogueState;
