@@ -15,6 +15,7 @@ class CASTLE_IN_DUNGEON_API AEnemyRogueZombie : public AEnemyRogue
 	GENERATED_BODY()
 
 public:
+	AEnemyRogueZombie();
 	virtual void EnemyWeaponInit();
 	virtual void EnemyRogueBodyInit();
 	virtual void EnemyRogueCollisionInit();

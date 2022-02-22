@@ -13,7 +13,7 @@ FString URogueAttackNotifyState::GetNotifyName_Implementation() const {
 void URogueAttackNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float DurationTime){
 	Super::NotifyBegin(MeshComp, Animation, DurationTime);
 	ARogue* Rogue = Cast<ARogue>(MeshComp->GetOwner());
-	ARogueWeapon* Weapon = Cast<ARogueWeapon>(Rogue->RogueWeapons);
+	//ARogueWeapon* Weapon = Cast<ARogueWeapon>(Rogue->RogueWeapons);
 	if (Rogue) {
 		if (Rogue->getAttackQue() != 4) {
 			Rogue->setCanHit(true);
@@ -27,7 +27,7 @@ void URogueAttackNotifyState::NotifyBegin(USkeletalMeshComponent* MeshComp, UAni
 void URogueAttackNotifyState::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) {
 	Super::NotifyEnd(MeshComp, Animation);
 	ARogue* Rogue = Cast<ARogue>(MeshComp->GetOwner());
-	ARogueWeapon* Weapon = Cast<ARogueWeapon>(Rogue->RogueWeapons);
+	//ARogueWeapon* Weapon = Cast<ARogueWeapon>(Rogue->RogueWeapons);
 	if (Rogue) {
 		if (Rogue->getAttackQue() != 4) {
 			Rogue->setCanHit(false);
