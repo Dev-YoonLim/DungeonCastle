@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "humanoidEnemy.h"
+#include "HumanoidEnemyAniminstance.h"
 #include "ZombieEnemy.generated.h"
 
 /**
@@ -17,10 +18,17 @@ public:
 	AZombieEnemy();
 
 public:
+	virtual void PostInitializeComponents() override;
+
+public:
 	virtual void BodyInit() override;
 	virtual void Working() override;
 	virtual void Attack() override;
 	virtual void Dodge() override;
 	virtual void Idle() override;
 	virtual void StatInit() override;
+
+public:
+	UAnimInstance* SetHumanoidAnim;
+	UHumanoidEnemyAniminstance* HumanoidAnim;
 };

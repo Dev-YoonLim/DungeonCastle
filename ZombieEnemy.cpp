@@ -8,6 +8,12 @@ AZombieEnemy::AZombieEnemy() {
 	StatInit();
 }
 
+void AZombieEnemy::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+	SetHumanoidAnim = GetMesh()->GetAnimInstance();
+	HumanoidAnim = Cast<UHumanoidEnemyAniminstance>(SetHumanoidAnim);
+}
+
 void AZombieEnemy::Idle() {
 
 }
@@ -26,7 +32,7 @@ void AZombieEnemy::Dodge() {
 
 void AZombieEnemy::BodyInit() {
 	auto BodyAsset = ConstructorHelpers::FObjectFinder<USkeletalMesh>
-		(TEXT("SkeletalMesh'/Game/EnemyRogue/Animation/ybot.ybot'"));
+		(TEXT("SkeletalMesh'/Game/HumanoidEnemy/Zombie/Default/ybot.ybot'"));
 	if (BodyAsset.Succeeded()) {
 		GetMesh()->SetSkeletalMesh(BodyAsset.Object);
 	}
@@ -37,4 +43,19 @@ void AZombieEnemy::BodyInit() {
 
 void AZombieEnemy::StatInit() {
 	EnemyHp *= EnemyHpCoe;
+	FormNumber = 1;
+	if (FormNumber == 0) {
+		auto AnimAsset = ConstructorHelpers::FClassFinder<UAnimInstance>
+			(TEXT("AnimBlueprint'/Game/HumanoidEnemy/Zombie/Default/AnimInstance/ZobieAnimInstance.ZobieAnimInstance_C'"));
+		if (AnimAsset.Succeeded()) {
+			GetMesh()->SetAnimClass(AnimAsset.Class);
+		}
+	}
+	else {
+		auto AnimAsset = ConstructorHelpers::FClassFinder<UAnimInstance>
+			(TEXT("AnimBlueprint'/Game/HumanoidEnemy/Zombie/Default/AnimInstance/ZobieAnimInstance_2.ZobieAnimInstance_2_C'"));
+		if (AnimAsset.Succeeded()) {
+			GetMesh()->SetAnimClass(AnimAsset.Class);
+		}
+	}
 }

@@ -27,6 +27,10 @@ void AhumanoidEnemy::Tick(float DeltaTime)
 
 }
 
+void AhumanoidEnemy::PostInitializeComponents() {
+	Super::PostInitializeComponents();
+}
+
 // Called to bind functionality to input
 void AhumanoidEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

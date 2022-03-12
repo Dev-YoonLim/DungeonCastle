@@ -52,8 +52,8 @@ void AEnemyAIController::OnPossess(APawn* InPawn) {
 		BlackboardComp->InitializeBlackboard(*EnemyRogue->EnemyBehaviorTree->BlackboardAsset);
 		RogueKeyID = BlackboardComp->GetKeyID("RogueKey");
 		EnemyRogueKeyID = BlackboardComp->GetKeyID("EnemyRogueKey");
-		PrePosKeyID = BlackboardComp->GetKeyID("PrePosKey");
-		NextPosKeyID = BlackboardComp->GetKeyID("NextPosKey");
+		PrePosKeyID = BlackboardComp->GetKeyID("PrePos");
+		NextPosKeyID = BlackboardComp->GetKeyID("NextPos");
 		BehaviorComp->StartTree(*EnemyRogue->EnemyBehaviorTree);
 	}
 }

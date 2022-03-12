@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "HumanoidEnemyAniminstance.h"
 #include "humanoidEnemy.generated.h"
 
 UCLASS()
@@ -25,6 +26,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PostInitializeComponents() override;
 
 public:
 	virtual void BodyInit();
@@ -39,8 +41,9 @@ public:
 		float EnemyHp;
 	UPROPERTY(EditAnywhere)
 		float EnemyHpCoe; // hp °è¼ö
+	UPROPERTY(EditAnywhere)
+		int32 FormNumber;
 
 public:
 	int32 EnemyActionState; // 0Idle, 1Move, 2Attack, 3TakeHit, 4Death
-
 };
