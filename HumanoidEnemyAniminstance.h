@@ -24,5 +24,20 @@ protected:
 
 public:
 	void ZombieAnimationInit();
+
+public:
+	UAnimMontage* ZombieIdle1;
+	UAnimMontage* ZombieIdle2;
+	UAnimMontage* ZombieDie1;
+	UAnimMontage* ZombieDie2;
+	UAnimMontage* ZombieWalk1;
+	UAnimMontage* ZombieWalk2;
+	UAnimMontage* ZombieHit1;
+	UAnimMontage* ZombieHit2;
+	UAnimMontage* ZombieAttack1;
+	UAnimMontage* ZombieAttack2;
+	UAnimMontage* ZombieAttack3;
+	UAnimMontage* ZombieAttack4;
+
 	
 };
