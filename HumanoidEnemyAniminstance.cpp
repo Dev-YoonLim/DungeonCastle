@@ -5,19 +5,19 @@
 
 
 UHumanoidEnemyAniminstance::UHumanoidEnemyAniminstance() {
-
+	ZombieAnimationInit();
 }
 
 void UHumanoidEnemyAniminstance::NativeBeginPlay() {
-
+	Super::NativeBeginPlay();
 }
 
 void UHumanoidEnemyAniminstance::NativeUpdateAnimation(float DeltaSec) {
-
+	Super::NativeUpdateAnimation(DeltaSec);
 }
 
 void UHumanoidEnemyAniminstance::ZombieAnimationInit() {
-	auto ZombieIdle1Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
+	/*auto ZombieIdle1Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Idle/ZombieIdle1_Montage.ZombieIdle1_Montage'"));
 	auto ZombieIdle2Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Idle/ZombieIdle2_Montage.ZombieIdle2_Montage'"));
@@ -30,7 +30,7 @@ void UHumanoidEnemyAniminstance::ZombieAnimationInit() {
 	auto ZombieWalk2Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Move/ZombieWalk2_Montage.ZombieWalk2_Montage'"));
 	auto ZombieHit1Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
-		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Hit/ZombieHit_Montage.ZombieHit_Montage'"));
+		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Hit/NewAnimMontage.NewAnimMontage'"));
 	auto ZombieHit2Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Hit/ZombieHit_Montage_2.ZombieHit_Montage_2'"));
 	auto ZombieAttack1Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
@@ -42,6 +42,12 @@ void UHumanoidEnemyAniminstance::ZombieAnimationInit() {
 	auto ZombieAttack4Asset = ConstructorHelpers::FObjectFinder<UAnimMontage>
 		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Attack/ZombieAttack4_Montage.ZombieAttack4_Montage'"));
 	
+	if (ZombieHit1Asset.Succeeded()) {
+		ZombieHit1 = ZombieHit1Asset.Object;
+	}
+	if (ZombieHit2Asset.Succeeded()) {
+		ZombieHit2 = ZombieHit2Asset.Object;
+	}
 	if (ZombieIdle1Asset.Succeeded()) {
 		ZombieIdle1 = ZombieIdle1Asset.Object;
 	}
@@ -71,6 +77,83 @@ void UHumanoidEnemyAniminstance::ZombieAnimationInit() {
 	}
 	if (ZombieAttack4Asset.Succeeded()) {
 		ZombieAttack4 = ZombieAttack4Asset.Object;
+	}*/
+	auto ReactionAsset = ConstructorHelpers::FObjectFinder<UAnimMontage>
+		(TEXT("AnimMontage'/Game/HumanoidEnemy/Zombie/Default/Animation/Reaction/Reaction.Reaction'"));
+	if (ReactionAsset.Succeeded()) {
+		Reactions = ReactionAsset.Object;
 	}
+}
 
+void UHumanoidEnemyAniminstance::ZombieHitPlay() {
+	Montage_Play(Reactions);
+}
+
+/*void UHumanoidEnemyAniminstance::ZombieIdlePlay() {
+	if (Montage_IsPlaying(ZombieIdle1) == false && Montage_IsPlaying(ZombieIdle2) == false) {
+		if (FMath::RandRange(0, 1) == 0) {
+			Montage_Play(ZombieIdle1);
+		}
+		else {
+			Montage_Play(ZombieIdle2);
+		}
+	}
+}
+
+void UHumanoidEnemyAniminstance::ZombieWalkPlay() {
+	if (Montage_IsPlaying(ZombieWalk1) == false && Montage_IsPlaying(ZombieWalk2) == false) {
+		if (FMath::RandRange(0, 1) == 0) {
+			Montage_Play(ZombieWalk1);
+		}
+		else {
+			Montage_Play(ZombieWalk2);
+		}
+	}
+}
+
+void UHumanoidEnemyAniminstance::ZombieAttackPlay() {
+	if (Montage_IsPlaying(ZombieIdle1) == false && Montage_IsPlaying(ZombieIdle2) == false) {
+		switch (FMath::RandRange(0, 3)) {
+		case 0:
+			Montage_Play(ZombieAttack1);
+			break;
+		case 1:
+			Montage_Play(ZombieAttack2);
+			break;
+		case 2:
+			Montage_Play(ZombieAttack3);
+			break;
+		case 3:
+			Montage_Play(ZombieAttack4);
+			break;
+		}
+	}
+}
+
+void UHumanoidEnemyAniminstance::ZombieHitPlay() {
+	Montage_Play(ZombieHit1);
+	//if (Montage_IsPlaying(ZombieHit1) == false && Montage_IsPlaying(ZombieHit2) == false) {
+		
+	//}
+	/*if (FMath::RandRange(0, 1) == 0) {
+		Montage_Play(ZombieHit1);
+	}
+	else {
+		Montage_Play(ZombieHit2);
+	}
+}
+
+void UHumanoidEnemyAniminstance::ZombieDiePlay() {
+	if (Montage_IsPlaying(ZombieDie1) == false && Montage_IsPlaying(ZombieDie2) == false) {
+		if (FMath::RandRange(0, 1) == 0) {
+			Montage_Play(ZombieDie1);
+		}
+		else {
+			Montage_Play(ZombieDie2);
+		}
+	}
+}*/
+
+void UHumanoidEnemyAniminstance::TestFun() {
+	//GEngine->AddOnScreenDebugMessage(-1, 300, FColor::Red, FString::Printf(TEXT("EnemyHitHitHit123")));
 }

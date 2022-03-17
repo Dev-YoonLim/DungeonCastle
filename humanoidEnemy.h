@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "HumanoidEnemyAniminstance.h"
+#include "RogueWeapon.h"
+#include "RogueTorch.h"
+#include "Rogue.h"
 #include "humanoidEnemy.generated.h"
 
 UCLASS()
@@ -27,12 +30,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void PostInitializeComponents() override;
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 public:
 	virtual void BodyInit();
-	virtual void Working();
+	virtual void Walking();
 	virtual void Attack();
 	virtual void Dodge();
+	virtual void Die();
+	virtual void Hit();
 	virtual void Idle();
 	virtual void StatInit();
 
@@ -46,4 +52,11 @@ public:
 
 public:
 	int32 EnemyActionState; // 0Idle, 1Move, 2Attack, 3TakeHit, 4Death
+	int32 TakeHitState; //슈퍼아머나 자세 등등
+	UAnimInstance* SetHumanoidAnim;
+	UHumanoidEnemyAniminstance* HumanoidAnim;
+	ARogueWeapon* RogueWeapon;
+	ARogueTorch* RogueTorch;
+	ARogue* WeaponOwner;
+	ARogue* TorchOwner;
 };

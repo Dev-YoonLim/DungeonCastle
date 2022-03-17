@@ -41,6 +41,9 @@ public:
 	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 public:
+	int32 GetAttackState() { return AttackState; }
+	void SetAttackState(int32 NewState) { AttackState = NewState; }
+
 	void DataTableInit();
 	void WeaponInit();
 
@@ -164,6 +167,7 @@ public:
 	int32 SelectWeaponElementNumber;
 	int32 SelectWeaponNumber;
 	int32 AttackQue;
+	int32 AttackState = 0;
 	FVector ElementEffectSize;
 
 	TCHAR* WeaponReference;

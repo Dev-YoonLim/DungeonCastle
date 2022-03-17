@@ -17,7 +17,8 @@ ARogue::ARogue()
 	RogueDialogueInit();
 	RogueWeaponInit();
 	RogueTorchInit();
-	setCanHit(false);
+	//setCanHit(false);
+	CanHit = false;
 	SetTorchCanHit(false);
 	//DialogueInit();
 }
@@ -1474,4 +1475,8 @@ void ARogue::RogueDieState(int32 Index) {
 	}
 	MyGameMode->Widget_MouseCursorChangedDelegate.ExecuteIfBound(2);
 	TakeHitOn = false;
+}
+
+void ARogue::setCanHit(bool newHitState) {
+	CanHit = newHitState;
 }

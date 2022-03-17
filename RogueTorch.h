@@ -73,6 +73,9 @@ public:
 
 	void CheckTorchAttackFinish() { TorchAttackFinsh = false; }
 
+	int32 GetAttackState() { return TorchAttackState; }
+	void SetAttackState(int32 NewState) { TorchAttackState = NewState; }
+
 public:
 	TCHAR* FireEffectReference;
 	TCHAR* FireEffectElementReference;
@@ -119,6 +122,8 @@ public:
 	USoundCue* IdleFireSound;
 
 public:
+	int32 TorchAttackState = 0;
+
 	bool TorchArrive;
 	bool RightSide;
 	bool TorchHitOn;

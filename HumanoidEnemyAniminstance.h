@@ -18,15 +18,31 @@ public:
 	UHumanoidEnemyAniminstance();
 
 
-protected:
+public:
 	virtual void NativeBeginPlay() override;
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 public:
 	void ZombieAnimationInit();
+	
+public:
+	/*UFUNCTION(BlueprintCallable)
+	void ZombieIdlePlay();
+	UFUNCTION(BlueprintCallable)
+	void ZombieWalkPlay();
+	UFUNCTION(BlueprintCallable)
+	void ZombieAttackPlay();
+	UFUNCTION(BlueprintCallable)
+	void ZombieDiePlay();*/
+
+	void TestFun();
+
+	UFUNCTION(BlueprintCallable)
+		void ZombieHitPlay();
 
 public:
-	UAnimMontage* ZombieIdle1;
+	UAnimMontage* Reactions;
+	/*UAnimMontage* ZombieIdle1;
 	UAnimMontage* ZombieIdle2;
 	UAnimMontage* ZombieDie1;
 	UAnimMontage* ZombieDie2;
@@ -37,7 +53,7 @@ public:
 	UAnimMontage* ZombieAttack1;
 	UAnimMontage* ZombieAttack2;
 	UAnimMontage* ZombieAttack3;
-	UAnimMontage* ZombieAttack4;
+	UAnimMontage* ZombieAttack4;*/
 
 	
 };

@@ -141,7 +141,7 @@ public:
 	void setAttackAfterTime(float NewTime) { AttackAfterTime = NewTime; }
 
 	bool getCanHit() { return CanHit; }
-	void setCanHit(bool newHitState) { CanHit = newHitState; }
+	void setCanHit(bool newHitState);
 
 
 	void SetTorchCanHit(bool NewTorchHitState) { TorchCanHit = NewTorchHitState; }
