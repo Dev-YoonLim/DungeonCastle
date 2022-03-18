@@ -273,7 +273,7 @@ private:
 	float BreakSynergy;
 	float StabSynergy;
 	float WeaponSpeed;
-	float WeaponSpeedValue;
+	float WeaponSpeedValueBonus;
 	float AttackFormSynergy[3][3];
 	bool DoubleAttackCheck[3];
 	int32 AttackDirectionCheck[3][2];
@@ -282,13 +282,13 @@ private:
 	
 	float WeaponPhysicsDamege[3];
 	float WeaponElementDamege;
-	float WeaponElementDamegeValue;
+	float WeaponElementDamegeBonus;
 	float WeaponTotalDamege[3];
 	
 	float WeaponDefaultDamege;
 	float WeaponElementDefaultDamge;
-	float WeaponElementPer;
-	float WeaponElementPerValue;
+	float WeaponElementValue;
+	float WeaponElementValueBonus;
 	float AvgWeaponDamege;
 	float LastAvgWeaponDamege;
 	float LastAvgWeaponEDamge;
@@ -320,7 +320,7 @@ private:
 	int32 ElementLevel;
 
 
-	float CertainElementSynergy[5];
+	float SelectedElementBonus[5];
 
 	int32 AttackForm[3];
 	int32 AttackFormIndex[3];
@@ -384,9 +384,9 @@ public:
 	int32 TotalWeaponCount;
 	int32 TotalElementCount;
 	int32 TotalAttackFormCount;
-	float SlashIncreaseValue;
-	float BreakIncreaseValue;
-	float StabIncreaseValue;
+	float SlashValueBonus;
+	float BreakValueBonus;
+	float StabValueBonus;
 	float TorchBurnAttackSynergyValue;
 	int32 ItemCount;
 	int32 DialogueTutorialCount;

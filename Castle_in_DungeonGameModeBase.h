@@ -36,7 +36,7 @@ DECLARE_DELEGATE_ThreeParams(AttackFormSynergyDelegateSignature, float*, bool*, 
 DECLARE_DELEGATE_FourParams(TorchStatusSynergyDelegateSignature, float, float, float, float);
 
 DECLARE_DELEGATE(WeaponTotalDamegeSettingDelegateSignature);
-DECLARE_DELEGATE_FourParams(WeaponTotalDamegeDelegateSignature, float, float, float, float);
+DECLARE_DELEGATE_ThreeParams(WeaponTotalDamegeDelegateSignature, float*, float, float);
 DECLARE_DELEGATE_NineParams(WeaponDoubleAttackAndAttackDirectionDelegateSignaure, bool, bool, bool, int32, int32, int32, int32, int32, int32);
 DECLARE_DELEGATE_OneParam(WeaponAttackQueDelegateSignature, int32);
 

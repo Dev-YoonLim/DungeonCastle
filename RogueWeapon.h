@@ -41,6 +41,7 @@ public:
 	//virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 public:
+	void WeaponAttackDamegeInit();
 	int32 GetAttackState() { return AttackState; }
 	void SetAttackState(int32 NewState) { AttackState = NewState; }
 
@@ -64,7 +65,7 @@ public:
 	void WeaponChangeElement(int32, float ElementLevelValue);
 
 	void WeaponSynergy(float, float, float);
-	void GetWeaponTotalDamegeValue(float, float, float, float);
+	void SetWeaponTotalDamegeValue(float*WeaponDamege, float ElementDamege, float ElementValue);
 	void GetWeaponDoubleCheckAndAttackDirection(bool, bool, bool, int32, int32, int32, int32, int32, int32);
 
 	void GetAttackQue(int32 NowQue);
@@ -87,7 +88,7 @@ private:
 	float EffectMinRange;
 	float EffectMaxRange;
 
-	float ElementDamege;
+	float DefaultElementDamege;
 	float ElementSynergy;
 
 
@@ -95,7 +96,8 @@ private:
 	float SlashSynergy;
 	float BreakSynergy;
 
-	float WeaponAttackDefaultPhysicsElementDameges[3];
+	float WeaponAttackPhysicsDameges[3];
+	float WeaponAttackElementDamege;
 	bool DoubleAttackChecks[3];
 	int32 AttackDirection[3][2];
 
@@ -125,9 +127,9 @@ private:
 	float DamegeTaken;
 	float DotDamege[5];
 	float DotDamegeTime;
-	float ElementPer;
-	float ElementPlusValue;
-	float DefaultElementPer;
+	float ElementValue;
+	//float ElementPlusValue;
+	//float DefaultElementPer;
 	float TotalElementPer;
 
 	float AttackDmgPlusValue;
@@ -138,11 +140,11 @@ public:
 	void SetDotDamege(int32 DotDamegeElement, float OriginDamege, float DotPer);
 	void SetDamegeTaken(float NewDamege) { DamegeTaken = NewDamege; }
 	void SetDotDamegeTime(float NewTime) { DotDamegeTime = NewTime; }
-	void SetPlusElementPer(float PlusPer) { TotalElementPer = ElementPer + PlusPer; }
-	void SetElementPer(float NewPer) { ElementPer = NewPer; }
+	void SetPlusElementPer(float PlusPer) { TotalElementPer = ElementValue + PlusPer; }
+	void SetElementPer(float NewPer) { ElementValue = NewPer; }
 	void SetTotalElementPer(float NewPer) { TotalElementPer = NewPer; }
 	void SetHitPlusElement(float PlusValue) { ElementPlusValue = PlusValue;}
-	void SetMultiplyElementPer(float MultiplyPer) { ElementPer *= MultiplyPer; }
+	void SetMultiplyElementPer(float MultiplyPer) { ElementValue *= MultiplyPer; }
 	void SetAttackDmgValue(float NewValue) { AttackDmgValue = NewValue; }
 	void SetAttackDmgPlusValue(float NewValue) { AttackDmgPlusValue += NewValue * 0.05; }
 	void InitAttackDmgPlusValue() { AttackDmgPlusValue = 1.f; }
@@ -151,8 +153,8 @@ public:
 	float GetDotDamege(int32 DotDamegeElement) { return DotDamege[DotDamegeElement]; }
 	float GetDamegeTaken() { return DamegeTaken; }
 	float GetDotDamegeTime() { return DotDamegeTime; }
-	float GetElementPer() { return ElementPer; }
-	float GetDefaultElementPer() { return DefaultElementPer; }
+	float GetElementPer() { return ElementValue; }
+	float GetDefaultElementPer() { return ElementValue; }
 	float GetTotalElementPer() { return TotalElementPer; }
 
 	void TakeAttackVector(FVector);

@@ -13,7 +13,7 @@ ARogueWeapon::ARogueWeapon()
 	WeaponInit();
 	DataTableInit();
 	WeaponAttackEffectInit();
-	GetWeaponTotalDamegeValue(0, 0, 0, 0);
+	WeaponAttackDamegeInit();
 	Weapon->OnComponentBeginOverlap.AddDynamic(this, &ARogueWeapon::EnterBeginOverlap);
 	Weapon->OnComponentEndOverlap.AddDynamic(this, &ARogueWeapon::EnterEndOverlap);
 	
@@ -48,7 +48,7 @@ void ARogueWeapon::WeaponDelegate() {
 	MyGameMode->Return_WeaponChangeDelegate.BindUObject(this, &ARogueWeapon::WeaponNumberChange);
 	MyGameMode->WeaponElementChangeDelegate_.BindUObject(this, &ARogueWeapon::WeaponChangeElement);
 	MyGameMode->WeaponAttackQueDelegate.BindUObject(this, &ARogueWeapon::GetAttackQue);
-	MyGameMode->WeaponTotalDamegeDelegate.BindUObject(this, &ARogueWeapon::GetWeaponTotalDamegeValue);
+	MyGameMode->WeaponTotalDamegeDelegate.BindUObject(this, &ARogueWeapon::SetWeaponTotalDamegeValue);
 	MyGameMode->WeaponDoubleAttackAndAttackDirectionDelegate.BindUObject(this, &ARogueWeapon::GetWeaponDoubleCheckAndAttackDirection);
 	//MyGameMode->RogueWeaponLevelDelegate.BindUObject(this, &ARogueWeapon::WeaponLevelUp);
 	MyGameMode->RogueElementLevelToWeaponDelegate.BindUObject(this, &ARogueWeapon::ElementLevelUp);
@@ -57,6 +57,13 @@ void ARogueWeapon::WeaponDelegate() {
 	MyGameMode->WeaponHitKnockBackDelegate.BindUObject(this, &ARogueWeapon::TakeKnockBackCheck);
 	MyGameMode->RogueAttackVectorToEnemyRogueDelegate.AddUObject(this, &ARogueWeapon::TakeAttackVector);
 	MyGameMode->Call_RogueUseWeaponReferenceDelegate.BindUObject(this, &ARogueWeapon::Receive_CallRogueUseWeapon);
+}
+
+void ARogueWeapon::WeaponAttackDamegeInit() {
+	for (int i = 0; i < 3; i++)
+		WeaponAttackPhysicsDameges[i] = 0;
+	WeaponAttackElementDamege = 0;
+	ElementValue = 0;
 }
 
 void ARogueWeapon::DataTableInit() {
@@ -251,7 +258,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		ElementEffectSize = WeaponDataTableRow->ElementEffectSize;
 		WeaponSynergy(WeaponDataTableRow->FormSynergyX, WeaponDataTableRow->FormSynergyY, WeaponDataTableRow->FormSynergyZ);
 
-		MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, ElementPer);
+		MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, ElementValue);
 		MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
 		MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
 
@@ -300,49 +307,49 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Normal/P_Buff_Char_SpeedUp_01.P_Buff_Char_SpeedUp_01'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Normal/P_ky_hit2.P_ky_hit2'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		ElementDamege = 10.f;
+		DefaultElementDamege = 10.f;
 		HitElementEffectScale = 0.3;
-		ElementPer = 20.f;
-		DefaultElementPer = 20.f;
+		ElementValue = 30.f;
+		//DefaultElementPer = 20.f;
 		break;
 	case 1:
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Fire/P_ky_fireStorm.P_ky_fireStorm'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Fire/WeaponHitEffect_Fire.WeaponHitEffect_Fire'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		ElementDamege = 6.f;
+		DefaultElementDamege = 6.f;
 		HitElementEffectScale = 0.3;
-		ElementPer = 20.f;
-		DefaultElementPer = 20.f;
+		ElementValue = 50.f;
+		//DefaultElementPer = 20.f;
 		break;
 	case 2:
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Ice/P_ky_healAura.P_ky_healAura'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Ice/P_ShoulderIce01.P_ShoulderIce01'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		ElementDamege = 8.f;
+		DefaultElementDamege = 8.f;
 		HitElementEffectScale = 0.2;
-		ElementPer = 30.f;
-		DefaultElementPer = 50.f;
+		ElementValue = 30.f;
+		//DefaultElementPer = 50.f;
 		break;
 	case 3:
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Poison/P_ky_storm.P_ky_storm'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Poison/P_ky_hit1.P_ky_hit1'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		ElementDamege = 1.f;
+		DefaultElementDamege = 1.f;
 		HitElementEffectScale = 0.25;
-		ElementPer = 50.f;
-		DefaultElementPer = 90.f;
+		ElementValue = 100.f;
+		//DefaultElementPer = 90.f;
 		break;
 	case 4:
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Electro/P_DOT_Lightning_01.P_DOT_Lightning_01'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Electro/P_ky_ThunderBallHit.P_ky_ThunderBallHit'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		ElementDamege = 5.f;
+		DefaultElementDamege = 5.f;
 		HitElementEffectScale = 0.1;
-		ElementPer = 0.f;
-		DefaultElementPer = 0.f;
+		ElementValue = 50.f;
+		//DefaultElementPer = 0.f;
 		break;
 	}
-	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, ElementPer);
+	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, ElementValue);
 	MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
 	MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
 
@@ -371,11 +378,14 @@ void ARogueWeapon::GetAttackQue(int32 NowQue) {
 	AttackQue = NowQue;
 }
 
-void ARogueWeapon::GetWeaponTotalDamegeValue(float FirstDamege, float SndDamege, float TrdDamege, float ElementPers) {
-	WeaponAttackDefaultPhysicsElementDameges[0] = FirstDamege;
-	WeaponAttackDefaultPhysicsElementDameges[1] = SndDamege;
-	WeaponAttackDefaultPhysicsElementDameges[2] = TrdDamege;
-	SetElementPer(ElementPers);
+void ARogueWeapon::SetWeaponTotalDamegeValue(float* WeaponDamege,  float ElementDamege, float ElementValue) {
+	WeaponAttackPhysicsDameges[0] = WeaponDamege[0];
+	WeaponAttackPhysicsDameges[1] = WeaponDamege[1];
+	WeaponAttackPhysicsDameges[2] = WeaponDamege[2];
+
+	WeaponAttackElementDamege = ElementDamege;
+
+	SetElementPer(ElementValue);
 }
 
 void ARogueWeapon::GetWeaponDoubleCheckAndAttackDirection(bool First, bool Snd, bool Trd, int32 ZeroZeroDirect,
@@ -422,7 +432,7 @@ void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* Oth
 			EnemyRogue->TakeAttackVector(TackAttackVectorValue); //공격방향에 따른 백터값
 			EnemyRogue->TakeWeaponKnockBackCheck(WeaponKnockBack); //넉백 체크 및 넉백발동
 		}
-		AttackElementStateEffect(GetElementPer(), WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue);
+		//AttackElementStateEffect(GetElementPer(), WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue);
 		//무기 속성 발동 및 상태 함수
 
 		if (StateEffect[4] == true) { // 전격속성일 경우 스택형 이펙트 발동
@@ -442,7 +452,7 @@ void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* Oth
 
 		/*if (ElementPlusValue != 0) { // 공격성공 및 피격이 없을 경우 발동되는 스택형 능력 구현 함수, 아직 완벽히 구현되지 않았음
 			SetPlusElementPer(ElementPlusValue);
-			MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, ElementDamege, TotalElementPer);
+			MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, TotalElementPer);
 		}
 		
 		if (AttackDmgPlusValue != 1.f) {
