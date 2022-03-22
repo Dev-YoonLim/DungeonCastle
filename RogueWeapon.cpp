@@ -64,6 +64,7 @@ void ARogueWeapon::WeaponAttackDamegeInit() {
 		WeaponAttackPhysicsDameges[i] = 0;
 	WeaponAttackElementDamege = 0;
 	ElementValue = 0;
+	DefaultElementValue = 0;
 }
 
 void ARogueWeapon::DataTableInit() {
@@ -258,7 +259,7 @@ void ARogueWeapon::WeaponNumberChange(int32 WeaponNumber) {
 		ElementEffectSize = WeaponDataTableRow->ElementEffectSize;
 		WeaponSynergy(WeaponDataTableRow->FormSynergyX, WeaponDataTableRow->FormSynergyY, WeaponDataTableRow->FormSynergyZ);
 
-		MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, ElementValue);
+		MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, DefaultElementValue);
 		MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
 		MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
 
@@ -309,7 +310,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 10.f;
 		HitElementEffectScale = 0.3;
-		ElementValue = 30.f;
+		DefaultElementValue = 30.f;
 		//DefaultElementPer = 20.f;
 		break;
 	case 1:
@@ -318,7 +319,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 6.f;
 		HitElementEffectScale = 0.3;
-		ElementValue = 50.f;
+		DefaultElementValue = 50.f;
 		//DefaultElementPer = 20.f;
 		break;
 	case 2:
@@ -327,7 +328,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 8.f;
 		HitElementEffectScale = 0.2;
-		ElementValue = 30.f;
+		DefaultElementValue = 30.f;
 		//DefaultElementPer = 50.f;
 		break;
 	case 3:
@@ -336,7 +337,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 1.f;
 		HitElementEffectScale = 0.25;
-		ElementValue = 100.f;
+		DefaultElementValue = 100.f;
 		//DefaultElementPer = 90.f;
 		break;
 	case 4:
@@ -345,11 +346,11 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 5.f;
 		HitElementEffectScale = 0.1;
-		ElementValue = 50.f;
+		DefaultElementValue = 50.f;
 		//DefaultElementPer = 0.f;
 		break;
 	}
-	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, ElementValue);
+	MyGameMode->WeaponElementSynergyDelegate.ExecuteIfBound(ElementSynergy, DefaultElementDamege, DefaultElementValue);
 	MyGameMode->WeaponSynergyDelegate.ExecuteIfBound(SelectWeaponNumber, SlashSynergy, BreakSynergy, StabSynergy, WeaponDamege, WeaponSpeed);
 	MyGameMode->WeaponTotalDamegeSettingDelegate.ExecuteIfBound();
 
@@ -378,14 +379,14 @@ void ARogueWeapon::GetAttackQue(int32 NowQue) {
 	AttackQue = NowQue;
 }
 
-void ARogueWeapon::SetWeaponTotalDamegeValue(float* WeaponDamege,  float ElementDamege, float ElementValue) {
-	WeaponAttackPhysicsDameges[0] = WeaponDamege[0];
-	WeaponAttackPhysicsDameges[1] = WeaponDamege[1];
-	WeaponAttackPhysicsDameges[2] = WeaponDamege[2];
+void ARogueWeapon::SetWeaponTotalDamegeValue(float* WeaponDameges,  float ElementDamege, float ElementValues) {
+	WeaponAttackPhysicsDameges[0] = WeaponDameges[0];
+	WeaponAttackPhysicsDameges[1] = WeaponDameges[1];
+	WeaponAttackPhysicsDameges[2] = WeaponDameges[2];
 
 	WeaponAttackElementDamege = ElementDamege;
 
-	SetElementPer(ElementValue);
+	SetElementValue(ElementValues*(1.0+0.1*ElementPlusValue));
 }
 
 void ARogueWeapon::GetWeaponDoubleCheckAndAttackDirection(bool First, bool Snd, bool Trd, int32 ZeroZeroDirect,
@@ -442,10 +443,10 @@ void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* Oth
 				FRotator(0, 0, 0), FVector(0.6, 0.6, 0.6)); 
 		}
 		
-		EnemyRogue->EnemyRogueTakeWeaponDamege(WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue,
+		/*EnemyRogue->EnemyRogueTakeWeaponDamege(WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue,
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
 			ElementStack[SelectWeaponElementNumber], StateEffect,
-			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1], WeaponSpeed);
+			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1], WeaponSpeed);*/
 			// 데미지 발동 함수 - 공격, 속성, 특수능력 발동, 도트데미지, 방향, 스택정보 전달
 		
 		MyRogue->MyRogueState->WeaponLevelEx++; // 무기 레벨 경험치 증가

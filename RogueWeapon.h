@@ -127,8 +127,9 @@ private:
 	float DamegeTaken;
 	float DotDamege[5];
 	float DotDamegeTime;
+	float DefaultElementValue;
 	float ElementValue;
-	//float ElementPlusValue;
+	float ElementPlusValue;
 	//float DefaultElementPer;
 	float TotalElementPer;
 
@@ -141,7 +142,7 @@ public:
 	void SetDamegeTaken(float NewDamege) { DamegeTaken = NewDamege; }
 	void SetDotDamegeTime(float NewTime) { DotDamegeTime = NewTime; }
 	void SetPlusElementPer(float PlusPer) { TotalElementPer = ElementValue + PlusPer; }
-	void SetElementPer(float NewPer) { ElementValue = NewPer; }
+	void SetElementValue(float NewPer) { ElementValue = NewPer; }
 	void SetTotalElementPer(float NewPer) { TotalElementPer = NewPer; }
 	void SetHitPlusElement(float PlusValue) { ElementPlusValue = PlusValue;}
 	void SetMultiplyElementPer(float MultiplyPer) { ElementValue *= MultiplyPer; }

@@ -637,10 +637,10 @@ void ARogueState::SetWeaponElementOne(int32 SelectElementNumber, bool Take) {
 	MyGameMode->WeaponElementChangeDelegate_.ExecuteIfBound(SelectElementNumber, ElementLevelValue); //현재는 키보드입력으로
 }
 
-void ARogueState::GetWeaponElementSynergy(float ElementSynergy, float ElementDefaultDamege, float ElementPer) {
+void ARogueState::GetWeaponElementSynergy(float ElementSynergy, float ElementDefaultDamege, float ElementValue) {
 	WeaponElementSynergy = ElementSynergy;
 	WeaponElementDefaultDamge = ElementDefaultDamege;
-	WeaponElementValue = ElementPer;
+	WeaponElementValue = ElementValue;
 }
 
 void ARogueState::SetSelectWeapon(int32 SelectWeaponNumber) {
@@ -1520,11 +1520,15 @@ void ARogueState::LastWeaponDamegeSetting() {
 		AttackThreeFormSynergy = 1.1;
 	}*/
 	for (int i = 0; i < 3; i++) {
-		if (LowHpToHighAttackSynergyCount == 1 && GetRogueHp() < GetRogueHp() / 4) 
-			WeaponTotalDamege[i] *= 1.5;
+		if (LowHpToHighAttackSynergyCount == 1 && GetRogueHp() < GetRogueHp() / 4) {
+			WeaponPhysicsDamege[i] *= 1.5;
+			WeaponElementDamege *= 1.5;
+		}
 
-		if (FullHpToHighAttackSynergyCount == 1 && GetRogueHp() == FullMaxHp) 
-			WeaponTotalDamege[i] *= 1.3;
+		if (FullHpToHighAttackSynergyCount == 1 && GetRogueHp() == FullMaxHp) {
+			WeaponPhysicsDamege[i] *= 1.3;
+			WeaponElementDamege *= 1.3;
+		}
 
 		LastWeaponDmgSum += WeaponPhysicsDamege[i];
 		//LastWeaponEDmgSum = (WeaponElementDamege * (1 + HadElementalOverlap[WeaponElementNumber] / 10));
