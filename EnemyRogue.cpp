@@ -201,7 +201,11 @@ void AEnemyRogue::EnemyRogueStateInit() {
 	HitSuperArmorCount = 0;
 	TakeDamageLimit = 1;
 	TakeDamageCount = 0;
-
+	ElementStatus[0] = 100.f;
+	ElementStatus[1] = 100.f;
+	ElementStatus[2] = 100.f;
+	ElementStatus[3] = 100.f;
+	ElementStatus[4] = 100.f;
 	/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
 		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
 	if (BlandAnim.Succeeded()) {
@@ -342,10 +346,10 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 	TakeCheckDoubleAttack = DoubleAttackChecks;
 	TakeCheckAttackDirection[0] = AttackDirectionOne;
 	TakeCheckAttackDirection[1] = AttackDirectionTwo;
-	if (WeaponEffect[WeaponElementNumber] == false && TakeWeaponElementNumbers != 4)
+	/*if (WeaponEffect[WeaponElementNumber] == false && TakeWeaponElementNumbers != 4)
 		TakeWeaponDamege = DefaultTotalDamege;
 	else
-		TakeWeaponDamege = EffectTotalDamege;
+		TakeWeaponDamege = EffectTotalDamege;*/
 	TakeWeaponEffect = WeaponEffect[WeaponElementNumber];
 	TakeWeaponElementNumbers = WeaponElementNumber;
 	TakeWeaponAttackStack = WeaponAttackStack;
@@ -357,7 +361,7 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 		ChangeKnockBackValue = 5.f;
 	KnockBackValue = ChangeKnockBackValue;
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
-	SetHp(TakeWeaponDamege);
+	//SetHp(TakeWeaponDamege);
 	if (EnemyDead == false) {
 		UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
 		WeaponHitAnimationPlay();
@@ -385,6 +389,60 @@ void AEnemyRogue::EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float Eff
 			//TakeElectricExplosion();
 			break;
 		}
+	}
+}
+
+void AEnemyRogue::EnemyHitFunc(bool DeadCheck) {
+	UGameplayStatics::PlaySoundAtLocation(this, TakeHitSoundCue, GetActorLocation());
+	if (DeadCheck == false) {
+		WeaponHitAnimationPlay();
+	}
+	else {
+		EnemyRogueDie();
+	}
+}
+
+void AEnemyRogue::EnemyRogueTakeWeaponPhysicsDamege(float TakePhysicsDamege) {
+	HitKinds = 0;
+	TakeWeaponPhysicsDamege = TakePhysicsDamege;
+	SetHp(TakeWeaponPhysicsDamege);
+	EnemyHitFunc(EnemyDead);
+	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
+}
+
+void AEnemyRogue::EnemyRogueTakeWeaponElementDamege(float TakeElementDamege) {
+	HitKinds = 0;
+	TakeWeaponElementDamege = TakeElementDamege;
+	SetHp(TakeWeaponElementDamege);
+}
+
+void AEnemyRogue::EnemyRogueTakeElementStatus(int32 Element, float ElementStatusValue) {
+	switch (Element) {
+	case 0:
+		if (ElementStatusLimit[Element] > TakeElementStatusValue)
+			TakeElementStatusValue += ElementStatusValue;
+		else {
+			TakeElementStatusValue = 0;
+			TakeStun();
+		}
+		ElectriFicationDPlusReady = false;
+		break;
+	case 1:
+		TakeBurn();
+		ElectriFicationDPlusReady = false;
+		break;
+	case 2:
+		TakeCold();
+		ElectriFicationDPlusReady = false;
+		break;
+	case 3:
+		TakePoison();
+		ElectriFicationDPlusReady = false;
+		break;
+	case 4:
+		ElectriFicationDPlusReady = true;
+		//TakeElectricExplosion();
+		break;
 	}
 }
 
@@ -520,7 +578,7 @@ void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 	}
 	else {
 		SetHp(TakeDotDamege);
-		TakeWeaponTempDamege += TakeWeaponDamege;
+		//TakeWeaponTempDamege += TakeWeaponDamege;
 		
 		BurningDotTick--;
 	}
@@ -547,7 +605,7 @@ void AEnemyRogue::TakeBurnExplosion() {
 		ExplosionBody = false;
 	}	
 	else {
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponBurnExplosion : %f"), TakeWeaponDamege * 3.f));
+		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponBurnExplosion : %f"), TakeWeaponDamege * 3.f));
 		ExplosionDamage = TakeTorchSpecialDamege;
 		SetHp(ExplosionDamage);
 	}
@@ -834,61 +892,59 @@ void AEnemyRogue::EnemyRogueSlow(int32 SlowStack, bool Freez) {
 }
 
 void AEnemyRogue::EnemyRogueDie() {
-	if (EnemyDead == true){
-		MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-(DeathData/2));
-		MyGameMode->RogueSetKarmaDelegate.ExecuteIfBound(Karma);
-		myRogue->MyRogueState->setRogueKill(1);
-		myRogue->MyRogueState->setRogueTotalKill(1);
-		GetCapsuleComponent()->SetCollisionProfileName("Death");
-		/*if (GiftAbilityPer >= FMath::FRandRange(0, 100)) {
-			GiftAbilityPer = 100.f;
-			GiftAbilityIndex = FMath::FRandRange(0, 10);
-			//MyGameMode->EnemyRogueDeathAndSendWeaponDelegate.ExecuteIfBound(GiftAbilityIndex);
-		}
-		else {
-			GiftAbilityPer += 5.f;
-		}*/
-		//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(99);
-		//Destroy();
-		int32 DeathFormIndex = FMath::FRandRange(0, 8);
-		
-		if (DeathFormIndex == 0) {
-			DeathForm = EnemyAnimInst->EnemyDownDeath1[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath1[0]);
-		}
-		else if (DeathFormIndex == 1) {
-			DeathForm = EnemyAnimInst->EnemyDownDeath2[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath2[0]);
-		}
-		else if (DeathFormIndex == 2) {
-			DeathForm = EnemyAnimInst->EnemyDownDeath3[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath3[0]);
-		}
+	MyGameMode->RogueSetDataDelegate.ExecuteIfBound(-(DeathData / 2));
+	MyGameMode->RogueSetKarmaDelegate.ExecuteIfBound(Karma);
+	myRogue->MyRogueState->setRogueKill(1);
+	myRogue->MyRogueState->setRogueTotalKill(1);
+	GetCapsuleComponent()->SetCollisionProfileName("Death");
+	/*if (GiftAbilityPer >= FMath::FRandRange(0, 100)) {
+		GiftAbilityPer = 100.f;
+		GiftAbilityIndex = FMath::FRandRange(0, 10);
+		//MyGameMode->EnemyRogueDeathAndSendWeaponDelegate.ExecuteIfBound(GiftAbilityIndex);
+	}
+	else {
+		GiftAbilityPer += 5.f;
+	}*/
+	//MyGameMode->Widget_ChangedWidgetDelegate.ExecuteIfBound(99);
+	//Destroy();
+	int32 DeathFormIndex = FMath::FRandRange(0, 8);
 
-		else if (DeathFormIndex == 3) {
-			DeathForm = EnemyAnimInst->EnemyUpDeath1[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath1[0]);
-		}
-		else if (DeathFormIndex == 4) {
-			DeathForm = EnemyAnimInst->EnemyUpDeath2[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath2[0]);
-		}
-		else if (DeathFormIndex == 5) {
-			DeathForm = EnemyAnimInst->EnemyUpDeath3[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath3[0]);
-		}
-		else if (DeathFormIndex <= 6) {
-			DeathForm = EnemyAnimInst->EnemyDownDeath1[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath1[0]);
-		}
-		else if (DeathFormIndex == 7) {
-			DeathForm = EnemyAnimInst->EnemyDownDeath2[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath2[0]);
-		}
-		else if (DeathFormIndex == 8) {
-			DeathForm = EnemyAnimInst->EnemyUpDeath3[1];
-			EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath3[0]);
-		}
+	if (DeathFormIndex == 0) {
+		DeathForm = EnemyAnimInst->EnemyDownDeath1[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath1[0]);
+	}
+	else if (DeathFormIndex == 1) {
+		DeathForm = EnemyAnimInst->EnemyDownDeath2[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath2[0]);
+	}
+	else if (DeathFormIndex == 2) {
+		DeathForm = EnemyAnimInst->EnemyDownDeath3[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath3[0]);
+	}
+
+	else if (DeathFormIndex == 3) {
+		DeathForm = EnemyAnimInst->EnemyUpDeath1[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath1[0]);
+	}
+	else if (DeathFormIndex == 4) {
+		DeathForm = EnemyAnimInst->EnemyUpDeath2[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath2[0]);
+	}
+	else if (DeathFormIndex == 5) {
+		DeathForm = EnemyAnimInst->EnemyUpDeath3[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath3[0]);
+	}
+	else if (DeathFormIndex <= 6) {
+		DeathForm = EnemyAnimInst->EnemyDownDeath1[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath1[0]);
+	}
+	else if (DeathFormIndex == 7) {
+		DeathForm = EnemyAnimInst->EnemyDownDeath2[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyDownDeath2[0]);
+	}
+	else if (DeathFormIndex == 8) {
+		DeathForm = EnemyAnimInst->EnemyUpDeath3[1];
+		EnemyAnimInst->Montage_Play(EnemyAnimInst->EnemyUpDeath3[0]);
 	}
 }
 

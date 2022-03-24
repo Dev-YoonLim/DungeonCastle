@@ -60,7 +60,8 @@ private:
 	float DefenceValue;
 	float MoveSpeedValue;
 	float MoveAccerValue;
-	float TakeWeaponDamege;
+	float TakeWeaponPhysicsDamege;
+	float TakeWeaponElementDamege;
 	bool TakeWeaponEffect;
 	float TakeDotDamege;
 	float TakeTorchStabDamege;
@@ -107,6 +108,9 @@ public:
 	int32 HitDirectionIndex;
 	UPROPERTY(EditAnywhere)
 		int32 EnemyForm;
+	UPROPERTY(EditAnywhere)
+		float ElementStatusLimit[5];
+	float TakeElementStatusValue;
 
 	bool EnemyDownFinish;
 	bool Hit;
@@ -166,6 +170,10 @@ public:
 public:
 	void EnemyRogueTakeWeaponDamege(float DefaultTotalDamege, float EffectTotalDamege, float DotDamege, 
 		int32 WeaponElementNumber, int32 WeaponAttackStack, bool* WeaponEffect, bool, int32, int32, float);
+
+	void EnemyRogueTakeWeaponPhysicsDamege(float TakePhysicsDamege);
+	void EnemyRogueTakeWeaponElementDamege(float TakeElementDamege);
+	void EnemyRogueTakeElementStatus(int32 Element, float TakeElementStatus);
 	
 	void EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksDamege, float SpecialDamege, 
 		int32* TorchElementStack, bool StabAttackOn, bool* DefaultEffect, bool* SpecialEffect, 
@@ -209,6 +217,7 @@ public:
 	void WorldRogueInit();
 	FVector DirectionVector();
 
+	void EnemyHitFunc(bool DeadCheck);
 	void WeaponHitAnimationPlay();
 	void TorchHitAnimationPlay();
 
