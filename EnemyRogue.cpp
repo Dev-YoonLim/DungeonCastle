@@ -201,11 +201,11 @@ void AEnemyRogue::EnemyRogueStateInit() {
 	HitSuperArmorCount = 0;
 	TakeDamageLimit = 1;
 	TakeDamageCount = 0;
-	ElementStatus[0] = 100.f;
-	ElementStatus[1] = 100.f;
-	ElementStatus[2] = 100.f;
-	ElementStatus[3] = 100.f;
-	ElementStatus[4] = 100.f;
+	ElementStatusLimit[0] = 100.f;
+	ElementStatusLimit[1] = 100.f;
+	ElementStatusLimit[2] = 100.f;
+	ElementStatusLimit[3] = 100.f;
+	ElementStatusLimit[4] = 100.f;
 	/*auto BlandAnim = ConstructorHelpers::FClassFinder<UAnimInstance>
 		(TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'"));
 	if (BlandAnim.Succeeded()) {
@@ -417,32 +417,32 @@ void AEnemyRogue::EnemyRogueTakeWeaponElementDamege(float TakeElementDamege) {
 }
 
 void AEnemyRogue::EnemyRogueTakeElementStatus(int32 Element, float ElementStatusValue) {
-	switch (Element) {
-	case 0:
-		if (ElementStatusLimit[Element] > TakeElementStatusValue)
-			TakeElementStatusValue += ElementStatusValue;
-		else {
-			TakeElementStatusValue = 0;
+	if (ElementStatusLimit[Element] > TakeElementStatusValue)
+		TakeElementStatusValue += ElementStatusValue;
+	else {
+		switch (Element) {
+		case 0:
 			TakeStun();
+			ElectriFicationDPlusReady = false;
+			break;
+		case 1:
+			TakeBurn();
+			ElectriFicationDPlusReady = false;
+			break;
+		case 2:
+			TakeCold();
+			ElectriFicationDPlusReady = false;
+			break;
+		case 3:
+			TakePoison();
+			ElectriFicationDPlusReady = false;
+			break;
+		case 4:
+			ElectriFicationDPlusReady = true;
+			//TakeElectricExplosion();
+			break;
 		}
-		ElectriFicationDPlusReady = false;
-		break;
-	case 1:
-		TakeBurn();
-		ElectriFicationDPlusReady = false;
-		break;
-	case 2:
-		TakeCold();
-		ElectriFicationDPlusReady = false;
-		break;
-	case 3:
-		TakePoison();
-		ElectriFicationDPlusReady = false;
-		break;
-	case 4:
-		ElectriFicationDPlusReady = true;
-		//TakeElectricExplosion();
-		break;
+		TakeElementStatusValue = 0;
 	}
 }
 
@@ -510,9 +510,10 @@ void AEnemyRogue::EnemyRogueTakeTorchDamege(float StabDamege, float BurnAttacksD
 }
 
 void AEnemyRogue::TakeStun() {
-	StunDotTick = 8;
-	Stun = true;
-	GetWorldTimerManager().SetTimer(StunDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakeStunDotTimer, 0.5, true);
+	SetHp(TakeWeaponPhysicsDamege*2);
+	//StunDotTick = 8;
+	//Stun = true;
+	//GetWorldTimerManager().SetTimer(StunDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakeStunDotTimer, 0.5, true);
 }
 
 void AEnemyRogue::EnemyRogueTakeStunDotTimer() {
@@ -565,11 +566,11 @@ void AEnemyRogue::TakeBurn() {
 void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurningEffect, GetActorLocation(),
 		FRotator(0, 0, 0), FVector(0.5, 0.5, 0.5));
-	if (BurningDotTick == 0) {
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(),
-			FRotator(0, 0, 0), FVector(0.2, 0.2, 0.5));
-		SetHp(TakeWeaponTempDamege*0.2);
-		
+	if (BurningDotTick == 0 || EnemyDead == true) {
+		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(),
+			FRotator(0, 0, 0), FVector(0.2, 0.2, 0.5));*/
+		//SetHp(TakeWeaponElementDamege *2);
+		TakeBurnExplosion();
 		GetWorldTimerManager().ClearTimer(BurnDotTimeHandle);
 		Burning = false;
 		BurningDotTick = -1;
@@ -577,7 +578,7 @@ void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 		//StateEffectStop();
 	}
 	else {
-		SetHp(TakeDotDamege);
+		SetHp(TakeWeaponElementDamege*0.2);
 		//TakeWeaponTempDamege += TakeWeaponDamege;
 		
 		BurningDotTick--;
@@ -585,29 +586,30 @@ void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 }
 
 void AEnemyRogue::TakeBurnExplosion() {
-	TakeTorchSpecial = true;
-	ExplosionBody = true;
+	//TakeTorchSpecial = true;
+	//ExplosionBody = true;
 	if (Burning == true) {
-		MyGameMode->EnemyRogueEffectStateCheckDelegate.ExecuteIfBound();
-		TakeTorchSpecial = false;
+		//MyGameMode->EnemyRogueEffectStateCheckDelegate.ExecuteIfBound();
+		//TakeTorchSpecial = false;
 		
 		GetWorldTimerManager().ClearTimer(BurnDotTimeHandle);
 		Burning = false;
 		BurningDotTick = 0;
-		ExplosionDamage = TakeTorchSpecialDamege + TakeWeaponTempDamege * 0.8;
-		SetHp(ExplosionDamage);
+		//ExplosionDamage = TakeTorchSpecialDamege + TakeWeaponTempDamege * 0.8;
+		SetHp(TakeWeaponElementDamege*2.f);
 		TakeWeaponTempDamege = 0;
 		
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(),
-			FRotator(0, 0, 0), FVector(0.5+TakeWeaponAttackStack*0.05, 0.5 + TakeWeaponAttackStack * 0.05, 0.5 + TakeWeaponAttackStack * 0.05));
+		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(),
+			FRotator(0, 0, 0), FVector(0.5+TakeWeaponAttackStack*0.05, 0.5 + TakeWeaponAttackStack * 0.05, 0.5 + TakeWeaponAttackStack * 0.05));*/
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(), FRotator(0, 0, 0), FVector(0.5, 0.5, 0.5));
 		
 		
-		ExplosionBody = false;
+		//ExplosionBody = false;
 	}	
 	else {
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("WeaponBurnExplosion : %f"), TakeWeaponDamege * 3.f));
-		ExplosionDamage = TakeTorchSpecialDamege;
-		SetHp(ExplosionDamage);
+		//ExplosionDamage = TakeTorchSpecialDamege;
+		SetHp(TakeWeaponElementDamege*1.5f);
 	}
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 	TakeWeaponAttackStack = 0;
