@@ -557,6 +557,7 @@ void AEnemyRogue::TakeKnockBackExplosion() {
 //--------------------------------------------------------------
 
 void AEnemyRogue::TakeBurn() {
+	TakeBurnExplosion();
 	if (Burning == false)
 		BurningDotTick = 16;
 	Burning = true;
@@ -570,7 +571,6 @@ void AEnemyRogue::EnemyRogueTakeBurningDotDamege() {
 		/*UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BurnExplosionEffect, GetActorLocation(),
 			FRotator(0, 0, 0), FVector(0.2, 0.2, 0.5));*/
 		//SetHp(TakeWeaponElementDamege *2);
-		TakeBurnExplosion();
 		GetWorldTimerManager().ClearTimer(BurnDotTimeHandle);
 		Burning = false;
 		BurningDotTick = -1;
@@ -626,14 +626,18 @@ void AEnemyRogue::TakeBurnExplosionStack() {
 //----------------------------------------------------------
 
 void AEnemyRogue::TakeCold() {
-	ColdSlow = true;
+	TakeFreezExplosion();
+	ColdDotTick = 40;
+	ColdSlowStack = 3;
+	FreezSlow = true;
+/*	ColdSlow = true;
 	ColdSlowStack++;
 	if (ColdSlowStack >= 9)
 		ColdSlowStack = 9;
 	if (FreezSlow == false)
 		ColdDotTick = 24;
 	else
-		ColdDotTick = 40;
+		ColdDotTick = 40;*/
 	
 	EnemyRogueSlow(ColdSlowStack, FreezSlow);
 	GetWorldTimerManager().SetTimer(ColdDotTimeHandle, this, &AEnemyRogue::EnemyRogueTakeColdSlowDotTimer, 0.5, true);
@@ -642,20 +646,23 @@ void AEnemyRogue::TakeCold() {
 
 
 void AEnemyRogue::EnemyRogueTakeColdSlowDotTimer() {
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ColdSlowEffect, GetActorLocation() + FVector(0, 0, 50),
-		FRotator(0, 0, 0), FVector(0.3, 0.3, 0.3));
-	if (FreezSlow == true) {
+	if (EnemyDead == false) {
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ColdSlowEffect, GetActorLocation() + FVector(0, 0, 50),
+			FRotator(0, 0, 0), FVector(0.3, 0.3, 0.3));
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FreezSlowEffect, GetActorLocation() + FVector(0, 0, 0),
 			FRotator(0, 0, 0), FVector(0.1, 0.1, 0.1));
 	}
+	/*if (FreezSlow == true) {
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FreezSlowEffect, GetActorLocation() + FVector(0, 0, 0),
+			FRotator(0, 0, 0), FVector(0.1, 0.1, 0.1));
+	}*/
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("DotTick : %d"), ColdDotTick));
 	ColdDotTick--;
 	if (ColdDotTick <= 0) {
-		
-		EnemyRogueSlow(ColdSlowStack, FreezSlow);
-		GetWorldTimerManager().ClearTimer(ColdDotTimeHandle);
 		ColdSlow = false;
 		FreezSlow = false;
+		EnemyRogueSlow(ColdSlowStack, FreezSlow);
+		GetWorldTimerManager().ClearTimer(ColdDotTimeHandle);
 		ColdDotTick = 0;
 	}
 }
@@ -672,13 +679,13 @@ void AEnemyRogue::TakeFreez() {
 }
 
 void AEnemyRogue::TakeFreezExplosion() {
-	TakeTorchSpecial = true;
-	TakeAllStack();
+	//TakeTorchSpecial = true;
+	//TakeAllStack();
 	UParticleSystem* FreezSlowBoom = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
 		TEXT("ParticleSystem'/Game/RogueStateEffect/Cold/P_GroundImpact02.P_GroundImpact02'")));
 	UParticleSystem* FreezSlowBoomDobule = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
 		TEXT("ParticleSystem'/Game/FireStick/Ice/P_ProjectileLob_Explo_Ice.P_ProjectileLob_Explo_Ice'")));
-	if (AllStack >= 5) {
+	/*if (AllStack >= 5) {
 		if (ColdSlowStack >= 5 && TakeWeaponElementNumbers == 2) {
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FreezSlowBoom, GetActorLocation() + FVector(0, 0, 50),
 				FRotator(FMath::FRandRange(-180, 180), FMath::FRandRange(-180, 180), FMath::FRandRange(-180, 180)),
@@ -693,11 +700,16 @@ void AEnemyRogue::TakeFreezExplosion() {
 			
 	}
 	else
-		ExplosionDamage = TakeTorchSpecialDamege * 1.2;
-
+		ExplosionDamage = TakeTorchSpecialDamege * 1.2;*/
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FreezSlowBoom, GetActorLocation() + FVector(0, 0, 50),
+		FRotator(FMath::FRandRange(-180, 180), FMath::FRandRange(-180, 180), FMath::FRandRange(-180, 180)),
+		FVector(1 + ColdSlowStack * 0.1, 1 + ColdSlowStack * 0.1, 1 + ColdSlowStack * 0.1));
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), FreezSlowBoomDobule, GetActorLocation() +
+		FVector(0, -70, 0), FRotator(0, 0, 0), FVector(0.5, 0.5, 0.5) * 1.5);
+	ExplosionDamage = TakeWeaponElementDamege * 1.5f;
 	SetHp(ExplosionDamage);
-	TakeStackInit();
-	AllDotTickInit();
+	//TakeStackInit();
+	//AllDotTickInit();
 	
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 }
@@ -877,7 +889,13 @@ void AEnemyRogue::TakeElectiFicationExplosion() {
 //------------------------------------------------------------------------------
 
 void AEnemyRogue::EnemyRogueSlow(int32 SlowStack, bool Freez) {
-	if (ColdDotTick <= 0)
+	if (Freez = true) {
+		SlowValue -= SlowStack * 0.15;
+	}
+	else
+		SlowValue = 1.f;
+
+	/*if (ColdDotTick <= 0)
 		SlowValue = 1.f;
 	else {
 		if (SlowValue >= 0.1) {
@@ -890,7 +908,7 @@ void AEnemyRogue::EnemyRogueSlow(int32 SlowStack, bool Freez) {
 			if (SlowValue <= 0.f)
 				SlowValue = 0.1f;
 		}
-	}
+	}*/
 }
 
 void AEnemyRogue::EnemyRogueDie() {
