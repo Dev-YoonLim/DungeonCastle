@@ -718,7 +718,8 @@ void AEnemyRogue::TakeFreezExplosion() {
 
 
 void AEnemyRogue::TakePoison() {
-	if (Venom == true) {
+	TakeVenomExplosion();
+	/*if (Venom == true) {
 		VenomStack++;
 		PoisonStack = VenomStack;
 	}
@@ -727,7 +728,7 @@ void AEnemyRogue::TakePoison() {
 	if (VenomStack >= 12)
 		VenomStack = 12;
 	if (PoisonStack >= 12)
-		PoisonStack = 12;
+		PoisonStack = 12;*/
 	Poison = true;
 	PoisonDotTick = 12;
 	
@@ -735,6 +736,7 @@ void AEnemyRogue::TakePoison() {
 }
 
 void AEnemyRogue::TakeVenom() {
+	TakeVenomExplosion();
 	Venom = true;
 	if (Poison == true) {
 		PoisonStack++;
@@ -755,39 +757,40 @@ void AEnemyRogue::TakeVenom() {
 
 void AEnemyRogue::TakeVenomExplosion() {
 	TakeTorchSpecial = true;
-	if (TakeWeaponElementNumbers == 3) {
-		UParticleSystem* VenomBoom = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
-			TEXT("ParticleSystem'/Game/RogueStateEffect/Poison/P_Aura_Poison_Shatter_01.P_Aura_Poison_Shatter_01'")));
-		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VenomBoom, GetActorLocation() + FVector(0, 0, 0),
-			FRotator(0, 0, 0), FVector(0.5, 0.5, 0.3));
-		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("VenomExplosionDamege : %f"), VenomStack * TakeTorchSpecialDamege));
-		SetHp(VenomStack * TakeTorchSpecialDamege);
-		VenomStack /= 2;
-		PoisonStack /= 2;
+	UParticleSystem* VenomBoom = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
+		TEXT("ParticleSystem'/Game/RogueStateEffect/Poison/P_Aura_Poison_Shatter_01.P_Aura_Poison_Shatter_01'")));
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VenomBoom, GetActorLocation() + FVector(0, 0, 0),
+		FRotator(0, 0, 0), FVector(0.5, 0.5, 0.3));
+	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("VenomExplosionDamege : %f"), VenomStack * TakeTorchSpecialDamege));
+	SetHp(TakeWeaponElementDamege*1.2f);
+	//VenomStack /= 2;
+	//PoisonStack /= 2;
+	/*if (TakeWeaponElementNumbers == 3) {
+		
 	}
 	else {
 		TakeAllStack();
 		GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("VenomExplosionDamege : %f"), AllStack * TakeTorchSpecialDamege));
-		ExplosionDamage = AllStack * TakeTorchSpecialDamege;
-		SetHp(ExplosionDamage);
+		//ExplosionDamage = AllStack * TakeTorchSpecialDamege;
+		//SetHp(ExplosionDamage);
 		TakeStackInit();
 		AllDotTickInit();
-	}
+	}*/
 	GetWorldTimerManager().SetTimer(KnockBackTimeHandle, this, &AEnemyRogue::TakeKnockBack, 0.01, true);
 }
 
 void AEnemyRogue::EnemyRogueTakePoisonDotDamege() {
 	float DotDamege;
-	if (Venom == true) {
-		DotDamege = VenomStack * TakeTorchSpecialDamege * 0.07;
+	//if (Venom == true) {
+		DotDamege = TakeWeaponElementDamege * 0.1;
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), VenomEffect, GetActorLocation() + FVector(0, 0, 0),
 			FRotator(0, 0, 0), FVector(0.5, 0.5, 1));
-	}
-	else {
+	//}
+	/*else {
 		DotDamege = TakeDotDamege * PoisonStack;
 		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), PoisonEffect, GetActorLocation() + FVector(0, 0, 50),
 			FRotator(0, 0, 0), FVector(1, 1, 1));
-	}
+	}*/
 	SetHp(DotDamege);
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Red, FString::Printf(TEXT("DotTick : %d"), PoisonDotTick));
 	PoisonDotTick--;
@@ -889,7 +892,7 @@ void AEnemyRogue::TakeElectiFicationExplosion() {
 //------------------------------------------------------------------------------
 
 void AEnemyRogue::EnemyRogueSlow(int32 SlowStack, bool Freez) {
-	if (Freez = true) {
+	if (Freez == true) {
 		SlowValue -= SlowStack * 0.15;
 	}
 	else

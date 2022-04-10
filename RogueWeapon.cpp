@@ -310,7 +310,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 10.f;
 		HitElementEffectScale = 0.3;
-		DefaultElementValue = 30.f;
+		DefaultElementValue = 20.f;
 		//DefaultElementPer = 20.f;
 		break;
 	case 1:
@@ -319,7 +319,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 6.f;
 		HitElementEffectScale = 0.3;
-		DefaultElementValue = 50.f;
+		DefaultElementValue = 10.f;
 		//DefaultElementPer = 20.f;
 		break;
 	case 2:
@@ -328,7 +328,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 8.f;
 		HitElementEffectScale = 0.2;
-		DefaultElementValue = 30.f;
+		DefaultElementValue = 5.f;
 		//DefaultElementPer = 50.f;
 		break;
 	case 3:
@@ -337,7 +337,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 1.f;
 		HitElementEffectScale = 0.25;
-		DefaultElementValue = 100.f;
+		DefaultElementValue = 30.f;
 		//DefaultElementPer = 90.f;
 		break;
 	case 4:
@@ -425,23 +425,36 @@ void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* Oth
 		WeaponAttackCheck = false; 
 		CostData(); // 공격 코스트 함수
 		SetDamegeTaken(0.f); //데미지 초기화
-		for (int i = 0; i < 5; i++)
-			StateEffect[i] = false; // 속성 특수능력 발동 초기화
-		
 		SpawnHitEffect(); // 공격 성공시 이펙트
+		EnemyRogue->EnemyRogueTakeWeaponPhysicsDamege(WeaponAttackPhysicsDameges[AttackQue]);
+		EnemyRogue->EnemyRogueTakeWeaponElementDamege(WeaponAttackElementDamege);
+		EnemyRogue->EnemyRogueTakeElementStatus(SelectWeaponElementNumber, ElementValue);
 		if (WeaponKnockBack == true) {
 			EnemyRogue->TakeAttackVector(TackAttackVectorValue); //공격방향에 따른 백터값
 			EnemyRogue->TakeWeaponKnockBackCheck(WeaponKnockBack); //넉백 체크 및 넉백발동
 		}
-		//AttackElementStateEffect(GetElementPer(), WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue);
-		//무기 속성 발동 및 상태 함수
-
 		if (StateEffect[4] == true) { // 전격속성일 경우 스택형 이펙트 발동
 			UParticleSystem* ElectricAttackBoomEffect = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
 				TEXT("ParticleSystem'/Game/Weapons/Effect/Electro/P_ky_lightning2.P_ky_lightning2'")));
-			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElectricAttackBoomEffect, HitPlace-FVector(0, 0, 20),
-				FRotator(0, 0, 0), FVector(0.6, 0.6, 0.6)); 
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElectricAttackBoomEffect, HitPlace - FVector(0, 0, 20),
+				FRotator(0, 0, 0), FVector(0.6, 0.6, 0.6));
 		}
+		MyRogue->MyRogueState->WeaponLevelEx++; // 무기 레벨 경험치 증가
+		if (MyRogue->MyRogueState->WeaponLevelEx > MyRogue->MyRogueState->WeaponLevelExMax) {
+			MyRogue->MyRogueState->SetWeaponLevelUp(); // 무기 경험치 최대치 도달 시 레벨 업
+		}
+		if (MyRogue->MyRogueState->ElementLevelEx > MyRogue->MyRogueState->ElementLevelExMax) {
+			MyRogue->MyRogueState->SetElementLevelUp(); // 속성 경험치 최대치 도달 시 레벨 업
+		}
+		//for (int i = 0; i < 5; i++)
+			//StateEffect[i] = false; // 속성 특수능력 발동 초기화
+		
+		
+		
+		//AttackElementStateEffect(GetElementPer(), WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue);
+		//무기 속성 발동 및 상태 함수
+
+		
 		
 		/*EnemyRogue->EnemyRogueTakeWeaponDamege(WeaponAttackDefaultPhysicsElementDameges[AttackQue]* AttackDmgPlusValue,
 			GetDamegeTaken(), GetDotDamege(SelectWeaponElementNumber), SelectWeaponElementNumber,
@@ -449,7 +462,7 @@ void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* Oth
 			DoubleAttackChecks[AttackQue], AttackDirection[AttackQue][0], AttackDirection[AttackQue][1], WeaponSpeed);*/
 			// 데미지 발동 함수 - 공격, 속성, 특수능력 발동, 도트데미지, 방향, 스택정보 전달
 		
-		MyRogue->MyRogueState->WeaponLevelEx++; // 무기 레벨 경험치 증가
+		
 
 		/*if (ElementPlusValue != 0) { // 공격성공 및 피격이 없을 경우 발동되는 스택형 능력 구현 함수, 아직 완벽히 구현되지 않았음
 			SetPlusElementPer(ElementPlusValue);
@@ -460,12 +473,6 @@ void ARogueWeapon::WeaponAttackPlay(AActor* OtherActor, UPrimitiveComponent* Oth
 			SetAttackDmgPlusValue(AttackDmgValue);
 		}*/
 		
-		if (MyRogue->MyRogueState->WeaponLevelEx > MyRogue->MyRogueState->WeaponLevelExMax) {
-			MyRogue->MyRogueState->SetWeaponLevelUp(); // 무기 경험치 최대치 도달 시 레벨 업
-		}
-		if (MyRogue->MyRogueState->ElementLevelEx > MyRogue->MyRogueState->ElementLevelExMax) {
-			MyRogue->MyRogueState->SetElementLevelUp(); // 속성 경험치 최대치 도달 시 레벨 업
-		}
 	}
 }
 
