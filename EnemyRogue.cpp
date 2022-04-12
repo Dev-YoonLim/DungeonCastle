@@ -438,8 +438,8 @@ void AEnemyRogue::EnemyRogueTakeElementStatus(int32 Element, float ElementStatus
 			ElectriFicationDPlusReady = false;
 			break;
 		case 4:
+			TakeElectiFication();
 			ElectriFicationDPlusReady = true;
-			//TakeElectricExplosion();
 			break;
 		}
 		TakeElementStatusValue = 0;
@@ -851,41 +851,63 @@ void AEnemyRogue::EnemyRogueTakeElectriFicationDotTimer() {
 
 
 void AEnemyRogue::TakeElectiFication() {
-	
-	if (ElectriFicationDPlus == true || ElectriFicationPlus == true)
+	/*if (ElectriFicationDPlus == true || ElectriFicationPlus == true)
 		ElectriFication = false;
 	else
 		ElectriFication = true;
-	if (TakeTorchEffectStack >= 4) {
-		if (ElectriFicationDPlus == true)
-			ElectriFicationDotTick = 30;
-		else if(ElectriFicationPlus == true)
-			ElectriFicationDotTick = 20;
-		else {
-			SetFicationValue(1.5f);
-			ElectriFicationDotTick = 10;
-			GetWorldTimerManager().SetTimer(ElectriFicationTimeHandle, this, &AEnemyRogue::EnemyRogueTakeElectriFicationDotTimer, 0.5, true);
-			TakeTorchEffectStack = 0;
-		}
+
+	if (ElectriFicationDPlus == true) {
+		SetFicationValue(2.0f);
+		ElectriFicationDotTick = 20;
 	}
+	else if (ElectriFicationPlus == true) {
+		SetFicationValue(1.5f);
+		ElectriFicationDotTick = 15;
+	}
+	else {
+		SetFicationValue(1.2f);
+		ElectriFicationDotTick = 10;
+	}*/
+	TakeElectiFicationExplosion();
+	GetWorldTimerManager().SetTimer(ElectriFicationTimeHandle, this, &AEnemyRogue::EnemyRogueTakeElectriFicationDotTimer, 0.5, true);
 }
 
 void AEnemyRogue::TakeElectiFicationExplosion() {
-	if (ElectriFicationDPlusReady == true) {
+	if (ElectriFicationPlus == true) {
+		UParticleSystem* ElectroDotEffect1 = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
+			TEXT("ParticleSystem'/Game/RogueStateEffect/ElectriFication/P_ky_lightning3.P_ky_lightning3'")));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElectroDotEffect1, GetActorLocation() +
+			FVector(FMath::FRandRange(-20, 20), FMath::FRandRange(-20, 20), FMath::FRandRange(-20, 20)),
+			FRotator(0, 0, 0),
+			FVector(0.6 + FMath::FRandRange(-0.2, 0.4), 0.6 + FMath::FRandRange(-0.2, 0.4), 0.4 + FMath::FRandRange(-0.2, 0.4)));
 		ElectriFication = false;
 		ElectriFicationPlus = false;
 		ElectriFicationDPlus = true;
-		SetFicationValue(3.f);
-		ElectriFicationDotTick = 30;
-		GetWorldTimerManager().SetTimer(ElectriFicationTimeHandle, this, &AEnemyRogue::EnemyRogueTakeElectriFicationDotTimer, 0.5, true);
+		SetFicationValue(1.8f);
+		ElectriFicationDotTick = 20;
 	}
-	else {
+	else if(ElectriFication == true){
+		UParticleSystem* ElectroDotEffect2 = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
+			TEXT("ParticleSystem'/Game/RogueStateEffect/ElectriFication/P_ky_lightning2.P_ky_lightning2'")));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElectroDotEffect2, GetActorLocation() +
+			FVector(FMath::FRandRange(-20, 20), FMath::FRandRange(-20, 20), FMath::FRandRange(-20, 20)),
+			FRotator(0, 0, 0),
+			FVector(0.6 + FMath::FRandRange(-0.2, 0.4), 0.6 + FMath::FRandRange(-0.2, 0.4), 0.4 + FMath::FRandRange(-0.2, 0.4)));
 		ElectriFication = false;
 		ElectriFicationPlus = true;
 		ElectriFicationDPlus = false;
-		SetFicationValue(2.f);
-		ElectriFicationDotTick = 20;
-		GetWorldTimerManager().SetTimer(ElectriFicationTimeHandle, this, &AEnemyRogue::EnemyRogueTakeElectriFicationDotTimer, 0.5, true);
+		SetFicationValue(1.5f);
+		ElectriFicationDotTick = 15;
+	}
+	else {
+		UParticleSystem* ElectroDotEffect3 = Cast<UParticleSystem>(StaticLoadObject(UParticleSystem::StaticClass(), NULL,
+			TEXT("ParticleSystem'/Game/RogueStateEffect/ElectriFication/P_ky_lightning1.P_ky_lightning1'")));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ElectroDotEffect3, GetActorLocation() +
+			FVector(FMath::FRandRange(-20, 20), FMath::FRandRange(-20, 20), FMath::FRandRange(-20, 20)),
+			FRotator(0, 0, 0),
+			FVector(0.6 + FMath::FRandRange(-0.2, 0.4), 0.6 + FMath::FRandRange(-0.2, 0.4), 0.4 + FMath::FRandRange(-0.2, 0.4)));
+		SetFicationValue(1.2f);
+		ElectriFicationDotTick = 10;
 	}
 }
 
