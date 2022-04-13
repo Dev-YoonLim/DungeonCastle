@@ -317,9 +317,9 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Fire/P_ky_fireStorm.P_ky_fireStorm'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Fire/WeaponHitEffect_Fire.WeaponHitEffect_Fire'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		DefaultElementDamege = 6.f;
+		DefaultElementDamege = 12.f;
 		HitElementEffectScale = 0.3;
-		DefaultElementValue = 10.f;
+		DefaultElementValue = 15.f;
 		//DefaultElementPer = 20.f;
 		break;
 	case 2:
@@ -328,7 +328,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
 		DefaultElementDamege = 8.f;
 		HitElementEffectScale = 0.2;
-		DefaultElementValue = 5.f;
+		DefaultElementValue = 10.f;
 		//DefaultElementPer = 50.f;
 		break;
 	case 3:
@@ -344,7 +344,7 @@ void ARogueWeapon::WeaponChangeElement(int32 ElementIndex, float SelectElementLe
 		ElementEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Electro/P_DOT_Lightning_01.P_DOT_Lightning_01'");
 		ElementHitEffectReference = TEXT("ParticleSystem'/Game/Weapons/Effect/Electro/P_ky_ThunderBallHit.P_ky_ThunderBallHit'");
 		WeaponElementEffect->SetRelativeTransform(FTransform(FRotator(0, 0, 0), FVector(0, 0, 0), ElementEffectSize * ElementLevelValue));
-		DefaultElementDamege = 5.f;
+		DefaultElementDamege = 6.f;
 		HitElementEffectScale = 0.1;
 		DefaultElementValue = 50.f;
 		//DefaultElementPer = 0.f;
