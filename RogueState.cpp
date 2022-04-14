@@ -165,7 +165,32 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	//if (UGameplayStatics::GetCurrentLevelName(GetWorld(), false) != TEXT("StartMap")) {
 	GEngine->AddOnScreenDebugMessage(-1, 600, FColor::Purple, FString::Printf(TEXT("Load")));
 	ARogue* myRogue = Cast<ARogue>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
-	TSubclassOf<AEnemyRogue> EnemyRogueClass;
+	for (int i = 2; i <= LoadGame->WeaponLevel; i++) {
+		SetWeaponLevelUp();
+		WeaponLevelExMax = WeaponLevelExMax + (5 * 1.2 * WeaponLevel);
+	}
+	for (int i = 2; i <= LoadGame->TorchLevel; i++) {
+		SetTorchLevelUp();
+		TorchLevelExMax = WeaponLevelExMax + (5 * 1.2 * TorchLevel);
+	}
+	for (int i = 2; i <= LoadGame->ElementalLevel; i++) {
+		SetElementLevelUp();
+		ElementLevelExMax = WeaponLevelExMax + (5 * 1.2 * ElementLevel);
+	}
+
+	WeaponLevelEx = LoadGame->WeaponLevelEx;
+	TorchLevelEx = LoadGame->TorchLevelEx;
+	ElementLevelEx = LoadGame->ElementalLevelEx;
+	RogueDeath = LoadGame->RogueDeath;
+	RogueKill = LoadGame->RogueKill;
+	RogueTotalKill = LoadGame->RogueTotalKill;
+
+	DungeonClearAllCount = LoadGame->DungeonClearAllCount;
+	for (int i = 0; i < 3; i++) {
+		DungeonClearCount[i] = LoadGame->DungeonClearCount[i];
+	}
+
+	/*TSubclassOf<AEnemyRogue> EnemyRogueClass;
 	//AEnemyRogue* enemyRogue = Cast<AEnemyRogue>(UGameplayStatics::GetAllActorsOfClass(GetWorld(), EnemyRogueClass, EnemyRogueClass));
 	for (int i = 0; i < 10; i++) {
 		DoorStateCheck[i] = LoadGame->DoorOpenCheck[i];
@@ -253,7 +278,7 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	myRogue->SetSubDialogueKinds(LoadGame->SubDialogueKinds);
 	DialogueTutorialCount = LoadGame->DialogueTutorialCount;
 	
-	/*else {
+	else {
 		LoadGame->StageIndex = 0;
 		MyGameMode->StageIndex = LoadGame->StageIndex;
 	}*/
@@ -279,10 +304,25 @@ void ARogueState::SaveGameData() {
 	//ShortCutDoor = Cast<TArray<ADoor>>(UGameplayStatics::GetActorOfClass(GetWorld(), ADoor::StaticClass()));
 	GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("GameSave")));
 	if (SaveState == true) {
+		PlayerData->WeaponLevel = WeaponLevel;
+		PlayerData->TorchLevel = TorchLevel;
+		PlayerData->ElementalLevel = ElementLevel;
+		PlayerData->WeaponLevelEx = WeaponLevelEx;
+		PlayerData->TorchLevelEx = TorchLevelEx;
+		PlayerData->ElementalLevelEx = ElementLevelEx;
+
+		PlayerData->RogueKill = RogueKill;
+		PlayerData->RogueDeath = RogueDeath;
+		PlayerData->RogueTotalKill = RogueTotalKill;
+
+		PlayerData->DungeonClearAllCount = DungeonClearAllCount;
+		for (int i = 0; i < 3; i++) {
+			PlayerData->DungeonClearCount[i] = DungeonClearCount[i];
+		}
 		/*PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 		PlayerData->FOVValue = MyGameMode->FOVValue;
 		PlayerData->HeadTracking = myRogue->RogueHeadShake;
-		PlayerData->LanguageType = MyGameMode->LanguageType;*/
+		PlayerData->LanguageType = MyGameMode->LanguageType;
 		PlayerData->DialogueTutorialCount = DialogueTutorialCount;
 		PlayerData->StageIndex = MyGameMode->StageIndex;
 		PlayerData->StageSubIndex = MyGameMode->StageSubIndex;
@@ -302,7 +342,7 @@ void ARogueState::SaveGameData() {
 		PlayerData->TorchElemental = TorchElementNumber;
 		PlayerData->WeaponElemental = WeaponElementNumber;
 		/*PlayerData->WeaponElemental = WeaponElementNumber;
-		PlayerData->TorchElemental = TorchElementNumber;*/
+		PlayerData->TorchElemental = TorchElementNumber;
 
 		PlayerData->WeaponLevel = WeaponLevel;
 		PlayerData->TorchLevel = TorchLevel;
@@ -357,7 +397,7 @@ void ARogueState::SaveGameData() {
 		//GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("Save")));
 		if (UGameplayStatics::SaveGameToSlot(PlayerData, SaveSlotName, 0) == false) {
 			GEngine->AddOnScreenDebugMessage(-1, 10, FColor::Yellow, FString::Printf(TEXT("SaveError")));
-		}
+		}*/
 	}
 }
 

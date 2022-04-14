@@ -18,6 +18,33 @@ public:
 	URogueSaveGame();
 
 	UPROPERTY()
+		int32 WeaponLevel;
+	UPROPERTY()
+		int32 TorchLevel;
+	UPROPERTY()
+		int32 ElementalLevel;
+
+	UPROPERTY()
+		float WeaponLevelEx;
+	UPROPERTY()
+		float TorchLevelEx;
+	UPROPERTY()
+		float ElementalLevelEx;
+
+	UPROPERTY()
+		int32 RogueKill;
+	UPROPERTY()
+		int32 RogueDeath;
+	UPROPERTY()
+		int32 RogueTotalKill;
+
+	UPROPERTY()
+		int32 DungeonClearAllCount;
+
+	UPROPERTY()
+		int32 DungeonClearCount[3];
+
+	/*UPROPERTY()
 		TArray<int32> TotalEquipAbilityDataList;
 	UPROPERTY()
 		int32 TotalEquipAbilityCount;
@@ -148,7 +175,7 @@ public:
 		int32 DoorOpenCheck[10];
 
 
-	/*UPROPERTY()
+	UPROPERTY()
 		int32 AttackIncreaseValue[3];
 	UPROPERTY()
 		int32 BurnAttackDmgIncreaseValue;
