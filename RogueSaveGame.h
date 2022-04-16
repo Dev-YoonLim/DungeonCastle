@@ -44,6 +44,14 @@ public:
 	UPROPERTY()
 		int32 DungeonClearCount[3];
 
+	UPROPERTY()
+		int32 StageIndex;
+	UPROPERTY()
+		int32 StageSubIndex;
+
+	UPROPERTY()
+		int32 DoorOpenCheck[10];
+
 	/*UPROPERTY()
 		TArray<int32> TotalEquipAbilityDataList;
 	UPROPERTY()

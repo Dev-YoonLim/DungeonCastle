@@ -189,6 +189,9 @@ void ARogueState::LoadGameData(URogueSaveGame* LoadData) {
 	for (int i = 0; i < 3; i++) {
 		DungeonClearCount[i] = LoadGame->DungeonClearCount[i];
 	}
+	for (int i = 0; i < 10; i++) {
+		DoorStateCheck[i] = LoadGame->DoorOpenCheck[i];
+	}
 
 	/*TSubclassOf<AEnemyRogue> EnemyRogueClass;
 	//AEnemyRogue* enemyRogue = Cast<AEnemyRogue>(UGameplayStatics::GetAllActorsOfClass(GetWorld(), EnemyRogueClass, EnemyRogueClass));
@@ -318,6 +321,9 @@ void ARogueState::SaveGameData() {
 		PlayerData->DungeonClearAllCount = DungeonClearAllCount;
 		for (int i = 0; i < 3; i++) {
 			PlayerData->DungeonClearCount[i] = DungeonClearCount[i];
+		}
+		for (int i = 0; i < 10; i++) {
+			PlayerData->DoorOpenCheck[i] = DoorStateCheck[i];
 		}
 		/*PlayerData->FXSoundVolume = MyGameMode->FXSoundClass->Properties.Volume;
 		PlayerData->FOVValue = MyGameMode->FOVValue;

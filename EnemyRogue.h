@@ -41,12 +41,14 @@ public:
 	virtual void EnemyWeaponInit();
 	virtual void EnemyRogueBodyInit();
 	virtual void EnemyRogueCollisionInit();
-	virtual void EnemyRogueStateInit();
+	virtual void EnemyRogueStatInit();
+	virtual void EnemyRogueElementTolInit();
 	void EnemyRogueTakeDamegeDelegateInit();
 	virtual void TakeStackInit();
 	virtual void AllStateInit();
 	virtual void AllDotTickInit();
 	virtual void StateEffectInit();
+	virtual void AnimBlendInit();
 
 	virtual void EnemyRogueBodySetting();
 	virtual void EnemyRogueStateSetting();
@@ -54,7 +56,11 @@ public:
 private:
 
 	UPROPERTY(EditAnyWhere)
-	float Hp;
+		float Hp;
+	UPROPERTY(EditAnyWhere)
+		int32 DeathData;
+	UPROPERTY(EditAnyWhere)
+		int32 Karma;
 
 	float AttackDamegeValue;
 	float DefenceValue;
@@ -87,8 +93,7 @@ private:
 
 	int32 AllStack;
 
-	int32 DeathData;
-	int32 Karma;
+	
 
 	FVector TakeAttackVectorValue;
 
@@ -247,6 +252,8 @@ public:
 		int32 HitCountLimite;
 	UPROPERTY(EditAnywhere)
 		int32 HitSuperArmorCountLimit;
+	UPROPERTY(EditAnywhere)
+		float EnemySpeed;
 
 	UPROPERTY(EditAnywhere)
 		ARogue* myRogue;
