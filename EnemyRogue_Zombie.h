@@ -18,6 +18,10 @@ public:
 	AEnemyRogue_Zombie();
 	
 public:
+	//virtual void BeginPlay() override;
 	virtual void EnemyRogueBodyInit() override;
 	virtual void AnimBlendInit() override;
+	virtual void EnemyRogueStateSetting() override;
+	virtual void EnemyRogueWeaponInfo() override;
+	virtual void WeaponHitAnimationPlay() override;
 };

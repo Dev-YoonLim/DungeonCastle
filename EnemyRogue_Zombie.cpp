@@ -24,3 +24,15 @@ void AEnemyRogue_Zombie::AnimBlendInit() {
 		HitSuperArmorCountLimit = 1;
 	}
 }
+
+void AEnemyRogue_Zombie::EnemyRogueStateSetting() {
+
+}
+
+void AEnemyRogue_Zombie::EnemyRogueWeaponInfo() {
+
+}
+
+void AEnemyRogue_Zombie::WeaponHitAnimationPlay() {
+
+}

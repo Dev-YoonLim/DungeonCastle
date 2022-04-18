@@ -223,11 +223,11 @@ public:
 	FVector DirectionVector();
 
 	void EnemyHitFunc(bool DeadCheck);
-	void WeaponHitAnimationPlay();
+	virtual void WeaponHitAnimationPlay();
 	void TorchHitAnimationPlay();
 
 	void SetEnemyDownFinish(bool StartCheck);
-	void EnemyRogueWeaponInfo();
+	virtual void EnemyRogueWeaponInfo();
 
 	bool GetTakeHit();
 	void SetTakeHit(bool newTakeHitState);
