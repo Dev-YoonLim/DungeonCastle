@@ -11,7 +11,7 @@ AEnemyRogue::AEnemyRogue()
 	PrimaryActorTick.bCanEverTick = true;
 	EnemyRogueBodyInit();
 	EnemyRogueStatInit();
-	AnimBlendInit();
+	//AnimBlendInit();
 	EnemyRogueElementTolInit();
 	//EnemyRogueAnimationInit();
 	TakeStackInit();
@@ -248,6 +248,7 @@ void AEnemyRogue::EnemyRogueStatInit() {
 }
 
 void AEnemyRogue::AnimBlendInit() {
+	EnemyForm = FMath::FRandRange(0, 9);
 	if (EnemyForm <= 6) {
 		/*UAnimInstance* EnemyAnim = Cast<UAnimInstance>(StaticLoadClass(UAnimInstance::StaticClass(), NULL,
 			TEXT("AnimBlueprint'/Game/EnemyRogue/BP_EnemyRogueAnimation.BP_EnemyRogueAnimation_C'")));*/
